@@ -1,4 +1,0 @@
-repository "Project MJ@Applecalypse@cloud"
-  path "/"
-    br "/main"
-    co "/main"
