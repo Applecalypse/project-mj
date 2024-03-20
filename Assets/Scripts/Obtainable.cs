@@ -16,12 +16,16 @@ public class Obtainable : MonoBehaviour
         col.isTrigger = false;
     }
 
-    public void Obtain(GameObject player)
+    public void Obtain(Transform hand)
     {
         Debug.Log("Obtaining " + gameObject.name);
-        transform.SetParent(player.transform);
+
+        transform.SetParent(hand);        
         rb.isKinematic = true;
         col.isTrigger = true;
+
+        transform.localPosition = new Vector3(0, 0, 0);
+        transform.localRotation = Quaternion.Euler(0, 0, 0);
     }
 
     public void Drop(GameObject player)

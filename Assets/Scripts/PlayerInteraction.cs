@@ -19,6 +19,7 @@ public class PlayerInteraction : MonoBehaviour
 
     // inventory
     private GameObject heldItem = null;
+    [SerializeField] private Transform handLocation;
 
     private void Start()
     {
@@ -54,7 +55,8 @@ public class PlayerInteraction : MonoBehaviour
         Obtainable targetObtainable = hit.transform.GetComponent<Obtainable>();
         if (targetObtainable != null && heldItem == null)
         {
-            targetObtainable.Obtain(gameObject);
+            
+            targetObtainable.Obtain(handLocation);
             heldItem = targetObtainable.gameObject;
         }
     }
