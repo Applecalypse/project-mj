@@ -11,6 +11,7 @@ using Unity.Services.Authentication;
 using Unity.Services.Core;
 using Unity.Services.Relay;
 using Unity.Services.Relay.Models;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -19,10 +20,11 @@ public class Relay : MonoBehaviour
     [SerializeField] private GameObject networkPanel;
     [SerializeField] private GameObject shutdownPanel;
     [SerializeField] private GameObject startPanel;
-    // [SerializeField] private GameObject renamePanel;
+    [SerializeField] private GameObject renamePanel;
     [SerializeField] private TMP_InputField nameInput;
-    [SerializeField] private TMP_Text placeholderText;
     [SerializeField] private TMP_InputField roomInput;
+    [SerializeField] private GameObject changeTeamPanel;
+    [SerializeField] private TMP_Text changeTeamText;
     [SerializeField] private TMP_Text roomText;
     [SerializeField] private Transform[] spawnPos;
     [SerializeField] private GameObject[] players;
@@ -37,6 +39,8 @@ public class Relay : MonoBehaviour
         networkPanel.SetActive(true);
         shutdownPanel.SetActive(false);
         startPanel.SetActive(false);
+        renamePanel.SetActive(false);
+        changeTeamPanel.SetActive(false);
         roomText.text = "";
     }
 
@@ -62,7 +66,9 @@ public class Relay : MonoBehaviour
             if (players[i].GetComponentInParent<NetworkObject>().IsLocalPlayer)
             {
                 mainPlayer = players[i];
-                Debug.Log("This is my player");
+                changeTeamText.text = "Team: " +
+                                      (mainPlayer.GetComponent<PlayerController>().team.Value == Team.Human ? "Human" : "Monster");
+                Debug.Log($"This is my player: {players[i].GetComponentInParent<NetworkObject>().OwnerClientId}");
             }
             MovePlayerServerRPC(players[i], spawnPos[i]);
         }
@@ -114,6 +120,8 @@ public class Relay : MonoBehaviour
 
         networkPanel.SetActive(false);
         shutdownPanel.SetActive(true);
+        renamePanel.SetActive(true);
+        changeTeamPanel.SetActive(true);
 
         if (!string.IsNullOrEmpty(joinCode))
         {
@@ -133,15 +141,20 @@ public class Relay : MonoBehaviour
         {
             networkPanel.SetActive(false);
             shutdownPanel.SetActive(true);
+            renamePanel.SetActive(true);
+            changeTeamPanel.SetActive(true);
         }
     }
 
     public void DisconnectRelay()
     {
-        NetworkManager.Singleton.Shutdown();
         networkPanel.SetActive(true);
         shutdownPanel.SetActive(false);
+        startPanel.SetActive(false);
+        renamePanel.SetActive(false);
+        changeTeamPanel.SetActive(false);
         roomText.text = "";
+        NetworkManager.Singleton.Shutdown();
     }
     
     public void StartGame()
@@ -159,6 +172,12 @@ public class Relay : MonoBehaviour
     public void Rename()
     {
         mainPlayer.GetComponent<PlayerController>().ChangePlayerNickname(nameInput.text);
+    }
+
+    public void ChangeTeam()
+    {
+        mainPlayer.GetComponent<PlayerController>().ChangePlayerTeam();
+        changeTeamText.text = "Team: " + (mainPlayer.GetComponent<PlayerController>().team.Value == Team.Human ? "Human" : "Monster");
     }
 
     private async Task<string> StartHostWithRelay(int maxPlayer = 5)

@@ -39,7 +39,7 @@ public class PlayerController : NetworkBehaviour
     private InputAction jumpAction;
 
     public NetworkVariable<FixedString32Bytes> nickname = new NetworkVariable<FixedString32Bytes>("", NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
-    public NetworkVariable<Team> team = new NetworkVariable<Team>(Team.Human);
+    public NetworkVariable<Team> team = new NetworkVariable<Team>(Team.Human, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 
     [SerializeField]
     private Transform cameraTransform;
@@ -49,14 +49,18 @@ public class PlayerController : NetworkBehaviour
 
     public override void OnNetworkSpawn()
     {
+        nickname.OnValueChanged += OnNameChange;
+        team.OnValueChanged += OnTeamChange;
+        
         if (!IsOwner)
         {
+            nameTag.text = nickname.Value.ToString();
             enabled = false; 
             return;
         }
+        
+        ChangePlayerNickname(OwnerClientId.ToString());
         base.OnNetworkSpawn();
-
-        ChangePlayerNickname(AuthenticationService.Instance.PlayerId.Substring(0, 6));
     }
 
     private void Start()
@@ -174,6 +178,24 @@ public class PlayerController : NetworkBehaviour
         nickname.Value = playerName;
         nameTag.text = playerName;
     }
+
+    private void OnNameChange(FixedString32Bytes oldname, FixedString32Bytes newName)
+    {
+        Debug.Log("Name has been changed");
+        nickname.Value = newName;
+        nameTag.text = newName.ToString();
+    }
+    
+    public void ChangePlayerTeam()
+    {
+        team.Value = team.Value == Team.Human ? Team.Monster : Team.Human;
+    }
+
+    private void OnTeamChange(Team oldTeam, Team newTeam)
+    {
+        Debug.Log("Team has been changed");
+        team.Value = newTeam;
+    }
     
     public bool IsInLobby
     {
@@ -182,6 +204,7 @@ public class PlayerController : NetworkBehaviour
             isInLobby = value;
             animator = GetComponentInParent<Animator>();
             animator.SetBool("isSitting", value);
+            nameTag.enabled = value;
         }
     }
 }
