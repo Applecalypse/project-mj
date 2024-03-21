@@ -6,14 +6,13 @@ using UnityEngine;
 // https://youtu.be/F20Sr5FlUlE?si=zOHVPfghQtbm6rs3
 public class Throwable : MonoBehaviour
 {
-
-    // throwing
+    [Header("Throwing")]
     private Rigidbody rb;
     private Collider col;
     private readonly float forwardThrowForce = 20f;
     private readonly float upwardThrowForce = 5f;
 
-    // hitting the target
+    [Header("Item Collision")]
     private bool collisionEnabled = false;
 
     void Start()
