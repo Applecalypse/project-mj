@@ -11,11 +11,11 @@ using UnityEngine.InputSystem;
 public class PlayerInteraction : MonoBehaviour
 {
     [SerializeField] private Transform cameraTransform;
-    private float interactionDistance = 3f;
+    private readonly float interactionDistance = 3f;
 
     // controls
     private PlayerInput playerInput;
-    private InputAction interactAction, dropAction;
+    private InputAction interactAction, dropAction, shootAction;
 
     // inventory
     private GameObject heldItem = null;
@@ -26,38 +26,60 @@ public class PlayerInteraction : MonoBehaviour
         playerInput = GetComponent<PlayerInput>();
         interactAction = playerInput.actions["Interact"];
         dropAction = playerInput.actions["Drop"];
+        shootAction = playerInput.actions["Shoot"];
     }
 
     void Update()
     {
         Interact();
         Drop();
+        Shoot();
     }
 
+    
     void Interact()
     {
         if (!interactAction.triggered) { return; }
         Debug.Log("Interacting");
 
+        // Perform a raycast
         RaycastHit hit;
-        Vector3 rayOrigin = cameraTransform.position + (cameraTransform.forward * 4f);
+        Vector3 rayOrigin = cameraTransform.position + (cameraTransform.forward * 0f);
         Physics.Raycast(rayOrigin, cameraTransform.forward, out hit, interactionDistance);
         // Debug.DrawRay(rayOrigin, cameraTransform.forward * interactionDistance, Color.red, 100f);
         if ( hit.transform == null  ) { return; }
         
         Debug.Log("Pointing at " + hit.transform.gameObject.name);
 
-        // for things like Doors, Chests, etc
         Interactable targetInteractable = hit.transform.GetComponent<Interactable>();
-        if (targetInteractable != null) { targetInteractable.Interact(); }
+        if (targetInteractable != null) { targetInteractable.Interact(); return; }
         
-        // for items that the player can pick up
         Obtainable targetObtainable = hit.transform.GetComponent<Obtainable>();
         if (targetObtainable != null && heldItem == null)
         {
-            
             targetObtainable.Obtain(handLocation);
             heldItem = targetObtainable.gameObject;
+        }
+    }
+
+    void Shoot()
+    {
+        if (!shootAction.triggered) { return; }
+        Debug.Log("Shooting");
+
+        if (heldItem != null) // if holding an item
+        {
+            Throwable targetThrowable = heldItem.GetComponent<Throwable>();
+            if (targetThrowable != null) { targetThrowable.Throw(cameraTransform, handLocation); }
+            
+            Consumable targetConsumable = heldItem.GetComponent<Consumable>();
+            if (targetConsumable != null) { targetConsumable.Use(); }
+
+            heldItem = null;
+        }
+        else
+        {
+            CameraFlash();
         }
     }
 
@@ -72,5 +94,11 @@ public class PlayerInteraction : MonoBehaviour
             targetObtainable.Drop(gameObject);
             heldItem = null;
         }
+    }
+
+    
+    void CameraFlash()
+    {
+        Debug.Log("Camera flash");
     }
 }
