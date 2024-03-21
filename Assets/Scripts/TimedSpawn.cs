@@ -14,7 +14,7 @@ public class TimedSpawn : MonoBehaviour
     [SerializeField] private float spawnInterval = 5f;
     [SerializeField] private float spawnRadius = 5f;
 
-    private float forcedSpawnInterval = 50f;
+    private readonly float forcedSpawnInterval = 50f;
     private float timeSinceLastSpawn = 0f;
 
     // Start is called before the first frame update
