@@ -6,7 +6,7 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/Prototype.unity
+    path: Assets/Scenes/PrototypePlayer.unity
     guid: 99c9720ab356a0642a771bea13969a05
   - enabled: 0
     path: Assets/Scenes/Lobby.unity
@@ -17,4 +17,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/PrototypeWarp.unity
     guid: 94d1c37079d8b434f8be5f23e79a99f3
+  - enabled: 1
+    path: Assets/Scenes/PrototypeEnemy.unity
+    guid: cde5f7b50730249e090ce067a8c3628f
   m_configObjects: {}

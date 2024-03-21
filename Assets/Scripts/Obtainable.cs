@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class Obtainable : MonoBehaviour
 {   
+    [Header("Item Physics")]
     private Rigidbody rb;
     private Collider col;
     private Vector3 originalScale;

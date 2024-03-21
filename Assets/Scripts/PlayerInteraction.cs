@@ -10,14 +10,15 @@ using UnityEngine.InputSystem;
 // PickUp - https://youtu.be/8kKLUsn7tcg?si=CMy838TxCqT5vdYy
 public class PlayerInteraction : MonoBehaviour
 {
+    [Header("Camera")]
     [SerializeField] private Transform cameraTransform;
     private readonly float interactionDistance = 3f;
 
-    // controls
+    [Header("Player Input")]
     private PlayerInput playerInput;
     private InputAction interactAction, dropAction, shootAction;
 
-    // inventory
+    [Header("Item Holding")]
     private GameObject heldItem = null;
     [SerializeField] private Transform handLocation;
 
