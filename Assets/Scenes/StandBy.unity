@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.05927974, g: 0.052777596, b: 0.101110354, a: 1}
+  m_IndirectSpecularColor: {r: 0.059295986, g: 0.05277412, b: 0.101122074, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1118,6 +1118,74 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 84380173}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &87118254
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 87118256}
+  - component: {fileID: 87118257}
+  - component: {fileID: 87118255}
+  m_Layer: 0
+  m_Name: SpawnLocationManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &87118255
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 87118254}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a3a9c7302899ca0438ee6a9abfd50466, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerPrefab: {fileID: 3306610084392409789, guid: 75f5d98c8e6db4963b153e0eb3ffca21,
+    type: 3}
+--- !u!4 &87118256
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 87118254}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &87118257
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 87118254}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 954446238
+  InScenePlacedSourceGlobalObjectIdHash: 0
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 0
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 1
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
 --- !u!1001 &91749372
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1989,7 +2057,7 @@ GameObject:
   - component: {fileID: 164557892}
   m_Layer: 0
   m_Name: pos1
-  m_TagString: Untagged
+  m_TagString: SpawnPointLobby
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -5209,7 +5277,7 @@ GameObject:
   - component: {fileID: 561087582}
   m_Layer: 0
   m_Name: pos3
-  m_TagString: Untagged
+  m_TagString: SpawnPointLobby
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -10764,7 +10832,7 @@ GameObject:
   - component: {fileID: 1278679415}
   m_Layer: 0
   m_Name: pos2
-  m_TagString: Untagged
+  m_TagString: SpawnPointLobby
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -11300,7 +11368,7 @@ GameObject:
   - component: {fileID: 1321373093}
   m_Layer: 0
   m_Name: pos4
-  m_TagString: Untagged
+  m_TagString: SpawnPointLobby
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -13882,9 +13950,25 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4331157867487981296, guid: bd9fe91b7f7dd4c33b7d38c82f4c85d4,
         type: 3}
+      propertyPath: NetworkConfig.PlayerPrefab
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 4331157867487981296, guid: bd9fe91b7f7dd4c33b7d38c82f4c85d4,
+        type: 3}
       propertyPath: NetworkConfig.ForceSamePrefabs
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4331157867487981296, guid: bd9fe91b7f7dd4c33b7d38c82f4c85d4,
+        type: 3}
+      propertyPath: NetworkConfig.Prefabs.NetworkPrefabsLists.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4331157867487981296, guid: bd9fe91b7f7dd4c33b7d38c82f4c85d4,
+        type: 3}
+      propertyPath: NetworkConfig.Prefabs.NetworkPrefabsLists.Array.data[0]
+      value: 
+      objectReference: {fileID: 11400000, guid: 83774134b842e5849a12741b1ee838ab,
+        type: 2}
     - target: {fileID: 7116921819921482085, guid: bd9fe91b7f7dd4c33b7d38c82f4c85d4,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -15499,6 +15583,9 @@ MonoBehaviour:
   - {fileID: 561087582}
   - {fileID: 1321373093}
   players: []
+  playerPrefab: {fileID: 3306610084392409789, guid: 75f5d98c8e6db4963b153e0eb3ffca21,
+    type: 3}
+  spawnPointManager: {fileID: 87118255}
   mainPlayer: {fileID: 0}
 --- !u!4 &1855144830
 Transform:
@@ -16892,3 +16979,4 @@ SceneRoots:
   - {fileID: 247284753}
   - {fileID: 1855144830}
   - {fileID: 1710828141}
+  - {fileID: 87118256}

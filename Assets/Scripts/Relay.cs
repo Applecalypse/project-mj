@@ -28,6 +28,10 @@ public class Relay : MonoBehaviour
     [SerializeField] private TMP_Text roomText;
     [SerializeField] private Transform[] spawnPos;
     [SerializeField] private GameObject[] players;
+    [SerializeField] private NetworkObject playerPrefab;
+    [SerializeField] private SpawnPointManager spawnPointManager;
+
+    [field: Header("For Debugging")]
     [SerializeField] private GameObject mainPlayer;
 
     private async void Awake()
@@ -42,35 +46,46 @@ public class Relay : MonoBehaviour
         renamePanel.SetActive(false);
         changeTeamPanel.SetActive(false);
         roomText.text = "";
+        // spawnPointManager = FindObjectOfType<SpawnPointManager>();
     }
 
     private void OnClientDisconnect(ulong u)
     {
-        players = GameObject.FindGameObjectsWithTag("Player");
-        if (NetworkManager.Singleton.LocalClientId == u)
-        {
-            Debug.Log("myself/host disconnected");
-            DisconnectRelay();
-        }
-        else
-        {
-            Debug.Log("a client has disconnected");
-        }
+        // players = GameObject.FindGameObjectsWithTag("Player");
+        // if (NetworkManager.Singleton.LocalClientId == u)
+        // {
+        //     Debug.Log("myself/host disconnected");
+        //     DisconnectRelay();
+        // }
+        // else
+        // {
+        //     Debug.Log("a client has disconnected");
+        // }
     }
 
     private void OnClientJoin(ulong u)
     {
-        players = GameObject.FindGameObjectsWithTag("Player");
-        for (int i = 0; i < players.Length; i++)
+        if (NetworkManager.Singleton.IsHost)
         {
-            if (players[i].GetComponentInParent<NetworkObject>().IsLocalPlayer)
+            SpawnPosition spawnPosition = spawnPointManager.GetPosition();
+            NetworkObject networkObject = NetworkManager.Singleton.SpawnManager.InstantiateAndSpawn(playerPrefab, u, true, false, position: spawnPosition.position, rotation: spawnPosition.rotation);
+            PlayerController playerController = networkObject.GetComponentInChildren<PlayerController>();
+            playerController.IsInLobby = true;
+            playerController.sittingPos.position = spawnPosition.position;
+            playerController.sittingPos.rotation = spawnPosition.rotation;
+        }
+
+        players = GameObject.FindGameObjectsWithTag("Player");
+        Debug.Log(players.Length);
+        foreach (GameObject player in players)
+        {
+            if (player.GetComponentInParent<NetworkObject>().IsOwner)
             {
-                mainPlayer = players[i];
+                mainPlayer = player.gameObject;
                 changeTeamText.text = "Team: " +
                                       (mainPlayer.GetComponent<PlayerController>().team.Value == Team.Human ? "Human" : "Monster");
-                Debug.Log($"This is my player: {players[i].GetComponentInParent<NetworkObject>().OwnerClientId}");
+                Debug.Log($"This is my player: {player.GetComponentInParent<NetworkObject>().OwnerClientId}");
             }
-            MovePlayerServerRPC(players[i], spawnPos[i]);
         }
     }
 
@@ -145,6 +160,18 @@ public class Relay : MonoBehaviour
             changeTeamPanel.SetActive(true);
         }
     }
+    
+    [ServerRpc]
+    public GameObject SpawnPlayerServerRpc(ulong u)
+    {
+        SpawnPosition spawnPosition = spawnPointManager.GetPosition();
+        NetworkObject networkObject = NetworkManager.Singleton.SpawnManager.InstantiateAndSpawn(playerPrefab, u, true, true, position: spawnPosition.position, rotation: spawnPosition.rotation);
+        PlayerController playerController = networkObject.GetComponentInChildren<PlayerController>();
+        playerController.IsInLobby = true;
+        playerController.sittingPos.position = spawnPosition.position;
+        playerController.sittingPos.rotation = spawnPosition.rotation;
+        return playerController.gameObject;
+    }
 
     public void DisconnectRelay()
     {
@@ -159,12 +186,12 @@ public class Relay : MonoBehaviour
     
     public void StartGame()
     {
-        players = GameObject.FindGameObjectsWithTag("Player");
-
-        foreach (GameObject player in players)
-        {
-            player.GetComponent<PlayerController>().IsInLobby = false;
-        }
+        // players = GameObject.FindGameObjectsWithTag("Player");
+        //
+        // foreach (GameObject player in players)
+        // {
+        //     player.GetComponent<PlayerController>().IsInLobby = false;
+        // }
         
         NetworkManager.Singleton.SceneManager.LoadScene("PrototypeWarp", LoadSceneMode.Single);
     }
