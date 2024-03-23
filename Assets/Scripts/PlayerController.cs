@@ -46,10 +46,11 @@ public class PlayerController : NetworkBehaviour
     private Animator animator;
     
 
-    [Header("Network")]
+    [Header("Networking - Debug")]
     private bool isInLobby;
     public NetworkVariable<FixedString32Bytes> nickname = new NetworkVariable<FixedString32Bytes>("", NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
     public NetworkVariable<Team> team = new NetworkVariable<Team>(Team.Human, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+    public SpawnPosition sittingPos = new SpawnPosition();
 
     [SerializeField] private TMP_Text nameTag;
 
@@ -93,6 +94,13 @@ public class PlayerController : NetworkBehaviour
         
         ChangePlayerNickname(OwnerClientId.ToString());
         base.OnNetworkSpawn();
+    }
+
+    public override void OnNetworkDespawn()
+    {
+        SpawnPointManager spawnPointManager = FindObjectOfType<SpawnPointManager>();
+        spawnPointManager.EmptyPosition(sittingPos.position, sittingPos.rotation);
+        base.OnNetworkDespawn();
     }
 
     void CheckGround()
