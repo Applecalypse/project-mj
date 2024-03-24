@@ -3,15 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-// credits: https://youtu.be/LtayTVAZD2M?si=1dHW7IbU2KRxcH5V
-public class Interactable : MonoBehaviour
+public class CollisionDetection : MonoBehaviour
 {
     // used for calling a function
     public UnityEvent onInteract;
 
-    public void Interact()
+    private void OnTriggerEnter(Collider other)
     {
-        Debug.Log("Interacting with " + gameObject.name);
+        Debug.Log("Trigger detected with " + other.gameObject.name);
         onInteract?.Invoke();
     }
 }
