@@ -5,14 +5,24 @@ using Unity.Netcode;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class SpawnPointManager : NetworkBehaviour
+public class GameManager : NetworkBehaviour
 {
     private NetworkList<SpawnPosition> spawnPositions;
     private NetworkList<bool> spawnPositionsFlags;
-    [SerializeField] private NetworkObject playerPrefab;
+
+    public static GameManager Instance;
     
     void Awake()
     {
+        if (Instance != null)
+        {
+            Destroy(this);
+            return;
+        }
+        
+        Instance = this;
+        DontDestroyOnLoad(this);
+        
         //NetworkList can't be initialized at declaration time like NetworkVariable. It must be initialized in Awake instead.
         //If you do initialize at declaration, you will run into Memmory leak errors.
         spawnPositions = new NetworkList<SpawnPosition>();

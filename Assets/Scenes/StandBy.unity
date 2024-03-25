@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.059295986, g: 0.05277412, b: 0.101122074, a: 1}
+  m_IndirectSpecularColor: {r: 0.05927974, g: 0.052777596, b: 0.101110354, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1128,28 +1128,14 @@ GameObject:
   m_Component:
   - component: {fileID: 87118256}
   - component: {fileID: 87118257}
-  - component: {fileID: 87118255}
+  - component: {fileID: 87118258}
   m_Layer: 0
-  m_Name: SpawnLocationManager
+  m_Name: GameManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &87118255
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 87118254}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a3a9c7302899ca0438ee6a9abfd50466, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  playerPrefab: {fileID: 3306610084392409789, guid: 75f5d98c8e6db4963b153e0eb3ffca21,
-    type: 3}
 --- !u!4 &87118256
 Transform:
   m_ObjectHideFlags: 0
@@ -1186,6 +1172,18 @@ MonoBehaviour:
   SpawnWithObservers: 1
   DontDestroyWithOwner: 0
   AutoObjectParentSync: 1
+--- !u!114 &87118258
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 87118254}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a3a9c7302899ca0438ee6a9abfd50466, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &91749372
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -15585,7 +15583,7 @@ MonoBehaviour:
   players: []
   playerPrefab: {fileID: 3306610084392409789, guid: 75f5d98c8e6db4963b153e0eb3ffca21,
     type: 3}
-  spawnPointManager: {fileID: 87118255}
+  gameManager: {fileID: 87118258}
   mainPlayer: {fileID: 0}
 --- !u!4 &1855144830
 Transform:

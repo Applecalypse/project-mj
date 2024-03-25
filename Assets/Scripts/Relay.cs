@@ -29,10 +29,10 @@ public class Relay : MonoBehaviour
     [SerializeField] private Transform[] spawnPos;
     [SerializeField] private GameObject[] players;
     [SerializeField] private NetworkObject playerPrefab;
-    [SerializeField] private SpawnPointManager spawnPointManager;
 
-    [field: Header("For Debugging")]
+    [field: Header("For Debugging, dun touch")]
     [SerializeField] private GameObject mainPlayer;
+    [SerializeField] private GameManager gameManager;
 
     private async void Awake()
     {
@@ -46,28 +46,30 @@ public class Relay : MonoBehaviour
         renamePanel.SetActive(false);
         changeTeamPanel.SetActive(false);
         roomText.text = "";
-        // spawnPointManager = FindObjectOfType<SpawnPointManager>();
+        gameManager = FindObjectOfType<GameManager>();
     }
 
     private void OnClientDisconnect(ulong u)
     {
-        // players = GameObject.FindGameObjectsWithTag("Player");
-        // if (NetworkManager.Singleton.LocalClientId == u)
-        // {
-        //     Debug.Log("myself/host disconnected");
-        //     DisconnectRelay();
-        // }
-        // else
-        // {
-        //     Debug.Log("a client has disconnected");
-        // }
+        players = GameObject.FindGameObjectsWithTag("Player");
+        if (NetworkManager.Singleton.LocalClientId == u)
+        {
+            Debug.Log("myself/host disconnected");
+            DisconnectRelay();
+        }
+        else
+        {
+            Debug.Log("a client has disconnected");
+        }
     }
 
     private void OnClientJoin(ulong u)
     {
+        // This spawn code is ran on the host, not the server because
+        // if its run on the server it is super funky.
         if (NetworkManager.Singleton.IsHost)
         {
-            SpawnPosition spawnPosition = spawnPointManager.GetPosition();
+            SpawnPosition spawnPosition = gameManager.GetPosition();
             NetworkObject networkObject = NetworkManager.Singleton.SpawnManager.InstantiateAndSpawn(playerPrefab, u, true, false, position: spawnPosition.position, rotation: spawnPosition.rotation);
             PlayerController playerController = networkObject.GetComponentInChildren<PlayerController>();
             playerController.IsInLobby = true;
@@ -164,7 +166,7 @@ public class Relay : MonoBehaviour
     [ServerRpc]
     public GameObject SpawnPlayerServerRpc(ulong u)
     {
-        SpawnPosition spawnPosition = spawnPointManager.GetPosition();
+        SpawnPosition spawnPosition = gameManager.GetPosition();
         NetworkObject networkObject = NetworkManager.Singleton.SpawnManager.InstantiateAndSpawn(playerPrefab, u, true, true, position: spawnPosition.position, rotation: spawnPosition.rotation);
         PlayerController playerController = networkObject.GetComponentInChildren<PlayerController>();
         playerController.IsInLobby = true;
@@ -186,12 +188,13 @@ public class Relay : MonoBehaviour
     
     public void StartGame()
     {
-        // players = GameObject.FindGameObjectsWithTag("Player");
-        //
-        // foreach (GameObject player in players)
-        // {
-        //     player.GetComponent<PlayerController>().IsInLobby = false;
-        // }
+        players = GameObject.FindGameObjectsWithTag("Player");
+        
+        foreach (GameObject player in players)
+        {
+            player.GetComponent<PlayerController>().IsInLobby = false;
+            Debug.Log("Team: " + (mainPlayer.GetComponent<PlayerController>().team.Value == Team.Human ? "Human" : "Monster"));
+        }
         
         NetworkManager.Singleton.SceneManager.LoadScene("PrototypeWarp", LoadSceneMode.Single);
     }
