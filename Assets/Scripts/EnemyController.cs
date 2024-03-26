@@ -5,11 +5,15 @@ using TMPro;
 using Unity.Collections;
 using Unity.Netcode;
 using Unity.Services.Authentication;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class EnemyController : NetworkBehaviour
 {
+    [Header("Testing")]
+    [SerializeField] private bool enablePlayerControls = true;
+
     [Header("Camera")]
     [SerializeField] private Transform cameraTransform;
 
@@ -65,13 +69,18 @@ public class EnemyController : NetworkBehaviour
 
     void Update()
     {
+        if (!enablePlayerControls) { return; }
+        
         if (isInLobby) { return; }
         // Uncomment for real multiplayer stuff
         // if (!IsOwner) { return; }
 
         CheckGround();
         MakeMovement();
+
+        // TODO: delete this and apply the "FollowCamera" script instead
         CameraRotation();
+
         Jump();
         ApplyGravity();
     }
@@ -136,6 +145,13 @@ public class EnemyController : NetworkBehaviour
             float jumpVelocity = Mathf.Sqrt(jumpHeight * -3.0f * gravityValue);
             enemyVelocity.y += jumpVelocity;
         }
+    }
+
+    public void Stun()
+    {
+        Debug.Log("Stunned");
+        // animator.SetBool("isStunned", true);
+        // StartCoroutine(StunTimer());
     }
 
     void ApplyGravity()

@@ -10,6 +10,9 @@ using UnityEngine.InputSystem;
 
 public class PlayerController : NetworkBehaviour
 {
+    [Header("Testing")]
+    [SerializeField] private bool enablePlayerControls = true;
+
     [Header("Camera")]
     [SerializeField] private Transform cameraTransform;
 
@@ -23,7 +26,7 @@ public class PlayerController : NetworkBehaviour
     [Header("Player Physics")]
     private readonly float jumpHeight = 1.0f;
     private readonly float gravityValue = -9.81f;
-    private readonly float rotationSpeed = 5f;    
+    private readonly float rotationSpeed = 5f;
 
     [Header("Player Stamina")]
     private readonly float maxStamina = 50f;
@@ -66,13 +69,14 @@ public class PlayerController : NetworkBehaviour
 
     void Update()
     {
+        if (!enablePlayerControls) { return; }
+        
         if (isInLobby) { return; }
         // Uncomment for real multiplayer stuff
         // if (!IsOwner) { return; }
 
         CheckGround();
         MakeMovement();
-        CameraRotation();
         Jump();
         ApplyGravity();
     }
@@ -156,14 +160,6 @@ public class PlayerController : NetworkBehaviour
         // will move relative to the camera's orientation
         move = move.x * cameraTransform.right.normalized + move.z * cameraTransform.forward.normalized; 
         controller.Move(move * (Time.deltaTime * playerSpeed));
-    }
-
-    void CameraRotation()
-    {
-        // // Makes player face the direction of the camera
-        float targetAngle = cameraTransform.eulerAngles.y; // this is the angle of the camera around y-axis
-        Quaternion targetRotation = Quaternion.Euler(0, targetAngle,0); // Form quaternion representation of the target angle
-        transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
     }
 
     void Jump()

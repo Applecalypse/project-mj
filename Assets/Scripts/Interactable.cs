@@ -6,6 +6,7 @@ using UnityEngine.Events;
 // credits: https://youtu.be/LtayTVAZD2M?si=1dHW7IbU2KRxcH5V
 public class Interactable : MonoBehaviour
 {
+    // used for calling a function
     public UnityEvent onInteract;
 
     public void Interact()
