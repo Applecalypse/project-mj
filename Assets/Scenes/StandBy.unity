@@ -15583,6 +15583,7 @@ MonoBehaviour:
   players: []
   playerPrefab: {fileID: 3306610084392409789, guid: 75f5d98c8e6db4963b153e0eb3ffca21,
     type: 3}
+  gameManager: {fileID: 87118258}
   mainPlayer: {fileID: 0}
   gameManager: {fileID: 87118258}
 --- !u!4 &1855144830
@@ -16978,3 +16979,5 @@ SceneRoots:
   - {fileID: 1843047087}
   - {fileID: 247284753}
   - {fileID: 1855144830}
+  - {fileID: 1710828141}
+  - {fileID: 87118256}
