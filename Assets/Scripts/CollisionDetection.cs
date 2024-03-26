@@ -3,14 +3,17 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
+// UNUSED
+// Will keep this here for now
 public class CollisionDetection : MonoBehaviour
 {
-    // used for calling a function
-    public UnityEvent onInteract;
+    [Header("Functions")]
+    [SerializeField] 
+    private UnityEvent onCollisionEnterFunction;
 
-    private void OnTriggerEnter(Collider other)
+    private void OnCollisionEnter(Collision other)
     {
-        Debug.Log("Trigger detected with " + other.gameObject.name);
-        onInteract?.Invoke();
+        Debug.Log("Collision detected with " + other.gameObject.name);
+        onCollisionEnterFunction?.Invoke();
     }
 }

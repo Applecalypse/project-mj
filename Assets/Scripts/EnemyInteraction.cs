@@ -5,6 +5,9 @@ using UnityEngine.InputSystem;
 
 public class EnemyInteraction : MonoBehaviour
 {
+    [Header("Testing")]
+    [SerializeField] private bool enablePlayerControls = true;
+
     [Header("Camera")]
     [SerializeField] private Transform cameraTransform;
     private readonly float interactionDistance = 3f;
@@ -39,6 +42,8 @@ public class EnemyInteraction : MonoBehaviour
     
     void Interact()
     {
+        if (!enablePlayerControls) { return; }
+        
         if (!interactAction.triggered) { return; }
         Debug.Log("Interacting");
 

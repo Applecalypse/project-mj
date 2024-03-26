@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -10,6 +11,9 @@ using UnityEngine.InputSystem;
 // PickUp - https://youtu.be/8kKLUsn7tcg?si=CMy838TxCqT5vdYy
 public class PlayerInteraction : MonoBehaviour
 {
+    [Header("Testing")]
+    [SerializeField] private bool enablePlayerControls = true;
+
     [Header("Camera")]
     [SerializeField] private Transform cameraTransform;
     private readonly float interactionDistance = 3f;
@@ -22,16 +26,26 @@ public class PlayerInteraction : MonoBehaviour
     private GameObject heldItem = null;
     [SerializeField] private Transform handLocation;
 
+    [Header("Camera Flash")]
+    [SerializeField] private GameObject cameraFlashObject;
+    // private Collider cameraFlashCollider;
+    private CameraFlash cameraFlash;
+
     private void Start()
     {
         playerInput = GetComponent<PlayerInput>();
         interactAction = playerInput.actions["Interact"];
         dropAction = playerInput.actions["Drop"];
         shootAction = playerInput.actions["Shoot"];
+
+        // cameraFlashCollider = cameraFlashObject.GetComponent<Collider>();
+        cameraFlash = cameraFlashObject.GetComponent<CameraFlash>();
     }
 
     void Update()
     {
+        if (!enablePlayerControls) { return; }
+        
         Interact();
         Drop();
         Shoot();
@@ -80,7 +94,7 @@ public class PlayerInteraction : MonoBehaviour
         }
         else
         {
-            CameraFlash();
+            DefaultAction();
         }
     }
 
@@ -98,8 +112,11 @@ public class PlayerInteraction : MonoBehaviour
     }
 
     
-    void CameraFlash()
+    void DefaultAction()
     {
-        Debug.Log("Camera flash");
+        bool flashSuccessful = cameraFlash.Flash();
+
+        if (flashSuccessful) { Debug.Log("Player Interaction: Flash Hit"); }
+        else { Debug.Log("Player Interaction: No target in range"); }
     }
 }

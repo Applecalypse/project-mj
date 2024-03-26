@@ -13,7 +13,11 @@ public class Throwable : MonoBehaviour
     private readonly float upwardThrowForce = 5f;
 
     [Header("Item Collision")]
+    // this should be on when you want any effects to take place
     private bool collisionEnabled = false;
+
+    [Header("Item Stats")]
+    [SerializeField] private int damage = 0;
 
     void Start()
     {
@@ -21,10 +25,10 @@ public class Throwable : MonoBehaviour
         col = GetComponent<Collider>();
     }
 
-    void Update()
-    {
+    // void Update()
+    // {
         
-    }
+    // }
 
     public void Throw(Transform camera, Transform hand)
     {
@@ -32,7 +36,6 @@ public class Throwable : MonoBehaviour
         rb.transform.parent = null;
         rb.useGravity = true;
         col.isTrigger = false;
-        collisionEnabled = true;
 
         // default direction is the direction that the camera is facing
         Vector3 throwDirection = camera.forward;
@@ -45,6 +48,8 @@ public class Throwable : MonoBehaviour
 
         Vector3 throwForce = (throwDirection * forwardThrowForce) + (camera.transform.up * upwardThrowForce);
         rb.AddForce(throwForce, ForceMode.Impulse);
+
+        collisionEnabled = true;
     }
 
     void OnCollisionEnter(Collision other)
@@ -52,11 +57,12 @@ public class Throwable : MonoBehaviour
         if (!collisionEnabled) { return; }
         if (other.gameObject.CompareTag("Enemy"))
         {
-            Debug.Log("Hit the enemy");
-            // other.gameObject.GetComponent<Enemy>().TakeDamage(10);
+            Debug.Log("Throwable: Collidded with Enemy");
+            other.gameObject.GetComponent<HealthController>().TakeDamage(damage);
+            
         }
-        else { collisionEnabled = false; Debug.Log("Hit something else"); }
+        else { collisionEnabled = false; Debug.Log("Throwable: Collided with something else"); }
 
-        Destroy(gameObject, 1f);
+        Destroy(gameObject);
     }
 }
