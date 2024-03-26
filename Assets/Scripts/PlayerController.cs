@@ -42,17 +42,15 @@ public class PlayerController : NetworkBehaviour
     [Header("Player Model")]
     private Transform feet;
     private bool isGrounded;
-
+    [SerializeField] private TMP_Text nameTag;
     private Animator animator;
     
 
-    [Header("Network")]
+    [Header("Networking - Debug")]
     private bool isInLobby;
     public NetworkVariable<FixedString32Bytes> nickname = new NetworkVariable<FixedString32Bytes>("", NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
     public NetworkVariable<Team> team = new NetworkVariable<Team>(Team.Human, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
-
-    [SerializeField] private TMP_Text nameTag;
-
+    public SpawnPosition sittingPos = new SpawnPosition();
     
     private void Start()
     {
@@ -93,6 +91,13 @@ public class PlayerController : NetworkBehaviour
         
         ChangePlayerNickname(OwnerClientId.ToString());
         base.OnNetworkSpawn();
+    }
+
+    public override void OnNetworkDespawn()
+    {
+        GameManager gameManager = FindObjectOfType<GameManager>();
+        gameManager.EmptyPosition(sittingPos.position, sittingPos.rotation);
+        base.OnNetworkDespawn();
     }
 
     void CheckGround()

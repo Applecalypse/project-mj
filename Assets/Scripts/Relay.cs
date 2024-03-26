@@ -28,7 +28,11 @@ public class Relay : MonoBehaviour
     [SerializeField] private TMP_Text roomText;
     [SerializeField] private Transform[] spawnPos;
     [SerializeField] private GameObject[] players;
+    [SerializeField] private NetworkObject playerPrefab;
+
+    [field: Header("For Debugging, dun touch")]
     [SerializeField] private GameObject mainPlayer;
+    [SerializeField] private GameManager gameManager;
 
     private async void Awake()
     {
@@ -42,6 +46,7 @@ public class Relay : MonoBehaviour
         renamePanel.SetActive(false);
         changeTeamPanel.SetActive(false);
         roomText.text = "";
+        gameManager = FindObjectOfType<GameManager>();
     }
 
     private void OnClientDisconnect(ulong u)
@@ -60,17 +65,29 @@ public class Relay : MonoBehaviour
 
     private void OnClientJoin(ulong u)
     {
-        players = GameObject.FindGameObjectsWithTag("Player");
-        for (int i = 0; i < players.Length; i++)
+        // This spawn code is ran on the host, not the server because
+        // if its run on the server it is super funky.
+        if (NetworkManager.Singleton.IsHost)
         {
-            if (players[i].GetComponentInParent<NetworkObject>().IsLocalPlayer)
+            SpawnPosition spawnPosition = gameManager.GetPosition();
+            NetworkObject networkObject = NetworkManager.Singleton.SpawnManager.InstantiateAndSpawn(playerPrefab, u, true, false, position: spawnPosition.position, rotation: spawnPosition.rotation);
+            PlayerController playerController = networkObject.GetComponentInChildren<PlayerController>();
+            playerController.IsInLobby = true;
+            playerController.sittingPos.position = spawnPosition.position;
+            playerController.sittingPos.rotation = spawnPosition.rotation;
+        }
+
+        players = GameObject.FindGameObjectsWithTag("Player");
+        Debug.Log(players.Length);
+        foreach (GameObject player in players)
+        {
+            if (player.GetComponentInParent<NetworkObject>().IsOwner)
             {
-                mainPlayer = players[i];
+                mainPlayer = player.gameObject;
                 changeTeamText.text = "Team: " +
                                       (mainPlayer.GetComponent<PlayerController>().team.Value == Team.Human ? "Human" : "Monster");
-                Debug.Log($"This is my player: {players[i].GetComponentInParent<NetworkObject>().OwnerClientId}");
+                Debug.Log($"This is my player: {player.GetComponentInParent<NetworkObject>().OwnerClientId}");
             }
-            MovePlayerServerRPC(players[i], spawnPos[i]);
         }
     }
 
@@ -145,6 +162,18 @@ public class Relay : MonoBehaviour
             changeTeamPanel.SetActive(true);
         }
     }
+    
+    [ServerRpc]
+    public GameObject SpawnPlayerServerRpc(ulong u)
+    {
+        SpawnPosition spawnPosition = gameManager.GetPosition();
+        NetworkObject networkObject = NetworkManager.Singleton.SpawnManager.InstantiateAndSpawn(playerPrefab, u, true, true, position: spawnPosition.position, rotation: spawnPosition.rotation);
+        PlayerController playerController = networkObject.GetComponentInChildren<PlayerController>();
+        playerController.IsInLobby = true;
+        playerController.sittingPos.position = spawnPosition.position;
+        playerController.sittingPos.rotation = spawnPosition.rotation;
+        return playerController.gameObject;
+    }
 
     public void DisconnectRelay()
     {
@@ -160,10 +189,11 @@ public class Relay : MonoBehaviour
     public void StartGame()
     {
         players = GameObject.FindGameObjectsWithTag("Player");
-
+        
         foreach (GameObject player in players)
         {
             player.GetComponent<PlayerController>().IsInLobby = false;
+            Debug.Log("Team: " + (mainPlayer.GetComponent<PlayerController>().team.Value == Team.Human ? "Human" : "Monster"));
         }
         
         NetworkManager.Singleton.SceneManager.LoadScene("PrototypeWarp", LoadSceneMode.Single);

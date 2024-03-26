@@ -197,7 +197,7 @@ GameObject:
   - component: {fileID: 3306610084392409789}
   m_Layer: 0
   m_Name: PlayerWithCamera
-  m_TagString: Player
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -939,6 +939,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a0a72f81aace4d7f83e53eb248f8660, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  cameraTransform: {fileID: 651192389867081491}
   playerSpeed: 5
   nickname:
     m_InternalValue:
@@ -977,7 +978,9 @@ MonoBehaviour:
         byte0029: 0
   team:
     m_InternalValue: 0
-  cameraTransform: {fileID: 651192389867081491}
+  sittingPos:
+    position: {x: 0, y: 0, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 0}
   nameTag: {fileID: 7131185321167561746}
 --- !u!114 &1771223874525122018
 MonoBehaviour:
