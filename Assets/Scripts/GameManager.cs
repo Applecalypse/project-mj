@@ -9,6 +9,7 @@ public class GameManager : NetworkBehaviour
 {
     private NetworkList<SpawnPosition> spawnPositions;
     private NetworkList<bool> spawnPositionsFlags;
+    public Dictionary<ulong, Team> uidToTeam;
 
     public static GameManager Instance;
     
@@ -27,6 +28,7 @@ public class GameManager : NetworkBehaviour
         //If you do initialize at declaration, you will run into Memmory leak errors.
         spawnPositions = new NetworkList<SpawnPosition>();
         spawnPositionsFlags = new NetworkList<bool>();
+        uidToTeam = new Dictionary<ulong, Team>();
     }
 
     public override void OnNetworkSpawn()
