@@ -89,6 +89,8 @@ public class Relay : MonoBehaviour
                 Debug.Log($"This is my player: {player.GetComponentInParent<NetworkObject>().OwnerClientId}");
             }
         }
+        GameManager.Instance.uidToTeam.Add(u, Team.Human);
+        Debug.Log(GameManager.Instance.uidToTeam);
     }
 
     //TODO: could make this client authoritative
@@ -196,7 +198,7 @@ public class Relay : MonoBehaviour
             Debug.Log("Team: " + (mainPlayer.GetComponent<PlayerController>().team.Value == Team.Human ? "Human" : "Monster"));
         }
         
-        NetworkManager.Singleton.SceneManager.LoadScene("PrototypeWarp", LoadSceneMode.Single);
+        NetworkManager.Singleton.SceneManager.LoadScene("PrototypeMap", LoadSceneMode.Single);
     }
 
     public void Rename()
@@ -208,6 +210,10 @@ public class Relay : MonoBehaviour
     {
         mainPlayer.GetComponent<PlayerController>().ChangePlayerTeam();
         changeTeamText.text = "Team: " + (mainPlayer.GetComponent<PlayerController>().team.Value == Team.Human ? "Human" : "Monster");
+        if(GameManager.Instance.uidToTeam.ContainsKey(mainPlayer.GetComponentInParent<NetworkObject>().OwnerClientId)){
+            GameManager.Instance.uidToTeam[mainPlayer.GetComponentInParent<NetworkObject>().OwnerClientId] = (mainPlayer.GetComponent<PlayerController>().team.Value == Team.Human ? Team.Human : Team.Monster);
+        }
+        Debug.Log(GameManager.Instance.uidToTeam);
     }
 
     private async Task<string> StartHostWithRelay(int maxPlayer = 5)
