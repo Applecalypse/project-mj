@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using Unity.VisualScripting;
 using UnityEngine;
+using Unity.Netcode;
 using UnityEngine.InputSystem;
 
 // credits: 
 // Interaction - https://youtu.be/LtayTVAZD2M?si=1dHW7IbU2KRxcH5V
 // Obtainable - https://youtu.be/2IhzPTS4av4?si=AhXazq9DUSgjoH5H
 // PickUp - https://youtu.be/8kKLUsn7tcg?si=CMy838TxCqT5vdYy
-public class PlayerInteraction : MonoBehaviour
+public class PlayerInteraction : NetworkBehaviour
 {
     [Header("Testing")]
     [SerializeField] private bool enablePlayerControls = true;
@@ -54,6 +55,16 @@ public class PlayerInteraction : MonoBehaviour
         Shoot();
     }
 
+    public override void OnNetworkSpawn()
+    {
+        if (!IsOwner)
+        {
+            enabled = false; 
+            return;
+        }
+        
+        base.OnNetworkSpawn();
+    }
     
     void Interact()
     {

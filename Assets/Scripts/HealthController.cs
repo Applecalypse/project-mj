@@ -3,33 +3,45 @@ using System.Collections.Generic;
 using UnityEngine;
 using Unity.Netcode;
 
-public class HealthController : MonoBehaviour
+public class HealthController : NetworkBehaviour
 {
     [Header("Health")]
     [SerializeField] private float maxHealth = 100;
-    [SerializeField] private float currentHealth;
 
+    [Header("Team")]
     // maybe can be used for checking Friendly fire
     [SerializeField] private Team myTeam;
 
-    private void Start()
+    [Header("Network")]
+    private NetworkVariable<float> currentHealth = new NetworkVariable<float>();
+
+    public override void OnNetworkSpawn()
     {
-        currentHealth = maxHealth;
+        if (!IsOwner)
+        {
+            enabled = false; 
+            return;
+        }
+        
+        currentHealth.Value = maxHealth;
+        base.OnNetworkSpawn();
+    }
 
-        // get team here
-        // myTeam = GetComponent<NetworkObject>().OwnerClientId == NetworkManager.Singleton.LocalClientId ? Team.Human : Team.Monster;
-
+    [ServerRpc]
+    public void TakeDamageServerRPC(float damage)
+    {
+        currentHealth.Value -= damage;
+        if (currentHealth.Value <= 0)
+        {
+            Debug.Log(transform.name + " is dead");
+            // Die();
+        }
     }
 
     public void TakeDamage(float damage)
     {
         Debug.Log(transform.name + ": taking damage = " + damage);
-        currentHealth -= damage;
-        if (currentHealth <= 0)
-        {
-            Debug.Log(transform.name + " is dead");
-            // Die();
-        }
+        TakeDamageServerRPC(damage);
     }
 
 }

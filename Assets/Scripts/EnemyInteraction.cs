@@ -1,9 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Unity.Netcode;
 using UnityEngine.InputSystem;
 
-public class EnemyInteraction : MonoBehaviour
+public class EnemyInteraction : NetworkBehaviour
 {
     [Header("Testing")]
     [SerializeField] private bool enablePlayerControls = true;
@@ -43,6 +44,17 @@ public class EnemyInteraction : MonoBehaviour
     {
         Interact();
         Attack();
+    }
+
+    public override void OnNetworkSpawn()
+    {
+        if (!IsOwner)
+        {
+            enabled = false; 
+            return;
+        }
+        
+        base.OnNetworkSpawn();
     }
 
     
