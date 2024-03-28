@@ -61,7 +61,7 @@ public class EnemyController : NetworkBehaviour
         playerInput = GetComponent<PlayerInput>();
         animator = GetComponentInParent<Animator>();
         moveAction = playerInput.actions["Move"];
-        // runAction = playerInput.actions["Run"];
+
         jumpAction = playerInput.actions["Jump"];
 
         feet = transform.Find("Feet");
@@ -120,10 +120,10 @@ public class EnemyController : NetworkBehaviour
         // Move
         Vector2 input2DVec = moveAction.ReadValue<Vector2>();
         Vector3 move = new Vector3(input2DVec.x, 0, input2DVec.y);
-        // bool isMoving = move.magnitude > 0.1f;
+        bool isMoving = move.magnitude > 0.1f;
 
         // set animator
-        // animator.SetBool("isMoving", isMoving);
+        animator.SetBool("isMoving", isMoving);
         
         // will move relative to the camera's orientation
         move = move.x * cameraTransform.right.normalized + move.z * cameraTransform.forward.normalized; 
