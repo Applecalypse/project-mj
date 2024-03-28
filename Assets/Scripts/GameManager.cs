@@ -10,6 +10,7 @@ public class GameManager : NetworkBehaviour
     public NetworkList<SpawnPosition> spawnPositions;
     public NetworkList<bool> spawnPositionsFlags;
     public Dictionary<ulong, Team> uidToTeam;
+    public NetworkVariable<int> keyItemCount = new NetworkVariable<int>(0);
 
     public static GameManager Instance;
     
@@ -29,6 +30,18 @@ public class GameManager : NetworkBehaviour
         spawnPositions = new NetworkList<SpawnPosition>();
         spawnPositionsFlags = new NetworkList<bool>();
         uidToTeam = new Dictionary<ulong, Team>();
+    }
+    
+    private void OnKeyCountChange(int oldKeyCount, int newKeyCount)
+    {
+        Debug.Log("Team has been changed");
+        keyItemCount.Value = newKeyCount;
+    }
+
+    public void increaseKeyCount()
+    {
+        keyItemCount.Value += 1;
+        Debug.Log(keyItemCount.Value);
     }
 
     public override void OnNetworkSpawn()

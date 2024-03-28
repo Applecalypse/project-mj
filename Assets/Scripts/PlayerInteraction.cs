@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -5,6 +6,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using Unity.Netcode;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Interactions;
 
 // credits: 
 // Interaction - https://youtu.be/LtayTVAZD2M?si=1dHW7IbU2KRxcH5V
@@ -21,7 +23,7 @@ public class PlayerInteraction : NetworkBehaviour
 
     [Header("Player Input")]
     private PlayerInput playerInput;
-    private InputAction interactAction, dropAction, shootAction;
+    private InputAction interactAction, prayAction, dropAction, shootAction;
 
     [Header("Item Holding")]
     private GameObject heldItem = null;
@@ -38,9 +40,35 @@ public class PlayerInteraction : NetworkBehaviour
     private void Start()
     {
         playerInput = GetComponent<PlayerInput>();
+        prayAction = playerInput.actions["Pray"];
         interactAction = playerInput.actions["Interact"];
         dropAction = playerInput.actions["Drop"];
         shootAction = playerInput.actions["Shoot"];
+        animator = GetComponentInParent<Animator>();
+        
+        prayAction.started += context =>
+        {
+            if (context.interaction is HoldInteraction)
+            {
+                Debug.Log("Start Praying");
+                animator.SetBool("isPraying", true);
+            }
+        };
+
+        prayAction.performed += context =>
+        {
+            if (context.interaction is HoldInteraction)
+            {
+                Pray();
+
+            }
+        };
+        
+        prayAction.canceled += context =>
+        {
+            Debug.Log("Stop Praying");
+            animator.SetBool("isPraying", false);
+        };
 
         cameraFlashCollider = cameraFlashObject.GetComponent<Collider>();
         cameraFlash = cameraFlashObject.GetComponent<CameraFlash>();
@@ -53,7 +81,20 @@ public class PlayerInteraction : NetworkBehaviour
         Interact();
         Drop();
         Shoot();
+        Vector3 rayOrigin = cameraTransform.position + (cameraTransform.forward * 1f);
+        Debug.DrawRay(rayOrigin, cameraTransform.forward * 5, Color.red, 100f);
     }
+
+    private void OnEnable()
+    {
+        prayAction.Enable();
+    }
+
+    private void OnDisable()
+    {
+        prayAction.Disable();
+    }
+
 
     public override void OnNetworkSpawn()
     {
@@ -96,6 +137,22 @@ public class PlayerInteraction : NetworkBehaviour
             targetObtainable.Obtain(handLocation);
             heldItem = targetObtainable.gameObject;
         }
+        
+       
+    }
+
+    void Pray()
+    {
+        RaycastHit hit;
+        Vector3 rayOrigin = cameraTransform.position + (cameraTransform.forward * 1f);
+        Physics.Raycast(rayOrigin, cameraTransform.forward, out hit, 5);
+        Debug.DrawRay(rayOrigin, cameraTransform.forward * 5, Color.red, 100f);
+        if ( hit.transform == null  ) { return; }
+        
+        Debug.Log("Pointing at " + hit.transform.gameObject.name);
+
+        Interactable targetInteractable = hit.transform.GetComponent<Interactable>();
+        if (targetInteractable != null && GameManager.Instance.keyItemCount.Value == 3) { targetInteractable.Interact(); return; }
     }
 
     void Shoot()

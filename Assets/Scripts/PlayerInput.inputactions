@@ -76,6 +76,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "Pray",
+                    "type": "Button",
+                    "id": "a2497e0c-59bf-450e-b6b0-26e806f1a61b",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -248,7 +257,7 @@
                     "name": "",
                     "id": "b9b5d24b-2c67-41e2-9f22-e774a33a9f32",
                     "path": "<Keyboard>/f",
-                    "interactions": "",
+                    "interactions": "Hold(duration=5)",
                     "processors": "",
                     "groups": "",
                     "action": "Interact",
@@ -285,6 +294,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "Drop",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "1224f8e6-b562-43dd-88ea-fb4faf137983",
+                    "path": "<Keyboard>/v",
+                    "interactions": "Hold(duration=3)",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Pray",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
