@@ -257,7 +257,7 @@
                     "name": "",
                     "id": "b9b5d24b-2c67-41e2-9f22-e774a33a9f32",
                     "path": "<Keyboard>/f",
-                    "interactions": "Hold(duration=5)",
+                    "interactions": "",
                     "processors": "",
                     "groups": "",
                     "action": "Interact",
