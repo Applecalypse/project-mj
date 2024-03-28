@@ -7,8 +7,9 @@ using UnityEngine;
 
 public class GameManager : NetworkBehaviour
 {
-    private NetworkList<SpawnPosition> spawnPositions;
-    private NetworkList<bool> spawnPositionsFlags;
+    public NetworkList<SpawnPosition> spawnPositions;
+    public NetworkList<bool> spawnPositionsFlags;
+    public Dictionary<ulong, Team> uidToTeam;
 
     public static GameManager Instance;
     
@@ -27,6 +28,7 @@ public class GameManager : NetworkBehaviour
         //If you do initialize at declaration, you will run into Memmory leak errors.
         spawnPositions = new NetworkList<SpawnPosition>();
         spawnPositionsFlags = new NetworkList<bool>();
+        uidToTeam = new Dictionary<ulong, Team>();
     }
 
     public override void OnNetworkSpawn()
@@ -37,6 +39,7 @@ public class GameManager : NetworkBehaviour
         {
             // Find all the spawnpoints in the lobby with the Tag "SpawnPointLobby"
             var transformsPosition = GameObject.FindGameObjectsWithTag("SpawnPointLobby");
+            Debug.Log("Found " + transformsPosition.Length + " spawnpoints");
             foreach (var transformPosition in transformsPosition)
             {
                 var spawnPositionObject = new SpawnPosition
@@ -56,7 +59,7 @@ public class GameManager : NetworkBehaviour
         {
             if (!spawnPositionsFlags[i])
             {
-                spawnPositionsFlags[i] = true;
+                ChangeFlagAtIndexServerRpc(i);
                 return spawnPositions[i];
             }
         }
@@ -64,6 +67,12 @@ public class GameManager : NetworkBehaviour
         // Returns empty of this if nothing is left (should not reach this condition)
         Debug.LogError("Reached a condition that should not have been reached");
         return new SpawnPosition();
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    private void ChangeFlagAtIndexServerRpc(int i)
+    {
+        spawnPositionsFlags[i] = true;
     }
 
     public bool EmptyPosition(Vector3 pos, Quaternion rot)

@@ -15,7 +15,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class Relay : MonoBehaviour
+public class Relay : NetworkBehaviour
 {
     [SerializeField] private GameObject networkPanel;
     [SerializeField] private GameObject shutdownPanel;
@@ -46,8 +46,102 @@ public class Relay : MonoBehaviour
         renamePanel.SetActive(false);
         changeTeamPanel.SetActive(false);
         roomText.text = "";
+    }
+
+    public override void OnNetworkSpawn()
+    {
+        base.OnNetworkSpawn();
         gameManager = FindObjectOfType<GameManager>();
     }
+    
+    /*
+     * Helping Functions
+     */
+
+    private GameObject FindMainPlayer(ulong playerId)
+    {
+        players = GameObject.FindGameObjectsWithTag("Player");
+        
+        foreach (GameObject player in players)
+        {
+            if (player.GetComponentInParent<NetworkObject>().OwnerClientId == playerId)
+            {
+                return player;
+            }
+        }
+
+        // player object if this owner dne
+        return null;
+    }
+    
+    /*
+     * Button functions
+     */
+    
+    public void StartGame()
+    {
+        players = GameObject.FindGameObjectsWithTag("Player");
+        
+        foreach (GameObject player in players)
+        {
+            player.GetComponent<PlayerController>().IsInLobby = false;
+            Debug.Log("Team: " + (mainPlayer.GetComponent<PlayerController>().team.Value == Team.Human ? "Human" : "Monster"));
+        }
+        
+        NetworkManager.Singleton.SceneManager.LoadScene("PrototypeMap", LoadSceneMode.Single);
+    }
+
+    public void Rename()
+    {
+        if (mainPlayer == null)
+        {
+            mainPlayer = FindMainPlayer(NetworkManager.Singleton.LocalClientId);
+            if (mainPlayer == null)
+            {
+                throw new NullReferenceException("No player found, null");
+            }
+        }
+        mainPlayer.GetComponent<PlayerController>().ChangePlayerNickname(nameInput.text);
+    }
+
+    public void ChangeTeam()
+    {
+        if (mainPlayer == null)
+        {
+            mainPlayer = FindMainPlayer(NetworkManager.Singleton.LocalClientId);
+            if (mainPlayer == null)
+            {
+                throw new NullReferenceException("No player found, null");
+            }
+        }
+        mainPlayer.GetComponent<PlayerController>().ChangePlayerTeam();
+        changeTeamText.text = "Team: " + (mainPlayer.GetComponent<PlayerController>().team.Value == Team.Human ? "Human" : "Monster");
+        if(GameManager.Instance.uidToTeam.ContainsKey(mainPlayer.GetComponentInParent<NetworkObject>().OwnerClientId)){
+            GameManager.Instance.uidToTeam[mainPlayer.GetComponentInParent<NetworkObject>().OwnerClientId] = (mainPlayer.GetComponent<PlayerController>().team.Value == Team.Human ? Team.Human : Team.Monster);
+        }
+        Debug.Log(GameManager.Instance.uidToTeam);
+    }
+    
+    /*
+     * ServerRpc
+     */
+    
+    //TODO: could make this client authoritative
+    [ServerRpc(RequireOwnership = false)]
+    private void SpawnPlayerServerRpc(ulong playerId, SpawnPosition spawnPosition) {
+        NetworkObject networkObject = NetworkManager.Singleton.SpawnManager.InstantiateAndSpawn(playerPrefab, playerId, true, true, position: spawnPosition.position, rotation: spawnPosition.rotation);
+        PlayerController playerController = networkObject.gameObject.GetComponentInChildren<PlayerController>();
+        playerController.IsInLobby = true;
+        playerController.sittingPos.position = spawnPosition.position;
+        playerController.sittingPos.rotation = spawnPosition.rotation;
+            
+        GameManager.Instance.uidToTeam.Add(playerId, Team.Human);
+        Debug.Log(GameManager.Instance.uidToTeam);
+    }
+    
+    /*
+     * Networking Callbacks
+     */
 
     private void OnClientDisconnect(ulong u)
     {
@@ -65,43 +159,18 @@ public class Relay : MonoBehaviour
 
     private void OnClientJoin(ulong u)
     {
-        // This spawn code is ran on the host, not the server because
-        // if its run on the server it is super funky.
-        if (NetworkManager.Singleton.IsHost)
+        if (NetworkManager.Singleton.LocalClientId == u)
         {
-            SpawnPosition spawnPosition = gameManager.GetPosition();
-            NetworkObject networkObject = NetworkManager.Singleton.SpawnManager.InstantiateAndSpawn(playerPrefab, u, true, false, position: spawnPosition.position, rotation: spawnPosition.rotation);
-            PlayerController playerController = networkObject.GetComponentInChildren<PlayerController>();
-            playerController.IsInLobby = true;
-            playerController.sittingPos.position = spawnPosition.position;
-            playerController.sittingPos.rotation = spawnPosition.rotation;
+            SpawnPlayerServerRpc(u, gameManager.GetPosition());
         }
 
-        players = GameObject.FindGameObjectsWithTag("Player");
-        Debug.Log(players.Length);
-        foreach (GameObject player in players)
-        {
-            if (player.GetComponentInParent<NetworkObject>().IsOwner)
-            {
-                mainPlayer = player.gameObject;
-                changeTeamText.text = "Team: " +
-                                      (mainPlayer.GetComponent<PlayerController>().team.Value == Team.Human ? "Human" : "Monster");
-                Debug.Log($"This is my player: {player.GetComponentInParent<NetworkObject>().OwnerClientId}");
-            }
-        }
+        // Always Team Human on join
+        changeTeamText.text = "Team: Human";
     }
-
-    //TODO: could make this client authoritative
-    [ServerRpc]
-    private void MovePlayerServerRPC(GameObject gameObject, Transform transform)
-    {
-        gameObject.GetComponent<PlayerController>().IsInLobby = true;
-        gameObject.GetComponent<CharacterController>().enabled = false;
-        gameObject.transform.position = transform.position;
-        gameObject.transform.rotation = transform.rotation;
-        gameObject.GetComponent<CharacterController>().enabled = true;
-    }
-
+    
+    /*
+     * Networking section (Relay related stuff)
+     */
 
     private static async Task Authenticate()
     {
@@ -127,6 +196,27 @@ public class Relay : MonoBehaviour
             // Notify the player with the proper error message
             Debug.LogException(ex);
         }
+    }
+
+    private async Task<string> StartHostWithRelay(int maxPlayer = 5)
+    {
+        Allocation allocation = await RelayService.Instance.CreateAllocationAsync(maxPlayer);
+
+        NetworkManager.Singleton.GetComponent<UnityTransport>().SetRelayServerData(new RelayServerData(allocation, "dtls"));
+
+        string joinCode = await RelayService.Instance.GetJoinCodeAsync(allocation.AllocationId);
+
+        return NetworkManager.Singleton.StartHost() ? joinCode : null;
+    }
+
+
+    private async Task<bool> StartClientWithRelay(string joinCode)
+    {
+        JoinAllocation joinAllocation = await RelayService.Instance.JoinAllocationAsync(joinCode);
+        
+        NetworkManager.Singleton.GetComponent<UnityTransport>().SetRelayServerData(new RelayServerData(joinAllocation, "dtls"));
+
+        return !string.IsNullOrEmpty(joinCode) && NetworkManager.Singleton.StartClient();
     }
     
     //TODO: Add error handling
@@ -162,18 +252,6 @@ public class Relay : MonoBehaviour
             changeTeamPanel.SetActive(true);
         }
     }
-    
-    [ServerRpc]
-    public GameObject SpawnPlayerServerRpc(ulong u)
-    {
-        SpawnPosition spawnPosition = gameManager.GetPosition();
-        NetworkObject networkObject = NetworkManager.Singleton.SpawnManager.InstantiateAndSpawn(playerPrefab, u, true, true, position: spawnPosition.position, rotation: spawnPosition.rotation);
-        PlayerController playerController = networkObject.GetComponentInChildren<PlayerController>();
-        playerController.IsInLobby = true;
-        playerController.sittingPos.position = spawnPosition.position;
-        playerController.sittingPos.rotation = spawnPosition.rotation;
-        return playerController.gameObject;
-    }
 
     public void DisconnectRelay()
     {
@@ -184,50 +262,5 @@ public class Relay : MonoBehaviour
         changeTeamPanel.SetActive(false);
         roomText.text = "";
         NetworkManager.Singleton.Shutdown();
-    }
-    
-    public void StartGame()
-    {
-        players = GameObject.FindGameObjectsWithTag("Player");
-        
-        foreach (GameObject player in players)
-        {
-            player.GetComponent<PlayerController>().IsInLobby = false;
-            Debug.Log("Team: " + (mainPlayer.GetComponent<PlayerController>().team.Value == Team.Human ? "Human" : "Monster"));
-        }
-        
-        NetworkManager.Singleton.SceneManager.LoadScene("PrototypeWarp", LoadSceneMode.Single);
-    }
-
-    public void Rename()
-    {
-        mainPlayer.GetComponent<PlayerController>().ChangePlayerNickname(nameInput.text);
-    }
-
-    public void ChangeTeam()
-    {
-        mainPlayer.GetComponent<PlayerController>().ChangePlayerTeam();
-        changeTeamText.text = "Team: " + (mainPlayer.GetComponent<PlayerController>().team.Value == Team.Human ? "Human" : "Monster");
-    }
-
-    private async Task<string> StartHostWithRelay(int maxPlayer = 5)
-    {
-        Allocation allocation = await RelayService.Instance.CreateAllocationAsync(maxPlayer);
-
-        NetworkManager.Singleton.GetComponent<UnityTransport>().SetRelayServerData(new RelayServerData(allocation, "dtls"));
-
-        string joinCode = await RelayService.Instance.GetJoinCodeAsync(allocation.AllocationId);
-
-        return NetworkManager.Singleton.StartHost() ? joinCode : null;
-    }
-
-
-    private async Task<bool> StartClientWithRelay(string joinCode)
-    {
-        JoinAllocation joinAllocation = await RelayService.Instance.JoinAllocationAsync(joinCode);
-        
-        NetworkManager.Singleton.GetComponent<UnityTransport>().SetRelayServerData(new RelayServerData(joinAllocation, "dtls"));
-
-        return !string.IsNullOrEmpty(joinCode) && NetworkManager.Singleton.StartClient();
     }
 }
