@@ -21,7 +21,7 @@ public class HealthController : MonoBehaviour
 
     }
 
-    public void TakeDamage(int damage)
+    public void TakeDamage(float damage)
     {
         Debug.Log(transform.name + ": taking damage = " + damage);
         currentHealth -= damage;

@@ -31,6 +31,9 @@ public class PlayerInteraction : MonoBehaviour
     // private Collider cameraFlashCollider;
     private CameraFlash cameraFlash;
 
+    [Header("Player Model")]
+    private Animator animator;
+
     private void Start()
     {
         playerInput = GetComponent<PlayerInput>();

@@ -26,7 +26,6 @@ public class PlayerController : NetworkBehaviour
     [Header("Player Physics")]
     private readonly float jumpHeight = 1.0f;
     private readonly float gravityValue = -9.81f;
-    private readonly float rotationSpeed = 5f;
 
     [Header("Player Stamina")]
     private readonly float maxStamina = 50f;

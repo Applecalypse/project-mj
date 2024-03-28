@@ -21,13 +21,14 @@ public class EnemyInteraction : MonoBehaviour
 
     [Header("Enemy Attack")]
     [SerializeField] private GameObject weapon;
-    private bool canAttack = false;
-    private readonly float attackCooldown = 5f;
+    private bool canAttack = true;
+    private readonly float attackCooldown = 0f;
 
     private void Start()
     {
         animator = GetComponent<Animator>();
         playerInput = GetComponent<PlayerInput>();
+        animator = GetComponentInParent<Animator>();
         interactAction = playerInput.actions["Interact"];
         attackAction = playerInput.actions["Attack"];
         canAttack = true;
@@ -43,7 +44,6 @@ public class EnemyInteraction : MonoBehaviour
     void Interact()
     {
         if (!enablePlayerControls) { return; }
-        
         if (!interactAction.triggered) { return; }
         Debug.Log("Interacting");
 
@@ -65,11 +65,10 @@ public class EnemyInteraction : MonoBehaviour
     {
         if (!attackAction.triggered) { return; }
         if (!canAttack) { return; }
-
+        Debug.Log("Attacking");
         canAttack = false;
-        weapon.SetActive(true);
-        // uncomment when we have an attacking animation
-        // animator.SetTrigger("Attack");
+        // weapon.SetActive(true);
+        animator.SetTrigger("Attacks");
         
         StartCoroutine(AttackCooldown());
     }
@@ -78,6 +77,6 @@ public class EnemyInteraction : MonoBehaviour
     {
         yield return new WaitForSeconds(attackCooldown);
         canAttack = true;
-        weapon.SetActive(false);
+        // weapon.SetActive(false);
     }
 }
