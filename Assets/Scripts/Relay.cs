@@ -80,6 +80,15 @@ public class Relay : NetworkBehaviour
     
     public void StartGame()
     {
+        if (mainPlayer == null)
+        {
+            mainPlayer = FindMainPlayer(NetworkManager.Singleton.LocalClientId);
+            if (mainPlayer == null)
+            {
+                throw new NullReferenceException("No player found, null");
+            }
+        }
+        
         players = GameObject.FindGameObjectsWithTag("Player");
         
         foreach (GameObject player in players)
