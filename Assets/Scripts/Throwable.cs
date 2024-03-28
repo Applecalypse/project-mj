@@ -12,17 +12,14 @@ public class Throwable : MonoBehaviour
     private readonly float forwardThrowForce = 10f;
     private readonly float upwardThrowForce = 0f;
 
-    [Header("Item Collision")]
-    // this should be on when you want any effects to take place
-    private bool collisionEnabled = false;
-
-    [Header("Item Stats")]
-    [SerializeField] private int damage = 0;
+    [Header("Damage")]
+    private Damagable damagable;
 
     void Start()
     {
         rb = GetComponent<Rigidbody>();
         col = GetComponent<Collider>();
+        damagable = GetComponent<Damagable>();
     }
 
     // void Update()
@@ -49,20 +46,6 @@ public class Throwable : MonoBehaviour
         Vector3 throwForce = (throwDirection * forwardThrowForce) + (camera.transform.up * upwardThrowForce);
         rb.AddForce(throwForce, ForceMode.Impulse);
 
-        collisionEnabled = true;
-    }
-
-    void OnCollisionEnter(Collision other)
-    {
-        if (!collisionEnabled) { return; }
-        if (other.gameObject.CompareTag("Enemy"))
-        {
-            Debug.Log("Throwable: Collidded with Enemy");
-            other.gameObject.GetComponent<HealthController>().TakeDamage(damage);
-            
-        }
-        else { collisionEnabled = false; Debug.Log("Throwable: Collided with something else"); }
-
-        Destroy(gameObject);
+        damagable.EnableCollision();
     }
 }

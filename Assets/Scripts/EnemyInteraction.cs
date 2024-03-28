@@ -22,13 +22,18 @@ public class EnemyInteraction : MonoBehaviour
     [Header("Enemy Attack")]
     [SerializeField] private GameObject weapon;
     private bool canAttack = true;
-    private readonly float attackCooldown = 0f;
+    private readonly float attackCooldown = 3f;
+
+    [Header("Damage")]
+    private Damagable damagable; // should be at weapon
 
     private void Start()
     {
         animator = GetComponent<Animator>();
         playerInput = GetComponent<PlayerInput>();
         animator = GetComponentInParent<Animator>();
+        damagable = weapon.GetComponent<Damagable>();
+
         interactAction = playerInput.actions["Interact"];
         attackAction = playerInput.actions["Attack"];
         canAttack = true;
@@ -65,9 +70,9 @@ public class EnemyInteraction : MonoBehaviour
     {
         if (!attackAction.triggered) { return; }
         if (!canAttack) { return; }
-        Debug.Log("Attacking");
         canAttack = false;
-        // weapon.SetActive(true);
+        
+        damagable.EnableCollision();
         animator.SetTrigger("Attacks");
         
         StartCoroutine(AttackCooldown());
@@ -77,6 +82,6 @@ public class EnemyInteraction : MonoBehaviour
     {
         yield return new WaitForSeconds(attackCooldown);
         canAttack = true;
-        // weapon.SetActive(false);
+        damagable.DisableCollision();
     }
 }
