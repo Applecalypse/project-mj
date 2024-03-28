@@ -4,6 +4,7 @@ using System.ComponentModel;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Interactions;
 
 // credits: 
 // Interaction - https://youtu.be/LtayTVAZD2M?si=1dHW7IbU2KRxcH5V
@@ -78,6 +79,18 @@ public class PlayerInteraction : MonoBehaviour
             targetObtainable.Obtain(handLocation);
             heldItem = targetObtainable.gameObject;
         }
+
+        interactAction.performed += context =>
+        {
+            if (context.interaction is HoldInteraction)
+            {
+                if (targetInteractable != null)
+                {
+                    targetInteractable.Interact();
+                }
+
+            }
+        };
     }
 
     void Shoot()
