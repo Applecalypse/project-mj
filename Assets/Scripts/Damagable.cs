@@ -1,28 +1,60 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 
 public class Damagable : MonoBehaviour
 {
+    [Header("Collision Detection")]
+    // private Rigidbody rb;
+    private Collider col;
+    private bool collisionEnabled = false;
+    [SerializeField] private Team teamToDamage;
+    private string teamToDamageString;
+
     [Header("Object Properties")]
     [SerializeField] private float damage = 0;
-    private bool collisionEnabled = false;
+    [SerializeField] private bool breakOnCollision = true;
+    [SerializeField] private bool onlyApplyDamageOnce = true;
 
-    void EnableCollision() { collisionEnabled = true; }
+    void Start()
+    {
+        // rb = GetComponent<Rigidbody>();
+        col = GetComponent<Collider>();
+        if (teamToDamage == Team.Human) { teamToDamageString = "Player"; }
+        else if (teamToDamage == Team.Monster) { teamToDamageString = "Enemy"; }
+        
+    }
 
-    void DisableCollision() { collisionEnabled = false; }
+    public void EnableCollision() { collisionEnabled = true; }
 
-    void OnCollisionEnter(Collision other)
+    public void DisableCollision() { collisionEnabled = false; }
+
+    void HandleCollision(GameObject other)
     {
         if (!collisionEnabled) { return; }
-        if (other.gameObject.CompareTag("Enemy"))
+        if (other.gameObject.CompareTag(teamToDamageString))
         {
-            Debug.Log("Throwable: Collidded with Enemy");
+            Debug.Log("Damagable: Collided with " + teamToDamageString);
             other.gameObject.GetComponent<HealthController>().TakeDamage(damage);
             
         }
-        else { collisionEnabled = false; Debug.Log("Throwable: Collided with something else"); }
 
-        Destroy(gameObject);
+        if (onlyApplyDamageOnce) { DisableCollision(); }
+        if (breakOnCollision) { Destroy(gameObject); }
+    }
+
+    void OnCollisionEnter(Collision other)
+    {
+        if (col.isTrigger) { return; }
+        Debug.Log("Damagable: Collision Detected " + other.gameObject.name);
+        HandleCollision(other.gameObject);
+    }
+
+    void OnTriggerEnter(Collider other)
+    {
+        if (!col.isTrigger) { return; }
+        Debug.Log("Damagable: Trigger Detected " + other.gameObject.name);
+        HandleCollision(other.gameObject);
     }
 }

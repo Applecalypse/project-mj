@@ -2,9 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using Unity.Netcode;
 
 // credits: https://www.youtube.com/watch?v=1h2yStilBWU
-public class TimedSpawn : MonoBehaviour
+public class TimedSpawn : NetworkBehaviour
 {
     [Header("Spawner Settings")]
     [SerializeField] private GameObject prefabToSpawn;
@@ -18,15 +19,22 @@ public class TimedSpawn : MonoBehaviour
     private readonly float forcedSpawnInterval = 50f;
     private float timeSinceLastSpawn = 0f;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        InvokeRepeating("SpawnObject", 5, spawnInterval);
-    }
-
     void Update()
     {
         timeSinceLastSpawn += Time.deltaTime;
+    }
+
+    public override void OnNetworkSpawn()
+    {
+        if (!IsServer)
+        {
+            enabled = false;
+            return;
+        }
+
+        InvokeRepeating("SpawnObject", 5, spawnInterval);
+
+        // base.OnNetworkSpawn();
     }
 
     void SpawnObject()
@@ -43,7 +51,8 @@ public class TimedSpawn : MonoBehaviour
             spawnPosition.y = transform.position.y + 0.5f;
 
             // instantiate the prefab as a child of the spawner
-            Instantiate(prefabToSpawn, spawnPosition, Quaternion.identity, gameObject.transform);
+            GameObject spawnedObj = Instantiate(prefabToSpawn, spawnPosition, Quaternion.identity, gameObject.transform);
+            spawnedObj.GetComponent<NetworkObject>().Spawn(true);
             timeSinceLastSpawn = 0f;
         }
     }

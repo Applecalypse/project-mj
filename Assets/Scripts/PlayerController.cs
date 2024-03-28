@@ -159,7 +159,11 @@ public class PlayerController : NetworkBehaviour
         
         
         // will move relative to the camera's orientation
-        move = move.x * cameraTransform.right.normalized + move.z * cameraTransform.forward.normalized; 
+        Vector3 xMovement = move.x * cameraTransform.right.normalized;
+        Vector3 zMovement = move.z * cameraTransform.forward.normalized;
+        xMovement.y = 0;
+        zMovement.y = 0;
+        move = xMovement + zMovement;
         controller.Move(move * (Time.deltaTime * playerSpeed));
     }
 

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using Unity.VisualScripting;
 using UnityEngine;
+using Unity.Netcode;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Interactions;
 
@@ -11,7 +12,7 @@ using UnityEngine.InputSystem.Interactions;
 // Interaction - https://youtu.be/LtayTVAZD2M?si=1dHW7IbU2KRxcH5V
 // Obtainable - https://youtu.be/2IhzPTS4av4?si=AhXazq9DUSgjoH5H
 // PickUp - https://youtu.be/8kKLUsn7tcg?si=CMy838TxCqT5vdYy
-public class PlayerInteraction : MonoBehaviour
+public class PlayerInteraction : NetworkBehaviour
 {
     [Header("Testing")]
     [SerializeField] private bool enablePlayerControls = true;
@@ -30,8 +31,8 @@ public class PlayerInteraction : MonoBehaviour
 
     [Header("Camera Flash")]
     [SerializeField] private GameObject cameraFlashObject;
-    // private Collider cameraFlashCollider;
     private CameraFlash cameraFlash;
+    private Collider cameraFlashCollider;
 
     [Header("Player Model")]
     private Animator animator;
@@ -69,7 +70,7 @@ public class PlayerInteraction : MonoBehaviour
             animator.SetBool("isPraying", false);
         };
 
-        // cameraFlashCollider = cameraFlashObject.GetComponent<Collider>();
+        cameraFlashCollider = cameraFlashObject.GetComponent<Collider>();
         cameraFlash = cameraFlashObject.GetComponent<CameraFlash>();
     }
 
@@ -95,16 +96,34 @@ public class PlayerInteraction : MonoBehaviour
     }
 
 
+    public override void OnNetworkSpawn()
+    {
+        if (!IsOwner)
+        {
+            enabled = false; 
+            return;
+        }
+        
+        base.OnNetworkSpawn();
+    }
+    
     void Interact()
     {
         if (!interactAction.triggered) { return; }
         Debug.Log("Interacting");
+
+        // disable the camera flash collider
+        cameraFlashCollider.enabled = false;
 
         // Perform a raycast
         RaycastHit hit;
         Vector3 rayOrigin = cameraTransform.position + (cameraTransform.forward * 0f);
         Physics.Raycast(rayOrigin, cameraTransform.forward, out hit, interactionDistance);
         // Debug.DrawRay(rayOrigin, cameraTransform.forward * interactionDistance, Color.red, 100f);
+
+        // enable back the camera flash collider
+        cameraFlashCollider.enabled = true;
+        
         if ( hit.transform == null  ) { return; }
         
         Debug.Log("Pointing at " + hit.transform.gameObject.name);
@@ -139,7 +158,7 @@ public class PlayerInteraction : MonoBehaviour
     void Shoot()
     {
         if (!shootAction.triggered) { return; }
-        Debug.Log("Shooting");
+        // Debug.Log("Shooting");
 
         if (heldItem != null) // if holding an item
         {
@@ -160,7 +179,7 @@ public class PlayerInteraction : MonoBehaviour
     void Drop()
     {
         if (!dropAction.triggered) { return; }
-        Debug.Log("Dropping");
+        // Debug.Log("Dropping");
 
         if (heldItem != null)
         {
@@ -175,7 +194,7 @@ public class PlayerInteraction : MonoBehaviour
     {
         bool flashSuccessful = cameraFlash.Flash();
 
-        if (flashSuccessful) { Debug.Log("Player Interaction: Flash Hit"); }
-        else { Debug.Log("Player Interaction: No target in range"); }
+        // if (flashSuccessful) { Debug.Log("Player Interaction: Flash Hit"); }
+        // else { Debug.Log("Player Interaction: No target in range"); }
     }
 }
