@@ -116,7 +116,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 1572456668
+  GlobalObjectIdHash: 912098900
   InScenePlacedSourceGlobalObjectIdHash: 912098900
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
@@ -278,6 +278,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 4705888595056127719}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: d8ba814298580704da2ec5c8fbe2b493,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4769239836475501315}
   m_SourcePrefab: {fileID: 100100000, guid: d8ba814298580704da2ec5c8fbe2b493, type: 3}
 --- !u!1 &2836886170923625110 stripped
 GameObject:
@@ -449,6 +453,21 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 1, z: 0}
+--- !u!114 &4769239836475501315
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2836886170923625110}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e448ca81f56214bf098611c682f6eb44, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealth: 100
+  currentHealth: 0
+  myTeam: 1
 --- !u!4 &3176573058126098476 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: d8ba814298580704da2ec5c8fbe2b493,

@@ -9,8 +9,8 @@ public class Throwable : MonoBehaviour
     [Header("Throwing")]
     private Rigidbody rb;
     private Collider col;
-    private readonly float forwardThrowForce = 20f;
-    private readonly float upwardThrowForce = 5f;
+    private readonly float forwardThrowForce = 10f;
+    private readonly float upwardThrowForce = 0f;
 
     [Header("Item Collision")]
     // this should be on when you want any effects to take place
