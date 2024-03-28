@@ -69,9 +69,10 @@ public class PlayerController : NetworkBehaviour
 
     void Update()
     {
+        if (isInLobby.Value) { return; }
+        
         if (!enablePlayerControls) { return; }
         
-        if (isInLobby.Value) { return; }
         // Uncomment for real multiplayer stuff
         // if (!IsOwner) { return; }
 
