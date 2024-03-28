@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -21,7 +22,7 @@ public class PlayerInteraction : MonoBehaviour
 
     [Header("Player Input")]
     private PlayerInput playerInput;
-    private InputAction interactAction, dropAction, shootAction;
+    private InputAction interactAction, prayAction, dropAction, shootAction;
 
     [Header("Item Holding")]
     private GameObject heldItem = null;
@@ -38,9 +39,35 @@ public class PlayerInteraction : MonoBehaviour
     private void Start()
     {
         playerInput = GetComponent<PlayerInput>();
+        prayAction = playerInput.actions["Pray"];
         interactAction = playerInput.actions["Interact"];
         dropAction = playerInput.actions["Drop"];
         shootAction = playerInput.actions["Shoot"];
+        animator = GetComponentInParent<Animator>();
+        
+        prayAction.started += context =>
+        {
+            if (context.interaction is HoldInteraction)
+            {
+                Debug.Log("Start Praying");
+                animator.SetBool("isPraying", true);
+            }
+        };
+
+        prayAction.performed += context =>
+        {
+            if (context.interaction is HoldInteraction)
+            {
+                Pray();
+
+            }
+        };
+        
+        prayAction.canceled += context =>
+        {
+            Debug.Log("Stop Praying");
+            animator.SetBool("isPraying", false);
+        };
 
         // cameraFlashCollider = cameraFlashObject.GetComponent<Collider>();
         cameraFlash = cameraFlashObject.GetComponent<CameraFlash>();
@@ -53,9 +80,21 @@ public class PlayerInteraction : MonoBehaviour
         Interact();
         Drop();
         Shoot();
+        Vector3 rayOrigin = cameraTransform.position + (cameraTransform.forward * 1f);
+        Debug.DrawRay(rayOrigin, cameraTransform.forward * 5, Color.red, 100f);
     }
 
-    
+    private void OnEnable()
+    {
+        prayAction.Enable();
+    }
+
+    private void OnDisable()
+    {
+        prayAction.Disable();
+    }
+
+
     void Interact()
     {
         if (!interactAction.triggered) { return; }
@@ -79,18 +118,22 @@ public class PlayerInteraction : MonoBehaviour
             targetObtainable.Obtain(handLocation);
             heldItem = targetObtainable.gameObject;
         }
+        
+       
+    }
 
-        interactAction.performed += context =>
-        {
-            if (context.interaction is HoldInteraction)
-            {
-                if (targetInteractable != null)
-                {
-                    targetInteractable.Interact();
-                }
+    void Pray()
+    {
+        RaycastHit hit;
+        Vector3 rayOrigin = cameraTransform.position + (cameraTransform.forward * 1f);
+        Physics.Raycast(rayOrigin, cameraTransform.forward, out hit, 5);
+        Debug.DrawRay(rayOrigin, cameraTransform.forward * 5, Color.red, 100f);
+        if ( hit.transform == null  ) { return; }
+        
+        Debug.Log("Pointing at " + hit.transform.gameObject.name);
 
-            }
-        };
+        Interactable targetInteractable = hit.transform.GetComponent<Interactable>();
+        if (targetInteractable != null && GameManager.Instance.keyItemCount.Value == 3) { targetInteractable.Interact(); return; }
     }
 
     void Shoot()
