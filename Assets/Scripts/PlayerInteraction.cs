@@ -28,8 +28,8 @@ public class PlayerInteraction : MonoBehaviour
 
     [Header("Camera Flash")]
     [SerializeField] private GameObject cameraFlashObject;
-    // private Collider cameraFlashCollider;
     private CameraFlash cameraFlash;
+    private Collider cameraFlashCollider;
 
     [Header("Player Model")]
     private Animator animator;
@@ -41,7 +41,7 @@ public class PlayerInteraction : MonoBehaviour
         dropAction = playerInput.actions["Drop"];
         shootAction = playerInput.actions["Shoot"];
 
-        // cameraFlashCollider = cameraFlashObject.GetComponent<Collider>();
+        cameraFlashCollider = cameraFlashObject.GetComponent<Collider>();
         cameraFlash = cameraFlashObject.GetComponent<CameraFlash>();
     }
 
@@ -60,11 +60,18 @@ public class PlayerInteraction : MonoBehaviour
         if (!interactAction.triggered) { return; }
         Debug.Log("Interacting");
 
+        // disable the camera flash collider
+        cameraFlashCollider.enabled = false;
+
         // Perform a raycast
         RaycastHit hit;
         Vector3 rayOrigin = cameraTransform.position + (cameraTransform.forward * 0f);
         Physics.Raycast(rayOrigin, cameraTransform.forward, out hit, interactionDistance);
         // Debug.DrawRay(rayOrigin, cameraTransform.forward * interactionDistance, Color.red, 100f);
+
+        // enable back the camera flash collider
+        cameraFlashCollider.enabled = true;
+        
         if ( hit.transform == null  ) { return; }
         
         Debug.Log("Pointing at " + hit.transform.gameObject.name);
@@ -83,7 +90,7 @@ public class PlayerInteraction : MonoBehaviour
     void Shoot()
     {
         if (!shootAction.triggered) { return; }
-        Debug.Log("Shooting");
+        // Debug.Log("Shooting");
 
         if (heldItem != null) // if holding an item
         {
@@ -104,7 +111,7 @@ public class PlayerInteraction : MonoBehaviour
     void Drop()
     {
         if (!dropAction.triggered) { return; }
-        Debug.Log("Dropping");
+        // Debug.Log("Dropping");
 
         if (heldItem != null)
         {
@@ -119,7 +126,7 @@ public class PlayerInteraction : MonoBehaviour
     {
         bool flashSuccessful = cameraFlash.Flash();
 
-        if (flashSuccessful) { Debug.Log("Player Interaction: Flash Hit"); }
-        else { Debug.Log("Player Interaction: No target in range"); }
+        // if (flashSuccessful) { Debug.Log("Player Interaction: Flash Hit"); }
+        // else { Debug.Log("Player Interaction: No target in range"); }
     }
 }
