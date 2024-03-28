@@ -50,12 +50,13 @@ public class PlayerController : NetworkBehaviour
     
 
     [Header("Networking - Debug")]
-    private bool isInLobby;
+    // [SerializeField] private bool isInLobby;
     public NetworkVariable<FixedString32Bytes> nickname = new NetworkVariable<FixedString32Bytes>("", NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
     public NetworkVariable<Team> team = new NetworkVariable<Team>(Team.Human, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+    public NetworkVariable<bool> isInLobby = new NetworkVariable<bool>();
     public SpawnPosition sittingPos = new SpawnPosition();
     
-    private void Start()
+    private void Awake()
     {
         controller = GetComponent<CharacterController>();
         playerInput = GetComponent<PlayerInput>();
@@ -63,15 +64,15 @@ public class PlayerController : NetworkBehaviour
         moveAction = playerInput.actions["Move"];
         runAction = playerInput.actions["Run"];
         jumpAction = playerInput.actions["Jump"];
-
         feet = transform.Find("Feet");
     }
 
     void Update()
     {
+        if (isInLobby.Value) { return; }
+        
         if (!enablePlayerControls) { return; }
         
-        if (isInLobby) { return; }
         // Uncomment for real multiplayer stuff
         // if (!IsOwner) { return; }
 
@@ -85,6 +86,7 @@ public class PlayerController : NetworkBehaviour
     {
         nickname.OnValueChanged += OnNameChange;
         team.OnValueChanged += OnTeamChange;
+        isInLobby.OnValueChanged += OnLobbyStateChange;
         
         if (!IsOwner)
         {
@@ -110,11 +112,11 @@ public class PlayerController : NetworkBehaviour
         if (isGrounded && playerVelocity.y < 0)
         {
             playerVelocity.y = 0f;
-            Debug.Log("Grounded");
+            // Debug.Log("Grounded");
         }
         else
         {
-            Debug.Log("Not Grounded");
+            // Debug.Log("Not Grounded");
         }
     }
 
@@ -204,15 +206,21 @@ public class PlayerController : NetworkBehaviour
         Debug.Log("Team has been changed");
         team.Value = newTeam;
     }
+
+    private void OnLobbyStateChange(bool oldValue, bool newValue)
+    {
+        Debug.Log("Lobby State has been changed");
+        IsInLobby = newValue;
+    }
     
     public bool IsInLobby
     {
-        get => isInLobby;
+        // get => isInLobby;
         set {
-            isInLobby = value;
             animator = GetComponentInParent<Animator>();
             animator.SetBool("isSitting", value);
             nameTag.enabled = value;
+            isInLobby.Value = value;
         }
     }
 }
