@@ -16,11 +16,11 @@ public class RandomSpanwer : MonoBehaviour
     private void Start()
     {
         Debug.Log("spawn");
-        Vector3 randomPositionPlayer = new Vector3(Random.Range(55, 70), 10, Random.Range(-70, 70));
-        Vector3 randomPositionEnemy = new Vector3(Random.Range(-55, -70), 10, Random.Range(-70, 70));
         ulong[] uids = GameManager.Instance.uidToTeam.Keys.ToArray();
         foreach (ulong uid in uids)
         {
+            Vector3 randomPositionPlayer = new Vector3(Random.Range(55, 70), 10, Random.Range(-70, 70));
+            Vector3 randomPositionEnemy = new Vector3(Random.Range(-55, -70), 10, Random.Range(-70, 70));
             if (GameManager.Instance.uidToTeam[uid] == Team.Human)
             {
                 NetworkManager.Singleton.SpawnManager.InstantiateAndSpawn(playerPrefab, uid, true, false,
