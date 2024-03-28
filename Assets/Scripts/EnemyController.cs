@@ -25,20 +25,11 @@ public class EnemyController : NetworkBehaviour
     [Header("Enemy Physics")]
     private readonly float jumpHeight = 1.0f;
     private readonly float gravityValue = -9.81f;
-    private readonly float rotationSpeed = 5f;    
-
-    // [Header("Player Stamina")]
-    // private readonly float maxStamina = 50f;
-    // private float stamina = 50f;
-    // private bool isTired = false;
-    // private readonly float staminaRecoveryRate = 5f;
-    // private readonly float staminaDecreaseRate = 12.5f;
     
     [Header("Player Input")]
     private PlayerInput playerInput;
     private CharacterController controller;
     private InputAction moveAction;
-    // private InputAction runAction;
     private InputAction jumpAction;
 
     [Header("Enemy Model")]
@@ -77,10 +68,6 @@ public class EnemyController : NetworkBehaviour
 
         CheckGround();
         MakeMovement();
-
-        // TODO: delete this and apply the "FollowCamera" script instead
-        CameraRotation();
-
         Jump();
         ApplyGravity();
     }
@@ -126,16 +113,12 @@ public class EnemyController : NetworkBehaviour
         animator.SetBool("isMoving", isMoving);
         
         // will move relative to the camera's orientation
-        move = move.x * cameraTransform.right.normalized + move.z * cameraTransform.forward.normalized; 
+        Vector3 xMovement = move.x * cameraTransform.right.normalized;
+        Vector3 zMovement = move.z * cameraTransform.forward.normalized;
+        xMovement.y = 0;
+        zMovement.y = 0;
+        move = xMovement + zMovement;
         controller.Move(move * (Time.deltaTime * enemySpeed));
-    }
-
-    void CameraRotation()
-    {
-        // // Makes player face the direction of the camera
-        float targetAngle = cameraTransform.eulerAngles.y; // this is the angle of the camera around y-axis
-        Quaternion targetRotation = Quaternion.Euler(0, targetAngle,0); // Form quaternion representation of the target angle
-        transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
     }
 
     void Jump()
