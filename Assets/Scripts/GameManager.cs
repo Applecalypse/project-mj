@@ -45,6 +45,7 @@ public class GameManager : NetworkBehaviour
         ChangeSceneServerRpc("GameOverHumansDead");
     }
 
+    // TODO: Connect this to the game
     public void HumanEscaped()
     {
         // ; Monster
