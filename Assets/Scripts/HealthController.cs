@@ -33,6 +33,19 @@ public class HealthController : NetworkBehaviour
         currentHealth.Value -= damage;
         if (currentHealth.Value <= 0)
         {
+            if (myTeam == Team.Monster)
+            {
+                GameManager.Instance.MonsterDead();
+            }
+            if (myTeam == Team.Human)
+            {
+                GetComponent<PlayerController>().isDead = true;
+                GameManager.Instance.OnPlayerDeath();
+            }
+            else
+            {
+                Debug.LogError("Wtf how did we reach here?");
+            }
             Debug.Log(transform.name + " is dead");
             // Die();
         }

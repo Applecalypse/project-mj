@@ -86,6 +86,7 @@ public class Relay : NetworkBehaviour
             if (mainPlayer == null)
             {
                 throw new NullReferenceException("No player found, null");
+                return;
             }
         }
         
@@ -94,8 +95,9 @@ public class Relay : NetworkBehaviour
         foreach (GameObject player in players)
         {
             player.GetComponent<PlayerController>().IsInLobby = false;
-            Debug.Log("Team: " + (mainPlayer.GetComponent<PlayerController>().team.Value == Team.Human ? "Human" : "Monster"));
         }
+        
+        GameManager.Instance.CountHumans();
         
         NetworkManager.Singleton.SceneManager.LoadScene("PrototypeMap", LoadSceneMode.Single);
     }

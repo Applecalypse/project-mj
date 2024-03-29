@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Unity.Netcode;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : NetworkBehaviour
 {
@@ -11,6 +12,7 @@ public class GameManager : NetworkBehaviour
     public NetworkList<bool> spawnPositionsFlags;
     public Dictionary<ulong, Team> uidToTeam;
     public NetworkVariable<int> keyItemCount = new NetworkVariable<int>(0);
+    public NetworkVariable<int> humanCount = new NetworkVariable<int>();
 
     public static GameManager Instance;
     
@@ -30,6 +32,69 @@ public class GameManager : NetworkBehaviour
         spawnPositions = new NetworkList<SpawnPosition>();
         spawnPositionsFlags = new NetworkList<bool>();
         uidToTeam = new Dictionary<ulong, Team>();
+    }
+
+    public void MonsterDead()
+    {
+        // ; Monster
+        // Change Scene to losing scene
+        
+        // ; Human
+        // Change Scene to winning scene (Monster Dead) -> move to lobby again
+
+        ChangeSceneServerRpc("GameOverHumansDead");
+    }
+
+    // TODO: Connect this to the game
+    public void HumanEscaped()
+    {
+        // ; Monster
+        // Change Scene to losing scene
+        
+        // ; Human
+        // Change scene to winning scene (human escaped)
+
+        ChangeSceneServerRpc("GameOverHumansDead");
+    }
+
+    public void HumanDead()
+    {
+        // ; Monster
+        // Change Scene to winning scene
+        
+        // ; Human
+        // If all humans are dead change to losing scene
+        
+        ChangeSceneServerRpc("GameOverHumansDead");
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    private void ChangeSceneServerRpc(string sceneName)
+    {
+        NetworkManager.Singleton.SceneManager.LoadScene(sceneName, LoadSceneMode.Single);
+    }
+
+    public void CountHumans()
+    {
+        if (IsHost)
+        {
+            humanCount.Value = GameObject.FindGameObjectsWithTag("Player").Length;
+        }
+    }
+
+    public void OnPlayerDeath()
+    {
+        DecrementPlayerCountServerRpc(1);
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    private void DecrementPlayerCountServerRpc(int decrement = 1)
+    {
+        humanCount.Value -= decrement;
+        if (humanCount.Value <= 0)
+        {
+            HumanDead();
+        }
     }
     
     private void OnKeyCountChange(int oldKeyCount, int newKeyCount)
