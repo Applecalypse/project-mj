@@ -46,6 +46,7 @@ public class PlayerController : NetworkBehaviour
     private bool isGrounded;
     [SerializeField] private TMP_Text nameTag;
     private Animator animator;
+    public bool isDead;
     
 
     [Header("Networking - Debug")]

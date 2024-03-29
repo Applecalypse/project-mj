@@ -23,4 +23,10 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/PrototypeMap.unity
     guid: 131cb336b6d0f4e6bae30114b1d5ccc8
+  - enabled: 1
+    path: Assets/Scenes/GameOverMonsterDead.unity
+    guid: 5ab47893353504eb39782e8531e89866
+  - enabled: 1
+    path: Assets/Scenes/GameOverHumansDead.unity
+    guid: eee3b8ac1e7b44ac5ace2032845ca053
   m_configObjects: {}
