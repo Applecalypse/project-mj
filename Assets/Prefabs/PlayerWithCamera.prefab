@@ -113,7 +113,7 @@ Transform:
   m_GameObject: {fileID: 1644475780224886112}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0.17364821, z: -0, w: 0.9848078}
-  m_LocalPosition: {x: 0.0065361895, y: 1.6046629, z: -0.008262799}
+  m_LocalPosition: {x: 0.0065361895, y: 2.604663, z: -0.008262799}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -315,7 +315,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 3509072853
+  GlobalObjectIdHash: 64930898
   InScenePlacedSourceGlobalObjectIdHash: 1475677706
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
@@ -732,7 +732,7 @@ PrefabInstance:
     - target: {fileID: 4644496146536518218, guid: 77de6b432f7624e4085a12ac575c7d18,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.6046629
+      value: 1.6046631
       objectReference: {fileID: 0}
     - target: {fileID: 4644496146536518218, guid: 77de6b432f7624e4085a12ac575c7d18,
         type: 3}
@@ -983,7 +983,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Actions: {fileID: -944628639613478452, guid: 8dc2f71322aa9419690b4a38f4a9c2fb,
     type: 3}
-  m_NotificationBehavior: 0
+  m_NotificationBehavior: 2
   m_UIInputModule: {fileID: 0}
   m_DeviceLostEvent:
     m_PersistentCalls:
@@ -994,7 +994,55 @@ MonoBehaviour:
   m_ControlsChangedEvent:
     m_PersistentCalls:
       m_Calls: []
-  m_ActionEvents: []
+  m_ActionEvents:
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 74797871-1443-4399-aedb-6c0cee796cd0
+    m_ActionName: CharacterControls/Move[/Keyboard/w,/Keyboard/s,/Keyboard/a,/Keyboard/d]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 7c8f2b61-4d1f-44ba-8b27-cdc43690f267
+    m_ActionName: CharacterControls/Look[/Mouse/delta]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 90e96754-84a1-481b-b85e-7c8ceecf1e36
+    m_ActionName: CharacterControls/Jump[/Keyboard/space]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 76002e59-5017-4b23-97d0-5760da1a82a7
+    m_ActionName: CharacterControls/Aim[/Mouse/rightButton]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 12da6d05-b81c-40ea-b01f-c869ec5bebe4
+    m_ActionName: CharacterControls/Shoot[/Mouse/leftButton]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 9f86d91f-f4c1-4b34-b673-01da6af2f183
+    m_ActionName: CharacterControls/Interact[/Keyboard/f]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 1c676f72-76db-4995-ba4a-9ad092048cab
+    m_ActionName: CharacterControls/Run[/Keyboard/leftShift]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: bab11fdb-9784-435c-83ef-efa1c3adf4a4
+    m_ActionName: CharacterControls/Drop[/Keyboard/q]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1771223874525122018}
+        m_TargetAssemblyTypeName: PlayerInteraction, Assembly-CSharp
+        m_MethodName: onPray
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: a2497e0c-59bf-450e-b6b0-26e806f1a61b
+    m_ActionName: CharacterControls/Pray[/Keyboard/v]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: CharacterControls
@@ -1042,6 +1090,7 @@ MonoBehaviour:
   cameraTransform: {fileID: 651192389867081491}
   playerSpeed: 5
   nameTag: {fileID: 7131185321167561746}
+  isDead: 0
   nickname:
     m_InternalValue:
       utf8LengthInBytes: 0
@@ -1144,7 +1193,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 100
-  currentHealth: 0
   myTeam: 0
 --- !u!114 &5197154234454349678
 MonoBehaviour:
