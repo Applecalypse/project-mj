@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 0249e7d0577885140a8271d47bd52d26
+guid: 9796a446524d07745875d4bd3846a0d6
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
@@ -8,22 +8,12 @@ ModelImporter:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: Material
-    second: {fileID: 2100000, guid: 6d5044f4b78c52a46bfac3eaf922abf8, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: Material.002
-    second: {fileID: 2100000, guid: 2ae13f6634ffc194abcfabfd95577be3, type: 2}
+    second: {fileID: 2100000, guid: 5abc8ebb0c87f2841ac319162192a073, type: 2}
   - first:
       type: UnityEngine:Texture2D
       assembly: UnityEngine.CoreModule
-      name: shrine
-    second: {fileID: 2800000, guid: 17382ecabf0da0143917bd3f2d8c5898, type: 3}
-  - first:
-      type: UnityEngine:Texture2D
-      assembly: UnityEngine.CoreModule
-      name: shrine_fence
-    second: {fileID: 2800000, guid: 9f88c8889b7aad64f974ab64be297129, type: 3}
+      name: malai
+    second: {fileID: 2800000, guid: dde687a64b4c9a14f84962c578f2343f, type: 3}
   materials:
     materialImportMode: 2
     materialName: 0
