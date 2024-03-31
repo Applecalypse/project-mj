@@ -14,9 +14,10 @@ public class TimedSpawn : NetworkBehaviour
     [SerializeField] private bool stopSpawning = false;
     [SerializeField] private float spawnInterval = 5f;
     [SerializeField] private float spawnRadius = 5f;
+    [SerializeField] private float initialDelay = 5f;
 
     [Header("Spawner Pity system")]
-    private readonly float forcedSpawnInterval = 50f;
+    [SerializeField] private float forcedSpawnInterval = 50f;
     private float timeSinceLastSpawn = 0f;
 
     void Update()
@@ -32,7 +33,13 @@ public class TimedSpawn : NetworkBehaviour
             return;
         }
 
-        InvokeRepeating("SpawnObject", 5, spawnInterval);
+        if (prefabToSpawn == null)
+        {
+            Debug.LogError("Prefab to spawn is not set on the spawner", this);
+            stopSpawning = true;
+        }
+
+        InvokeRepeating("SpawnObject", initialDelay, spawnInterval);
 
         // base.OnNetworkSpawn();
     }
