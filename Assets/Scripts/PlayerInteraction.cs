@@ -40,12 +40,12 @@ public class PlayerInteraction : NetworkBehaviour
     private void Start()
     {
         playerInput = GetComponent<PlayerInput>();
-        prayAction = playerInput.actions["Pray"];
         interactAction = playerInput.actions["Interact"];
         dropAction = playerInput.actions["Drop"];
         shootAction = playerInput.actions["Shoot"];
         animator = GetComponentInParent<Animator>();
         
+        /*
         prayAction.started += context =>
         {
             if (context.interaction is HoldInteraction)
@@ -68,7 +68,7 @@ public class PlayerInteraction : NetworkBehaviour
         {
             Debug.Log("Stop Praying");
             animator.SetBool("isPraying", false);
-        };
+        };*/
 
         cameraFlashCollider = cameraFlashObject.GetComponent<Collider>();
         cameraFlash = cameraFlashObject.GetComponent<CameraFlash>();
@@ -82,18 +82,29 @@ public class PlayerInteraction : NetworkBehaviour
         Drop();
         Shoot();
         Vector3 rayOrigin = cameraTransform.position + (cameraTransform.forward * 1f);
-        Debug.DrawRay(rayOrigin, cameraTransform.forward * 5, Color.red, 100f);
+        //Debug.DrawRay(rayOrigin, cameraTransform.forward * 5, Color.red, 100f);
     }
 
-    private void OnEnable()
+    public void onPray(InputAction.CallbackContext context)
     {
-        prayAction.Enable();
+        switch (context.phase)
+        {
+            case InputActionPhase.Started:
+                Debug.Log("Start Praying");
+                animator.SetBool("isPraying", true);
+                break;
+            case InputActionPhase.Performed:
+                Debug.Log("Perform Praying");
+                Pray();
+                break;
+            case InputActionPhase.Canceled:
+                Debug.Log("Stop Praying");
+                animator.SetBool("isPraying", false);
+                break;
+        }
     }
 
-    private void OnDisable()
-    {
-        prayAction.Disable();
-    }
+    
 
 
     public override void OnNetworkSpawn()
@@ -144,7 +155,7 @@ public class PlayerInteraction : NetworkBehaviour
     void Pray()
     {
         RaycastHit hit;
-        Vector3 rayOrigin = cameraTransform.position + (cameraTransform.forward * 1f);
+        Vector3 rayOrigin = cameraTransform.position + (cameraTransform.forward * 1.2f);
         Physics.Raycast(rayOrigin, cameraTransform.forward, out hit, 5);
         Debug.DrawRay(rayOrigin, cameraTransform.forward * 5, Color.red, 100f);
         if ( hit.transform == null  ) { return; }
