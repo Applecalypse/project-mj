@@ -174,8 +174,6 @@ public class Relay : NetworkBehaviour
         {
             SpawnPlayerServerRpc(u, gameManager.GetPosition());
         }
-        
-        //GameManager.Instance.uidToTeam.Add(u, Team.Human);
 
         // Always Team Human on join
         changeTeamText.text = "Team: Human";
