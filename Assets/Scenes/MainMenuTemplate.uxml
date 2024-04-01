@@ -1,0 +1,8 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <ui:VisualElement style="flex-grow: 1; justify-content: center; align-items: center; align-self: auto;">
+        <ui:Label tabindex="-1" text="They Don&apos;t Exist" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Title" style="font-size: 120px; -unity-text-align: middle-center; -unity-font-style: bold; -unity-font: url(&apos;project://database/Assets/UI%20Toolkit/UnityThemes/UnityDefaultRuntimeTheme.tss?fileID=2230732570650464555&amp;guid=77336e93dce52490dbd1482bb62a92cb&amp;type=3#NotInter-Regular&apos;); -unity-font-definition: initial; color: rgb(255, 255, 255);" />
+        <ui:Button text="Play" parse-escape-sequences="true" display-tooltip-when-elided="true" name="play-button" style="margin-top: 8px; font-size: 80px; -unity-font-style: bold; color: rgb(0, 0, 0); width: 600px;" />
+        <ui:Button text="Setting" parse-escape-sequences="true" display-tooltip-when-elided="true" name="setting-button" style="margin-top: 8px; font-size: 80px; -unity-font-style: bold; color: rgb(0, 0, 0); width: 600px;" />
+        <ui:Button text="Credit" parse-escape-sequences="true" display-tooltip-when-elided="true" name="credit-button" style="margin-top: 8px; font-size: 80px; -unity-font-style: bold; color: rgb(0, 0, 0); width: 600px;" />
+    </ui:VisualElement>
+</ui:UXML>

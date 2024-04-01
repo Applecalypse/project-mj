@@ -21,6 +21,8 @@ public class Relay : NetworkBehaviour
     [SerializeField] private GameObject shutdownPanel;
     [SerializeField] private GameObject startPanel;
     [SerializeField] private GameObject renamePanel;
+    [SerializeField] private GameObject networkUI;
+    [SerializeField] private GameObject mainMenuUI;
     [SerializeField] private TMP_InputField nameInput;
     [SerializeField] private TMP_InputField roomInput;
     [SerializeField] private GameObject changeTeamPanel;
@@ -34,13 +36,13 @@ public class Relay : NetworkBehaviour
     [SerializeField] private GameObject mainPlayer;
     [SerializeField] private GameManager gameManager;
 
-    private async void Awake()
+    private void Awake()
     {
-        await Authenticate();
-
         NetworkManager.Singleton.OnClientDisconnectCallback += OnClientDisconnect;
         NetworkManager.Singleton.OnClientConnectedCallback += OnClientJoin;
+        networkUI.SetActive(false);
         networkPanel.SetActive(true);
+        mainMenuUI.SetActive(true);
         shutdownPanel.SetActive(false);
         startPanel.SetActive(false);
         renamePanel.SetActive(false);
@@ -77,6 +79,14 @@ public class Relay : NetworkBehaviour
     /*
      * Button functions
      */
+
+
+    public void ToMainMenu()
+    {
+        networkUI.SetActive(false);
+        mainMenuUI.SetActive(true);
+        SignOff();
+    }
     
     public void StartGame()
     {
@@ -183,7 +193,7 @@ public class Relay : NetworkBehaviour
      * Networking section (Relay related stuff)
      */
 
-    private static async Task Authenticate()
+    public static async Task Authenticate()
     {
         await UnityServices.InitializeAsync();
         try
@@ -207,6 +217,11 @@ public class Relay : NetworkBehaviour
             // Notify the player with the proper error message
             Debug.LogException(ex);
         }
+    }
+
+    private static void SignOff()
+    {
+        AuthenticationService.Instance.SignOut(clearCredentials: true);
     }
 
     private async Task<string> StartHostWithRelay(int maxPlayer = 5)
@@ -237,6 +252,7 @@ public class Relay : NetworkBehaviour
         string joinCode = await StartHostWithRelay();
 
         networkPanel.SetActive(false);
+        mainMenuUI.SetActive(false);
         shutdownPanel.SetActive(true);
         renamePanel.SetActive(true);
         changeTeamPanel.SetActive(true);
@@ -258,6 +274,7 @@ public class Relay : NetworkBehaviour
         if (started)
         {
             networkPanel.SetActive(false);
+            mainMenuUI.SetActive(false);
             shutdownPanel.SetActive(true);
             renamePanel.SetActive(true);
             changeTeamPanel.SetActive(true);
@@ -266,8 +283,9 @@ public class Relay : NetworkBehaviour
 
     public void DisconnectRelay()
     {
-        networkPanel.SetActive(true);
         shutdownPanel.SetActive(false);
+        networkPanel.SetActive(true);
+        mainMenuUI.SetActive(true);
         startPanel.SetActive(false);
         renamePanel.SetActive(false);
         changeTeamPanel.SetActive(false);
