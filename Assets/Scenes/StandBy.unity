@@ -15949,6 +15949,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   networkPanel: {fileID: 131894044}
   shutdownPanel: {fileID: 980219116}
+  mainMenuPanel: {fileID: 1803661244}
   startPanel: {fileID: 390143313}
   renamePanel: {fileID: 982884379}
   networkUI: {fileID: 1843047086}

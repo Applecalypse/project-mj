@@ -19,6 +19,7 @@ public class Relay : NetworkBehaviour
 {
     [SerializeField] private GameObject networkPanel;
     [SerializeField] private GameObject shutdownPanel;
+    [SerializeField] private GameObject mainMenuPanel;
     [SerializeField] private GameObject startPanel;
     [SerializeField] private GameObject renamePanel;
     [SerializeField] private GameObject networkUI;
@@ -253,6 +254,7 @@ public class Relay : NetworkBehaviour
 
         networkPanel.SetActive(false);
         mainMenuUI.SetActive(false);
+        mainMenuPanel.SetActive(false);
         shutdownPanel.SetActive(true);
         renamePanel.SetActive(true);
         changeTeamPanel.SetActive(true);
@@ -275,6 +277,7 @@ public class Relay : NetworkBehaviour
         {
             networkPanel.SetActive(false);
             mainMenuUI.SetActive(false);
+            mainMenuPanel.SetActive(false);
             shutdownPanel.SetActive(true);
             renamePanel.SetActive(true);
             changeTeamPanel.SetActive(true);
@@ -285,7 +288,7 @@ public class Relay : NetworkBehaviour
     {
         shutdownPanel.SetActive(false);
         networkPanel.SetActive(true);
-        mainMenuUI.SetActive(true);
+        mainMenuPanel.SetActive(true);
         startPanel.SetActive(false);
         renamePanel.SetActive(false);
         changeTeamPanel.SetActive(false);

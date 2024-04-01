@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class NameRotator : MonoBehaviour
 {
-    [SerializeField] private Transform cameraTransform;
+    private Transform cameraTransform;
 
     private Vector3 offset = new Vector3(0, 180, 180);
 

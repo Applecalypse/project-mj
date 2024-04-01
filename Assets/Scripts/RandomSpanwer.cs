@@ -19,8 +19,8 @@ public class RandomSpanwer : MonoBehaviour
         foreach (ulong uid in uids)
         {
             Debug.Log(uid);
-            Vector3 randomPositionPlayer = new Vector3(0, 30, 0);
-            Vector3 randomPositionEnemy = new Vector3(Random.Range(-55, -70), 20, Random.Range(-70, 70));
+            Vector3 randomPositionPlayer = new Vector3(Random.Range(55, 70), 5, Random.Range(55, 70));
+            Vector3 randomPositionEnemy = new Vector3(Random.Range(-55, -70), 20, Random.Range(-55, -70));
             Debug.Log(randomPositionPlayer);
             if (GameManager.Instance.uidToTeam[uid] == Team.Human)
             {
