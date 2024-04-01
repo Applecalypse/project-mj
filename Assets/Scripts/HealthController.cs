@@ -10,7 +10,7 @@ public class HealthController : NetworkBehaviour
 
     [Header("Team")]
     // maybe can be used for checking Friendly fire
-    [SerializeField] private Team myTeam;
+    private Team myTeam;
 
     [Header("Network")]
     private NetworkVariable<float> currentHealth = new NetworkVariable<float>();
@@ -22,9 +22,22 @@ public class HealthController : NetworkBehaviour
             enabled = false; 
             return;
         }
+
+        CheckTeam();
         
         currentHealth.Value = maxHealth;
         base.OnNetworkSpawn();
+    }
+
+    void CheckTeam()
+    {
+        // automatically assign team based on the controller
+        PlayerController playerController = GetComponent<PlayerController>();
+        EnemyController enemyController = GetComponent<EnemyController>();
+        
+        if (playerController != null) { myTeam = playerController.team.Value; }
+        else if (enemyController != null) { myTeam = enemyController.team.Value; }
+        else { Debug.LogError("Wtf how did we reach here?"); }
     }
 
     [ServerRpc]

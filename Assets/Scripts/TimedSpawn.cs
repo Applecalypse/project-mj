@@ -7,8 +7,19 @@ using Unity.Netcode;
 // credits: https://www.youtube.com/watch?v=1h2yStilBWU
 public class TimedSpawn : NetworkBehaviour
 {
+    private enum SpawnerType
+    {
+        SpawnOneItemType,
+        SpawnItemsRandom,
+        SpawnItemsInOrder
+    }
+
     [Header("Spawner Settings")]
-    [SerializeField] private GameObject prefabToSpawn;
+    [SerializeField] private SpawnerType spawnerType = SpawnerType.SpawnOneItemType;
+    [SerializeField] private List<GameObject> listOfPrefabsToSpawn = new List<GameObject>();
+    [SerializeField] private int startingPrefabIndex = 0;
+    private GameObject currentPrefabToSpawn;
+    
     [SerializeField] private float spawnRate = 25f;
     [SerializeField] private int maxSpawnCount = 3;
     [SerializeField] private bool stopSpawning = false;
@@ -33,12 +44,13 @@ public class TimedSpawn : NetworkBehaviour
             return;
         }
 
-        if (prefabToSpawn == null)
+        if (listOfPrefabsToSpawn.Count == 0)
         {
-            Debug.LogError("Prefab to spawn is not set on the spawner", this);
+            Debug.LogError("TimedSpawn: List of prefabs to spawn is empty");
             stopSpawning = true;
         }
-
+        currentPrefabToSpawn = listOfPrefabsToSpawn[startingPrefabIndex];
+        
         InvokeRepeating("SpawnObject", initialDelay, spawnInterval);
 
         // base.OnNetworkSpawn();
@@ -58,9 +70,29 @@ public class TimedSpawn : NetworkBehaviour
             spawnPosition.y = transform.position.y + 0.5f;
 
             // instantiate the prefab as a child of the spawner
-            GameObject spawnedObj = Instantiate(prefabToSpawn, spawnPosition, Quaternion.identity, gameObject.transform);
+            GameObject spawnedObj = Instantiate(currentPrefabToSpawn, spawnPosition, Quaternion.identity, gameObject.transform);
             spawnedObj.GetComponent<NetworkObject>().Spawn(true);
+            
+            // reset the timer and set the next spawn
             timeSinceLastSpawn = 0f;
+            SetNextSpawn();
+        }
+    }
+
+    void SetNextSpawn()
+    {
+        if (spawnerType == SpawnerType.SpawnItemsRandom)
+        {
+            currentPrefabToSpawn = listOfPrefabsToSpawn[Random.Range(0, listOfPrefabsToSpawn.Count)];
+        }
+        else if (spawnerType == SpawnerType.SpawnItemsInOrder)
+        {
+            int nextIndex = listOfPrefabsToSpawn.IndexOf(currentPrefabToSpawn) + 1;
+            if (nextIndex >= listOfPrefabsToSpawn.Count)
+            {
+                nextIndex = 0;
+            }
+            currentPrefabToSpawn = listOfPrefabsToSpawn[nextIndex];
         }
     }
 }
