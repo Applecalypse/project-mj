@@ -5,21 +5,21 @@ using UnityEngine;
 public class ItemSkin : MonoBehaviour
 {
     [Header("Item Skin Settings")]
-    [SerializeField] private MeshFilter defaultMeshFilter;
-    [SerializeField] private List<Mesh> allSkins = new List<Mesh>();
+    [SerializeField] private MeshRenderer defaultMeshRenderer;
+    [SerializeField] private List<Material> allSkinsMaterial = new List<Material>();
 
     [Header("Item Skin Options")]
     [SerializeField] private bool randomizeSkin = false;
 
     void Start()
     {
-        if (defaultMeshFilter == null)
+        if (defaultMeshRenderer == null)
         {
             Debug.LogError("ItemSkin: Default Mesh Filter is not assigned");
             return;
         }
 
-        if (allSkins.Count == 0)
+        if (allSkinsMaterial.Count == 0)
         {
             Debug.LogError("ItemSkin: List of skins is empty");
             return;
@@ -27,8 +27,11 @@ public class ItemSkin : MonoBehaviour
 
         if (randomizeSkin)
         {
-            int randomSkinIndex = Random.Range(0, allSkins.Count);
-            defaultMeshFilter.mesh = allSkins[randomSkinIndex];
+            int randomSkinIndex = Random.Range(0, allSkinsMaterial.Count);
+            // uncomment to see if it works when randomSkinIndex is 1
+            // randomSkinIndex = 1;
+            Debug.Log("ItemSkin: Random skin index: " + randomSkinIndex);
+            defaultMeshRenderer.material = allSkinsMaterial[randomSkinIndex];
         }
     }
 }
