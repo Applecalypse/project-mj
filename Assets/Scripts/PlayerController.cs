@@ -85,7 +85,7 @@ public class PlayerController : NetworkBehaviour
         // if (!IsOwner) { return; }
 
         CheckGround();
-        // MakeMovement();
+        MakeMovement();
         Jump();
         ApplyGravity();
     }
@@ -193,7 +193,11 @@ public class PlayerController : NetworkBehaviour
     void ApplyGravity()
     {
         playerVelocity.y += gravityValue * Time.deltaTime;
-        controller.SimpleMove(playerVelocity);
+        // controller.SimpleMove(playerVelocity);
+        if (!isGrounded)
+        {
+            transform.position += playerVelocity * Time.deltaTime;
+        }
     }
 
     public void ChangePlayerNickname(string playerName)
