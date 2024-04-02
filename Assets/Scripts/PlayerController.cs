@@ -171,10 +171,8 @@ public class PlayerController : NetworkBehaviour
         xMovement.y = 0;
         zMovement.y = 0;
         move = xMovement + zMovement;
-        // controller.Move(move * (Time.deltaTime * playerSpeed));
+        controller.Move(move * (Time.deltaTime * playerSpeed));
 
-        transform.position += move * (Time.deltaTime * playerSpeed);
-        
         // set animator
         animator.SetBool("isMoving", isMoving);
     }
@@ -195,11 +193,11 @@ public class PlayerController : NetworkBehaviour
     void ApplyGravity()
     {
         playerVelocity.y += gravityValue * Time.deltaTime;
-        // controller.SimpleMove(playerVelocity);
-        if (!isGrounded)
-        {
-            transform.position += playerVelocity * Time.deltaTime;
-        }
+        controller.Move(playerVelocity * Time.deltaTime);
+        // if (!isGrounded)
+        // {
+        //     transform.position += playerVelocity * Time.deltaTime;
+        // }
     }
 
     public void ChangePlayerNickname(string playerName)
