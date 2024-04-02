@@ -72,7 +72,7 @@ public class PlayerController : NetworkBehaviour
     
     IEnumerator WaitFrozen()
     {
-        yield return new WaitForSecondsRealtime(5f);
+        yield return new WaitForSecondsRealtime(0.1f);
         controller.enabled = true;
         isFrozen = false;
     }
@@ -194,10 +194,6 @@ public class PlayerController : NetworkBehaviour
     {
         playerVelocity.y += gravityValue * Time.deltaTime;
         controller.Move(playerVelocity * Time.deltaTime);
-        // if (!isGrounded)
-        // {
-        //     transform.position += playerVelocity * Time.deltaTime;
-        // }
     }
 
     public void ChangePlayerNickname(string playerName)
