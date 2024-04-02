@@ -11,11 +11,11 @@ using UnityEngine.InputSystem;
 
 public class EnemyController : NetworkBehaviour
 {
-    [Header("Testing")]
-    [SerializeField] private bool enablePlayerControls = true;
-
     [Header("Camera")]
     [SerializeField] private Transform cameraTransform;
+
+    [Header("Enemy Controls")]
+    [SerializeField] private bool enablePlayerControls = true;
 
     [Header("Enemy Movement")]
     // private readonly float enemyBaseSpeed = 6f;
@@ -35,10 +35,13 @@ public class EnemyController : NetworkBehaviour
     [Header("Enemy Model")]
     private Transform feet;
     private bool isGrounded;
-
+    public bool isFrozen;
     private Animator animator;
-    
 
+    [Header("Enemy Stun settings")]
+    private bool isStunned = false;
+    public float stunDuration = 3f;
+    
     [Header("Network")]
     private bool isInLobby;
     public NetworkVariable<FixedString32Bytes> nickname = new NetworkVariable<FixedString32Bytes>("", NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
@@ -48,6 +51,7 @@ public class EnemyController : NetworkBehaviour
 
     private void Start()
     {
+        StartCoroutine(WaitFrozen());
         controller = GetComponent<CharacterController>();
         playerInput = GetComponent<PlayerInput>();
         animator = GetComponentInParent<Animator>();
@@ -58,11 +62,19 @@ public class EnemyController : NetworkBehaviour
         feet = transform.Find("Feet");
     }
 
+    IEnumerator WaitFrozen()
+    {
+        yield return new WaitForSecondsRealtime(0.1f);
+        controller.enabled = true;
+        isFrozen = false;
+    }
+
     void Update()
     {
+        if (isInLobby || isFrozen || isStunned) { return; }
+    
         if (!enablePlayerControls) { return; }
-        
-        if (isInLobby) { return; }
+
         // Uncomment for real multiplayer stuff
         // if (!IsOwner) { return; }
 
@@ -133,8 +145,21 @@ public class EnemyController : NetworkBehaviour
     public void Stun()
     {
         Debug.Log("Stunned");
-        // animator.SetBool("isStunned", true);
-        // StartCoroutine(StunTimer());
+        // animation does not work properly
+        animator.SetBool("isStunned", true);
+        
+        isStunned = true;
+        StartCoroutine(GetStunned());
+        
+        EnemyInteraction enemyInteraction = GetComponent<EnemyInteraction>();
+        enemyInteraction.Stun(stunDuration);
+    }
+
+    IEnumerator GetStunned()
+    {
+        yield return new WaitForSecondsRealtime(stunDuration);
+        animator.SetBool("isStunned", false);
+        isStunned = false;
     }
 
     void ApplyGravity()
