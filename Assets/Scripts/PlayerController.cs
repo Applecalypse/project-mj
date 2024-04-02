@@ -192,7 +192,7 @@ public class PlayerController : NetworkBehaviour
     void ApplyGravity()
     {
         playerVelocity.y += gravityValue * Time.deltaTime;
-        controller.Move(playerVelocity * Time.deltaTime);
+        // controller.Move(playerVelocity * Time.deltaTime);
     }
 
     public void ChangePlayerNickname(string playerName)
