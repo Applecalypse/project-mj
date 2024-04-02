@@ -47,7 +47,7 @@ public class PlayerController : NetworkBehaviour
     [SerializeField] private TMP_Text nameTag;
     private Animator animator;
     public bool isDead;
-    public float frozenDuration = 2f;
+    public bool isFrozen;
     
 
     [Header("Networking - Debug")]
@@ -59,7 +59,9 @@ public class PlayerController : NetworkBehaviour
     
     private void Awake()
     {
+        StartCoroutine(WaitFrozen());
         controller = GetComponent<CharacterController>();
+        controller.enabled = false;
         playerInput = GetComponent<PlayerInput>();
         animator = GetComponentInParent<Animator>();
         moveAction = playerInput.actions["Move"];
@@ -67,10 +69,17 @@ public class PlayerController : NetworkBehaviour
         jumpAction = playerInput.actions["Jump"];
         feet = transform.Find("Feet");
     }
+    
+    IEnumerator WaitFrozen()
+    {
+        yield return new WaitForSecondsRealtime(0.1f);
+        controller.enabled = true;
+        isFrozen = false;
+    }
 
     void Update()
     {
-        if (isInLobby.Value) { return; }
+        if (isInLobby.Value || isFrozen) { return; }
         
         if (!enablePlayerControls) { return; }
         
@@ -123,11 +132,6 @@ public class PlayerController : NetworkBehaviour
 
     void MakeMovement()
     {
-        if (frozenDuration > 0)
-        {
-            frozenDuration -= Time.deltaTime;
-            return;
-        }
         // Run
         bool runButtonPressed = runAction.ReadValue<float>() > 0.5f;
 
@@ -161,10 +165,6 @@ public class PlayerController : NetworkBehaviour
             }
         }
         
-        // set animator
-        animator.SetBool("isMoving", isMoving);
-        
-        
         // will move relative to the camera's orientation
         Vector3 xMovement = move.x * cameraTransform.right.normalized;
         Vector3 zMovement = move.z * cameraTransform.forward.normalized;
@@ -172,6 +172,9 @@ public class PlayerController : NetworkBehaviour
         zMovement.y = 0;
         move = xMovement + zMovement;
         controller.Move(move * (Time.deltaTime * playerSpeed));
+
+        // set animator
+        animator.SetBool("isMoving", isMoving);
     }
 
     void Jump()

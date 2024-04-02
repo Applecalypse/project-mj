@@ -8060,6 +8060,98 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 791607903}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &804503488
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 804503491}
+  - component: {fileID: 804503490}
+  - component: {fileID: 804503489}
+  m_Layer: 0
+  m_Name: Terrain (1)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 2147483647
+  m_IsActive: 1
+--- !u!154 &804503489
+TerrainCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 804503488}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_TerrainData: {fileID: 15600000, guid: b6acd3a5dfc4a4ded9107a773a758553, type: 2}
+  m_EnableTreeColliders: 1
+--- !u!218 &804503490
+Terrain:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 804503488}
+  m_Enabled: 1
+  serializedVersion: 6
+  m_TerrainData: {fileID: 15600000, guid: b6acd3a5dfc4a4ded9107a773a758553, type: 2}
+  m_TreeDistance: 5000
+  m_TreeBillboardDistance: 50
+  m_TreeCrossFadeLength: 5
+  m_TreeMaximumFullLODCount: 50
+  m_DetailObjectDistance: 80
+  m_DetailObjectDensity: 1
+  m_HeightmapPixelError: 5
+  m_SplatMapDistance: 1000
+  m_HeightmapMaximumLOD: 0
+  m_ShadowCastingMode: 2
+  m_DrawHeightmap: 1
+  m_DrawInstanced: 0
+  m_DrawTreesAndFoliage: 1
+  m_StaticShadowCaster: 0
+  m_IgnoreQualitySettings: 0
+  m_ReflectionProbeUsage: 1
+  m_MaterialTemplate: {fileID: 2100000, guid: 594ea882c5a793440b60ff72d896021e, type: 2}
+  m_BakeLightProbesForTrees: 1
+  m_PreserveTreePrototypeLayers: 0
+  m_DeringLightProbesForTrees: 1
+  m_ReceiveGI: 1
+  m_ScaleInLightmap: 0.0256
+  m_LightmapParameters: {fileID: 15203, guid: 0000000000000000f000000000000000, type: 0}
+  m_GroupingID: 0
+  m_RenderingLayerMask: 1
+  m_AllowAutoConnect: 1
+  m_EnableHeightmapRayTracing: 1
+  m_EnableTreesAndDetailsRayTracing: 0
+  m_TreeMotionVectorModeOverride: 3
+--- !u!4 &804503491
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 804503488}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -125, y: 0, z: -125}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &816422040
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -14289,12 +14381,6 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1448404395}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &1448404397 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 3264894628783676347, guid: 4b3b356a77ccfe640a982b42b04ecd98,
-    type: 3}
-  m_PrefabInstance: {fileID: 1448404395}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1451799043
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -18177,12 +18263,6 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1739971444}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &1739971446 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 3264894628783676347, guid: 4b3b356a77ccfe640a982b42b04ecd98,
-    type: 3}
-  m_PrefabInstance: {fileID: 1739971444}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1744118860
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -21883,6 +21963,7 @@ SceneRoots:
   m_Roots:
   - {fileID: 1654688706}
   - {fileID: 376852381}
+  - {fileID: 804503491}
   - {fileID: 107833370}
   - {fileID: 719988799}
   - {fileID: 1575951962}
@@ -21890,11 +21971,7 @@ SceneRoots:
   - {fileID: 8712484485327954827}
   - {fileID: 6517487094592172238}
   - {fileID: 81338972370220048}
-  - {fileID: 1396712827}
   - {fileID: 1127011884}
   - {fileID: 1012567986}
-  - {fileID: 1340290228}
   - {fileID: 1254464992}
-  - {fileID: 410535391}
-  - {fileID: 219904033}
   - {fileID: 1208977769}

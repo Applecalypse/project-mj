@@ -1090,6 +1090,7 @@ MonoBehaviour:
   playerSpeed: 5
   nameTag: {fileID: 7131185321167561746}
   isDead: 0
+  isFrozen: 0
   nickname:
     m_InternalValue:
       utf8LengthInBytes: 0
