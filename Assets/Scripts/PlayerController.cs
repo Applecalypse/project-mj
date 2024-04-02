@@ -10,11 +10,11 @@ using UnityEngine.InputSystem;
 
 public class PlayerController : NetworkBehaviour
 {
-    [Header("Testing")]
-    [SerializeField] private bool enablePlayerControls = true;
-
     [Header("Camera")]
     [SerializeField] private Transform cameraTransform;
+
+    [Header("Player Controls")]
+    [SerializeField] private bool enablePlayerControls = true;
 
     [Header("Player Movement")]
     private readonly float playerBaseSpeed = 5f;

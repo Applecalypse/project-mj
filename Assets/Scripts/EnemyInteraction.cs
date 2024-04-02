@@ -6,12 +6,15 @@ using UnityEngine.InputSystem;
 
 public class EnemyInteraction : NetworkBehaviour
 {
-    [Header("Testing")]
-    [SerializeField] private bool enablePlayerControls = true;
-
     [Header("Camera")]
     [SerializeField] private Transform cameraTransform;
     private readonly float interactionDistance = 3f;
+
+    [Header("Enemy Controls")]
+    [SerializeField] private bool enablePlayerControls = true;
+
+    [Header("Enemy Status")]
+    private bool isStunned = false;
 
     [Header("Enemy Animation")]
     private Animator animator;
@@ -42,6 +45,10 @@ public class EnemyInteraction : NetworkBehaviour
 
     void Update()
     {
+        if (!enablePlayerControls) { return; }
+
+        if (isStunned) { return; }
+
         Interact();
         Attack();
     }
@@ -95,5 +102,17 @@ public class EnemyInteraction : NetworkBehaviour
         yield return new WaitForSeconds(attackCooldown);
         canAttack = true;
         damagable.DisableCollision();
+    }
+
+    public void Stun( float stunDuration )
+    {
+        isStunned = true;
+        StartCoroutine(GetStunned(stunDuration));
+    }
+
+    IEnumerator GetStunned(float stunDuration)
+    {
+        yield return new WaitForSecondsRealtime(stunDuration);
+        isStunned = false;
     }
 }
