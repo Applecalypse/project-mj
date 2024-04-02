@@ -24,11 +24,13 @@ public class RandomSpanwer : MonoBehaviour
             Debug.Log(randomPositionPlayer);
             if (GameManager.Instance.uidToTeam[uid] == Team.Human)
             {
+                Debug.Log("Human");
                 NetworkManager.Singleton.SpawnManager.InstantiateAndSpawn(playerPrefab, uid, true, false,
                     position: randomPositionPlayer, rotation: Quaternion.identity);
             }
             else
             {
+                Debug.Log("Monster");
                 NetworkManager.Singleton.SpawnManager.InstantiateAndSpawn(enemyPrefab, uid, true, false,
                     position: randomPositionEnemy, rotation: Quaternion.identity);
             }

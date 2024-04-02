@@ -47,6 +47,7 @@ public class PlayerController : NetworkBehaviour
     [SerializeField] private TMP_Text nameTag;
     private Animator animator;
     public bool isDead;
+    public float frozenDuration = 2f;
     
 
     [Header("Networking - Debug")]
@@ -122,6 +123,11 @@ public class PlayerController : NetworkBehaviour
 
     void MakeMovement()
     {
+        if (frozenDuration > 0)
+        {
+            frozenDuration -= Time.deltaTime;
+            return;
+        }
         // Run
         bool runButtonPressed = runAction.ReadValue<float>() > 0.5f;
 
