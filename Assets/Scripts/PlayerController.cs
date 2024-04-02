@@ -85,9 +85,9 @@ public class PlayerController : NetworkBehaviour
         // if (!IsOwner) { return; }
 
         CheckGround();
-        MakeMovement();
+        // MakeMovement();
         Jump();
-        ApplyGravity();
+        // ApplyGravity();
     }
 
     public override void OnNetworkSpawn()
