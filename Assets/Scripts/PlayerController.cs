@@ -61,6 +61,7 @@ public class PlayerController : NetworkBehaviour
     {
         StartCoroutine(WaitFrozen());
         controller = GetComponent<CharacterController>();
+        controller.enabled = false;
         playerInput = GetComponent<PlayerInput>();
         animator = GetComponentInParent<Animator>();
         moveAction = playerInput.actions["Move"];
@@ -71,7 +72,8 @@ public class PlayerController : NetworkBehaviour
     
     IEnumerator WaitFrozen()
     {
-        yield return new WaitForSecondsRealtime(2f);
+        yield return new WaitForSecondsRealtime(5f);
+        controller.enabled = true;
         isFrozen = false;
     }
 
