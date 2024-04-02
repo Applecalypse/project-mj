@@ -87,7 +87,7 @@ public class PlayerController : NetworkBehaviour
         CheckGround();
         // MakeMovement();
         Jump();
-        // ApplyGravity();
+        ApplyGravity();
     }
 
     public override void OnNetworkSpawn()
@@ -163,17 +163,18 @@ public class PlayerController : NetworkBehaviour
             }
         }
         
-        // set animator
-        animator.SetBool("isMoving", isMoving);
-        
-        
         // will move relative to the camera's orientation
         Vector3 xMovement = move.x * cameraTransform.right.normalized;
         Vector3 zMovement = move.z * cameraTransform.forward.normalized;
         xMovement.y = 0;
         zMovement.y = 0;
         move = xMovement + zMovement;
-        controller.Move(move * (Time.deltaTime * playerSpeed));
+        // controller.Move(move * (Time.deltaTime * playerSpeed));
+
+        transform.position += move * (Time.deltaTime * playerSpeed);
+        
+        // set animator
+        animator.SetBool("isMoving", isMoving);
     }
 
     void Jump()
@@ -192,7 +193,7 @@ public class PlayerController : NetworkBehaviour
     void ApplyGravity()
     {
         playerVelocity.y += gravityValue * Time.deltaTime;
-        // controller.Move(playerVelocity * Time.deltaTime);
+        controller.SimpleMove(playerVelocity);
     }
 
     public void ChangePlayerNickname(string playerName)
