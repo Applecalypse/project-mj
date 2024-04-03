@@ -40,10 +40,17 @@ public class HealthController : NetworkBehaviour
         else { Debug.LogError("Wtf how did we reach here?"); }
     }
 
+    public void SetCurrentHealth(float val)
+    {
+        //currentHealth.Value = val;
+        Debug.Log( currentHealth.Value );
+    }
+
     [ServerRpc]
-    public void TakeDamageServerRPC(float damage)
+    public void TakeDamageServerRpc(float damage)
     {
         currentHealth.Value -= damage;
+        Debug.Log("DAMAGED");
         if (currentHealth.Value <= 0)
         {
             if (myTeam == Team.Monster)
@@ -52,8 +59,9 @@ public class HealthController : NetworkBehaviour
             }
             if (myTeam == Team.Human)
             {
-                GetComponent<PlayerController>().isDead = true;
+                GetComponent<PlayerController>().OnDead();
                 GameManager.Instance.OnPlayerDeath();
+                StartCoroutine(KillCoroutine());
             }
             else
             {
@@ -64,18 +72,29 @@ public class HealthController : NetworkBehaviour
         }
     }
 
+    IEnumerator KillCoroutine()
+    {
+        yield return new WaitForSeconds(3f);
+        KillPlayer();
+    }
+    private void KillPlayer()
+    {
+        GetComponent<PlayerController>().setSpectator(true);
+    }
+
     public void RevivePlayer()
     {
         PlayerController playerController = GetComponent<PlayerController>();
         playerController.Revive();
         currentHealth.Value = maxHealth;
+        StopCoroutine(KillCoroutine());
         GameManager.Instance.OnPlayerRevive();
     }
 
     public void TakeDamage(float damage)
     {
         Debug.Log(transform.name + ": taking damage = " + damage);
-        TakeDamageServerRPC(damage);
+        TakeDamageServerRpc(damage);
     }
 
 }
