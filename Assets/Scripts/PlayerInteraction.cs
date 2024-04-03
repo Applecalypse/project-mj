@@ -140,7 +140,7 @@ public class PlayerInteraction : NetworkBehaviour
         Debug.Log("Pointing at " + hit.transform.gameObject.name);
 
         Interactable targetInteractable = hit.transform.GetComponent<Interactable>();
-        if (targetInteractable != null) { targetInteractable.Interact(); return; }
+        if (targetInteractable != null && !hit.transform.gameObject.CompareTag("shrine")) { targetInteractable.Interact(); return; }
         
         Obtainable targetObtainable = hit.transform.GetComponent<Obtainable>();
         if (targetObtainable != null && heldItem == null)

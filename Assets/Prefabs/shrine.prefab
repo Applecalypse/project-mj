@@ -78,6 +78,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: shrine
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 26f0a304139a794479800df48bd1beeb,
+        type: 3}
+      propertyPath: m_TagString
+      value: shrine
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
