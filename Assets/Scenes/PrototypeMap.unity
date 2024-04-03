@@ -12806,7 +12806,6 @@ Transform:
   - {fileID: 8712484485327954828}
   - {fileID: 6517487094592172239}
   - {fileID: 81338972370220049}
-  - {fileID: 1254464993}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1249597121
@@ -21905,6 +21904,16 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1237093387}
     m_Modifications:
+    - target: {fileID: 886753165325980746, guid: 30cacee098993b9438de95c231181588,
+        type: 3}
+      propertyPath: GlobalObjectIdHash
+      value: 2408104586
+      objectReference: {fileID: 0}
+    - target: {fileID: 886753165325980746, guid: 30cacee098993b9438de95c231181588,
+        type: 3}
+      propertyPath: InScenePlacedSourceGlobalObjectIdHash
+      value: 522218523
+      objectReference: {fileID: 0}
     - target: {fileID: 1249624992255382936, guid: 30cacee098993b9438de95c231181588,
         type: 3}
       propertyPath: m_Name
@@ -22063,6 +22072,16 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1237093387}
     m_Modifications:
+    - target: {fileID: 1728324068805050683, guid: a7a8d3b50c7e5e3428cbe6c6b52c3806,
+        type: 3}
+      propertyPath: GlobalObjectIdHash
+      value: 271282645
+      objectReference: {fileID: 0}
+    - target: {fileID: 1728324068805050683, guid: a7a8d3b50c7e5e3428cbe6c6b52c3806,
+        type: 3}
+      propertyPath: InScenePlacedSourceGlobalObjectIdHash
+      value: 3879280690
+      objectReference: {fileID: 0}
     - target: {fileID: 7479479976990465749, guid: a7a8d3b50c7e5e3428cbe6c6b52c3806,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -22137,15 +22156,15 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1237093387}
     m_Modifications:
-    - target: {fileID: 8369755939159705838, guid: 6ecb962ceafb11146b544111d8d860aa,
+    - target: {fileID: 5936449366011519584, guid: 6ecb962ceafb11146b544111d8d860aa,
         type: 3}
-      propertyPath: m_LocalScale.y
-      value: 4.5996766
+      propertyPath: GlobalObjectIdHash
+      value: 346972585
       objectReference: {fileID: 0}
-    - target: {fileID: 8369755939159705838, guid: 6ecb962ceafb11146b544111d8d860aa,
+    - target: {fileID: 5936449366011519584, guid: 6ecb962ceafb11146b544111d8d860aa,
         type: 3}
-      propertyPath: m_LocalScale.z
-      value: 4.5996766
+      propertyPath: InScenePlacedSourceGlobalObjectIdHash
+      value: 2951621728
       objectReference: {fileID: 0}
     - target: {fileID: 8369755939159705838, guid: 6ecb962ceafb11146b544111d8d860aa,
         type: 3}
@@ -22222,11 +22241,6 @@ SceneRoots:
   - {fileID: 107833370}
   - {fileID: 719988799}
   - {fileID: 1575951962}
-  - {fileID: 2932994051955792377}
-  - {fileID: 8712484485327954827}
-  - {fileID: 6517487094592172238}
-  - {fileID: 81338972370220048}
-  - {fileID: 1127011884}
-  - {fileID: 1012567986}
   - {fileID: 1208977769}
-  - {fileID: 1575951962}
+  - {fileID: 694983669}
+  - {fileID: 1237093387}
