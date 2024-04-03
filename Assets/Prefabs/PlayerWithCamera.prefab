@@ -1077,6 +1077,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 4109cd8ec47c62f4494304e31d853035,
         type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 4109cd8ec47c62f4494304e31d853035,
+        type: 3}
       propertyPath: m_TagString
       value: Player
       objectReference: {fileID: 0}
@@ -1090,6 +1095,11 @@ PrefabInstance:
       propertyPath: m_Controller
       value: 
       objectReference: {fileID: 9100000, guid: 6aa5476378fee1e408aad2b837fe98db, type: 2}
+    - target: {fileID: 8417361359673230750, guid: 4109cd8ec47c62f4494304e31d853035,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 5866666021909216657, guid: 4109cd8ec47c62f4494304e31d853035, type: 3}
     m_RemovedGameObjects: []
@@ -1220,6 +1230,22 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: a2497e0c-59bf-450e-b6b0-26e806f1a61b
     m_ActionName: CharacterControls/Pray[/Keyboard/v]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 6830097896265177901}
+        m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
+        m_MethodName: onFly
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: daf93d96-bfc5-48a1-9127-64a91b7952bd
+    m_ActionName: CharacterControls/Fly[/Keyboard/q,/Keyboard/e]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: CharacterControls
