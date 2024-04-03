@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using HGS.CallLimiter;
 using TMPro;
 using Unity.Collections;
 using Unity.Netcode;
@@ -45,6 +46,7 @@ public class PlayerController : NetworkBehaviour
     private Transform feet;
     private bool isGrounded;
     [SerializeField] private TMP_Text nameTag;
+    private AudioSource audioSource;
     private Animator animator;
     public bool isDead;
     public bool isFrozen;
@@ -57,6 +59,9 @@ public class PlayerController : NetworkBehaviour
     public NetworkVariable<bool> isInLobby = new NetworkVariable<bool>();
     public SpawnPosition sittingPos = new SpawnPosition();
     
+    [SerializeField] float fireRatio = 0.5f;
+    Throttle _fireThrottle = new Throttle();
+    
     private void Awake()
     {
         StartCoroutine(WaitFrozen());
@@ -64,6 +69,7 @@ public class PlayerController : NetworkBehaviour
         controller.enabled = false;
         playerInput = GetComponent<PlayerInput>();
         animator = GetComponentInParent<Animator>();
+        audioSource = GetComponentInChildren<AudioSource>();
         moveAction = playerInput.actions["Move"];
         runAction = playerInput.actions["Run"];
         jumpAction = playerInput.actions["Jump"];
@@ -187,6 +193,14 @@ public class PlayerController : NetworkBehaviour
         {
             controller.Move(move * (Time.deltaTime * playerSpeed));
             animator.SetBool("isMoving", isMoving);
+        }
+
+        if (move.magnitude > Mathf.Epsilon && isGrounded)
+        {
+            _fireThrottle.Run(()=>
+            {
+                SettingManager.Instance.PlaySfxGrass("OnGrass", audioSource);
+            }, 1/ (controller.velocity.magnitude * 0.5f) );
         }
     }
 

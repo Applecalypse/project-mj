@@ -8,6 +8,7 @@ TagManager:
   - Interactable
   - SpawnPointLobby
   - shrine
+  - Ground
   layers:
   - Default
   - TransparentFX

@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "com.hgs.call-limiter": "https://github.com/homy-game-studio/hgs-unity-call-limiter.git#upm",
     "com.unity.cinemachine": "2.9.7",
     "com.unity.collab-proxy": "2.3.1",
     "com.unity.ide.rider": "3.0.27",
