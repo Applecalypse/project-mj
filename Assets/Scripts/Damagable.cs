@@ -33,12 +33,8 @@ public class Damagable : MonoBehaviour
     void HandleCollision(GameObject other)
     {
         if (!collisionEnabled) { return; }
-        if (other.gameObject.CompareTag(teamToDamageString))
-        {
-            Debug.Log("Damagable: Collided with " + teamToDamageString);
-            other.gameObject.GetComponent<HealthController>().TakeDamage(damage);
-            
-        }
+        Debug.Log("Damagable: Collided with " + teamToDamageString);
+        other.gameObject.GetComponent<HealthController>().TakeDamage(damage);
 
         if (onlyApplyDamageOnce) { DisableCollision(); }
         if (breakOnCollision) { Destroy(gameObject); }
@@ -48,6 +44,8 @@ public class Damagable : MonoBehaviour
     {
         if (col.isTrigger) { return; }
         Debug.Log("Damagable: Collision Detected " + other.gameObject.name);
+        
+        if (!other.gameObject.CompareTag(teamToDamageString)) { return; }
         HandleCollision(other.gameObject);
     }
 
@@ -55,6 +53,8 @@ public class Damagable : MonoBehaviour
     {
         if (!col.isTrigger) { return; }
         Debug.Log("Damagable: Trigger Detected " + other.gameObject.name);
+        
+        if (!other.gameObject.CompareTag(teamToDamageString)) { return; }
         HandleCollision(other.gameObject);
     }
 }

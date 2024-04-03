@@ -27,7 +27,8 @@ public class PlayerInteraction : NetworkBehaviour
 
     [Header("Item Holding")]
     private GameObject heldItem = null;
-    [SerializeField] private Transform handLocation;
+    // [SerializeField] private Transform handLocation;
+    [SerializeField] private GameObject hand;
 
     [Header("Camera Flash")]
     [SerializeField] private GameObject cameraFlashObject;
@@ -74,6 +75,8 @@ public class PlayerInteraction : NetworkBehaviour
 
         cameraFlashCollider = cameraFlashObject.GetComponent<Collider>();
         cameraFlash = cameraFlashObject.GetComponent<CameraFlash>();
+
+        hand = GetComponent<ParentableNetworkObject>().GetParentableObject();
     }
 
     void Update()
@@ -166,12 +169,16 @@ public class PlayerInteraction : NetworkBehaviour
         Obtainable targetObtainable = hit.transform.GetComponent<Obtainable>();
         if (targetObtainable != null && heldItem == null)
         {
-            targetObtainable.Obtain(handLocation);
-            heldItem = targetObtainable.gameObject;
+            heldItem = targetObtainable.Obtain(hand.transform);
+            if (heldItem) 
+            {
+                // hit.transform.GetComponent<NetworkObject>().Despawn();
+                Destroy(hit.transform.gameObject);
+            }
         }
         
-       
     }
+
 
     void Revive()
     {
@@ -229,7 +236,13 @@ public class PlayerInteraction : NetworkBehaviour
         if (heldItem != null) // if holding an item
         {
             Throwable targetThrowable = heldItem.GetComponent<Throwable>();
-            if (targetThrowable != null) { targetThrowable.Throw(cameraTransform, handLocation); }
+            if (targetThrowable != null) 
+            {
+                targetThrowable.Throw(cameraTransform, hand.transform);
+                
+                Damagable targetDamagable = heldItem.GetComponent<Damagable>();
+                if (targetDamagable != null) { targetDamagable.EnableCollision(); }
+            }
             
             Consumable targetConsumable = heldItem.GetComponent<Consumable>();
             if (targetConsumable != null) { targetConsumable.Use(); }
@@ -247,13 +260,20 @@ public class PlayerInteraction : NetworkBehaviour
         if (!dropAction.triggered) { return; }
         // Debug.Log("Dropping");
 
-        if (heldItem != null)
-        {
-            Obtainable targetObtainable = heldItem.GetComponent<Obtainable>();
-            targetObtainable.Drop(gameObject);
-            heldItem = null;
-        }
+        if (heldItem == null) { return; }
+        
+        Obtainable targetObtainable = heldItem.GetComponent<Obtainable>();
+        targetObtainable.Drop(gameObject);
+        heldItem = null;
     }
+
+    // [ServerRpc(RequireOwnership = true)]
+    // void DropServerRpc()
+    // {
+    //     Obtainable targetObtainable = heldItem.GetComponent<Obtainable>();
+    //     targetObtainable.Drop(gameObject);
+    //     heldItem = null;
+    // }
 
     
     void DefaultAction()

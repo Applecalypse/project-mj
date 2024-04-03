@@ -2,14 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Net.Http.Headers;
 using UnityEngine;
+using Unity.Netcode;
 
-public class Obtainable : MonoBehaviour
+public class Obtainable : NetworkBehaviour
 {   
     [Header("Item Physics")]
     private Rigidbody rb;
     private Collider col;
-    private Vector3 originalScale;
     private readonly float dropForce = 3f;
+
+    [Header("Network")]
+    private GameObject newObtainable = null;
 
     void Start()
     {
@@ -20,42 +23,58 @@ public class Obtainable : MonoBehaviour
         col.isTrigger = false;
     }
 
-    public void Obtain(Transform hand)
-    {
-        Debug.Log("Obtaining " + gameObject.name);
+    // public void Obtain(Transform hand)
+    // {
+    //     Debug.Log("Obtaining " + gameObject.name);
+        
+        
+    //     transform.SetParent(hand.transform);
+    //     rb.isKinematic = true;
+    //     rb.useGravity = false;
+    //     col.isTrigger = true;
 
-        transform.SetParent(hand);        
+    //     transform.localPosition = new Vector3(0, 0, 0);
+    //     transform.localRotation = Quaternion.Euler(0, 0, 0);
+        
+    //     originalScale = transform.localScale;
+    //     transform.localScale = transform.localScale * 0.5f;
+    // }
+
+    public GameObject Obtain(Transform hand)
+    {
         rb.isKinematic = true;
         rb.useGravity = false;
-        col.isTrigger = true;
+        col.enabled = false;
+        GetComponent<NetworkObject>().enabled = false;
+        GetComponent<ClientNetworkTransform>().enabled = false;
 
-        transform.localPosition = new Vector3(0, 0, 0);
-        transform.localRotation = Quaternion.Euler(0, 0, 0);
-        
-        originalScale = transform.localScale;
-        transform.localScale = transform.localScale * 0.5f;
+        newObtainable = Instantiate(gameObject, hand.position, hand.rotation, hand);
+        newObtainable.name = gameObject.name;
+        newObtainable.transform.parent = hand.transform;
+        newObtainable.GetComponent<NetworkObject>().enabled = true;
+        newObtainable.GetComponent<ClientNetworkTransform>().enabled = true;
+        return newObtainable;
     }
-
+    
     public void Drop(GameObject player)
     {
         Debug.Log("Dropping " + gameObject.name);
-        // resize back the object if needed
-        transform.localScale = originalScale;
 
         transform.SetParent(null);
 
         rb.isKinematic = false;
         rb.useGravity = true;
-        col.isTrigger = false;
+        col.enabled = true;
+        GetComponent<NetworkObject>().enabled = false;
+        GetComponent<ClientNetworkTransform>().enabled = false;
 
-        // rb.velocity = player.GetComponent<Rigidbody>().velocity;
+        transform.parent = null;
+        GetComponent<NetworkObject>().enabled = true;
+        GetComponent<ClientNetworkTransform>().enabled = true;
         rb.AddForce(player.transform.forward * dropForce, ForceMode.Impulse);
         rb.AddForce(player.transform.up * dropForce, ForceMode.Impulse);
 
         float random = Random.Range(-1f, 1f);
         rb.AddTorque(new Vector3(random, random, random));
-
-        
-
     }
 }

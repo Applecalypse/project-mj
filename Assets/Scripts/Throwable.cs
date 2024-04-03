@@ -12,27 +12,18 @@ public class Throwable : MonoBehaviour
     private readonly float forwardThrowForce = 10f;
     private readonly float upwardThrowForce = 0f;
 
-    [Header("Damage")]
-    private Damagable damagable;
-
     void Start()
     {
         rb = GetComponent<Rigidbody>();
         col = GetComponent<Collider>();
-        damagable = GetComponent<Damagable>();
     }
-
-    // void Update()
-    // {
-        
-    // }
 
     public void Throw(Transform camera, Transform hand)
     {
         rb.isKinematic = false;
         rb.transform.parent = null;
         rb.useGravity = true;
-        col.isTrigger = false;
+        col.enabled = true;
 
         // default direction is the direction that the camera is facing
         Vector3 throwDirection = camera.forward;
@@ -45,7 +36,5 @@ public class Throwable : MonoBehaviour
 
         Vector3 throwForce = (throwDirection * forwardThrowForce) + (camera.transform.up * upwardThrowForce);
         rb.AddForce(throwForce, ForceMode.Impulse);
-
-        damagable.EnableCollision();
     }
 }
