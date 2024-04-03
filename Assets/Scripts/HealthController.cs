@@ -13,7 +13,7 @@ public class HealthController : NetworkBehaviour
     private Team myTeam;
 
     [Header("Network")]
-    private NetworkVariable<float> currentHealth = new NetworkVariable<float>();
+    private NetworkVariable<float> currentHealth = new NetworkVariable<float>(writePerm: NetworkVariableWritePermission.Owner);
 
     public override void OnNetworkSpawn()
     {
@@ -62,6 +62,14 @@ public class HealthController : NetworkBehaviour
             Debug.Log(transform.name + " is dead");
             // Die();
         }
+    }
+
+    public void RevivePlayer()
+    {
+        PlayerController playerController = GetComponent<PlayerController>();
+        playerController.Revive();
+        currentHealth.Value = maxHealth;
+        GameManager.Instance.OnPlayerRevive();
     }
 
     public void TakeDamage(float damage)

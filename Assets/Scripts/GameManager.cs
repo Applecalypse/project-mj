@@ -82,6 +82,12 @@ public class GameManager : NetworkBehaviour
         }
     }
 
+    public void OnPlayerRevive()
+    {
+        // TODO: yes Im lazy
+        DecrementPlayerCountServerRpc(-1);
+    }
+
     public void OnPlayerDeath()
     {
         DecrementPlayerCountServerRpc(1);
