@@ -7,6 +7,7 @@ using Unity.Netcode;
 using Unity.Services.Authentication;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.InputSystem;
 
 public class EnemyController : NetworkBehaviour
@@ -35,12 +36,13 @@ public class EnemyController : NetworkBehaviour
     [Header("Enemy Model")]
     private Transform feet;
     private bool isGrounded;
-    public bool isFrozen;
+    private bool isFrozen = true;
     private Animator animator;
 
     [Header("Enemy Stun settings")]
     private bool isStunned = false;
-    public float stunDuration = 3f;
+    private readonly float stunDuration = 3f;
+    [SerializeField] private Image stunScreen;
     
     [Header("Network")]
     private bool isInLobby;
@@ -150,9 +152,22 @@ public class EnemyController : NetworkBehaviour
         
         isStunned = true;
         StartCoroutine(GetStunned());
+        StartCoroutine(FlashBang());
         
         EnemyInteraction enemyInteraction = GetComponent<EnemyInteraction>();
         enemyInteraction.Stun(stunDuration);
+    }
+
+    IEnumerator FlashBang()
+    {
+        stunScreen.color = new Color(1, 1, 1, 1);
+        Debug.Log("alpha" + stunScreen.color.a);
+        float fadeSpeed = 0.2f * Time.deltaTime;
+        while (stunScreen.color.a > 0)
+        {
+            stunScreen.color = new Color(1, 1, 1, stunScreen.color.a - fadeSpeed);
+            yield return null;
+        }
     }
 
     IEnumerator GetStunned()
