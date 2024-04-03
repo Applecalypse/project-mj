@@ -36,6 +36,7 @@ public class PlayerInteraction : NetworkBehaviour
 
     [Header("Player Model")]
     private Animator animator;
+    private PlayerController playerController;
 
     private void Start()
     {
@@ -44,6 +45,7 @@ public class PlayerInteraction : NetworkBehaviour
         dropAction = playerInput.actions["Drop"];
         shootAction = playerInput.actions["Shoot"];
         animator = GetComponentInParent<Animator>();
+        playerController = GetComponent<PlayerController>();
         
         /*
         prayAction.started += context =>
@@ -76,7 +78,7 @@ public class PlayerInteraction : NetworkBehaviour
 
     void Update()
     {
-        if (!enablePlayerControls) { return; }
+        if (!enablePlayerControls || playerController.isDead) { return; }
         
         Interact();
         Drop();
@@ -87,6 +89,7 @@ public class PlayerInteraction : NetworkBehaviour
 
     public void onPray(InputAction.CallbackContext context)
     {
+        if (playerController.isDead) { return; }
         switch (context.phase)
         {
             case InputActionPhase.Started:
@@ -104,7 +107,25 @@ public class PlayerInteraction : NetworkBehaviour
         }
     }
 
-    
+    public void OnInteract(InputAction.CallbackContext context)
+    {
+        if (playerController.isDead) { return; }
+        switch (context.phase)
+        {
+            case InputActionPhase.Started:
+                Debug.Log("Start Interact");
+                if (context.interaction is PressInteraction) { break; }
+                if (!CheckIfPointingAtPlayer())
+                { Debug.Log("Pointed At Player"); interactAction.Reset(); }
+                break;
+            case InputActionPhase.Performed:
+                if (context.interaction is HoldInteraction) { Debug.Log("Done Holding Interact"); Revive(); }
+                break;
+            case InputActionPhase.Canceled:
+                Debug.Log("Stopped Holding Interact");
+                break;
+        }
+    }
 
 
     public override void OnNetworkSpawn()
@@ -137,10 +158,10 @@ public class PlayerInteraction : NetworkBehaviour
         
         if ( hit.transform == null  ) { return; }
         
-        Debug.Log("Pointing at " + hit.transform.gameObject.name);
+        // Debug.Log("Pointing at " + hit.transform.gameObject.name);
 
         Interactable targetInteractable = hit.transform.GetComponent<Interactable>();
-        if (targetInteractable != null) { targetInteractable.Interact(); return; }
+        if (targetInteractable != null && !hit.transform.gameObject.CompareTag("shrine")) { targetInteractable.Interact(); return; }
         
         Obtainable targetObtainable = hit.transform.GetComponent<Obtainable>();
         if (targetObtainable != null && heldItem == null)
@@ -150,6 +171,40 @@ public class PlayerInteraction : NetworkBehaviour
         }
         
        
+    }
+
+    void Revive()
+    {
+        RaycastHit hit;
+        Vector3 rayOrigin = cameraTransform.position + (cameraTransform.forward);
+        Physics.Raycast(rayOrigin, cameraTransform.forward, out hit, 5);
+        Debug.DrawRay(rayOrigin, cameraTransform.forward * 5, Color.red, 100f);
+        
+        if ( hit.transform == null  ) { return; }
+        
+        Debug.Log("Revived : " + hit.transform.gameObject.name);
+        
+        if (hit.transform.gameObject.name == "bob")
+        {
+            Debug.Log("Reviving");
+            HealthController healthController = hit.transform.GetComponent<HealthController>();
+            healthController.RevivePlayer();
+        }
+    }
+
+    // Shitty code, I hate this
+    bool CheckIfPointingAtPlayer()
+    {
+        RaycastHit hit;
+        Vector3 rayOrigin = cameraTransform.position + (cameraTransform.forward);
+        Physics.Raycast(rayOrigin, cameraTransform.forward, out hit, 5);
+        Debug.DrawRay(rayOrigin, cameraTransform.forward * 5, Color.red, 100f);
+        
+        if ( hit.transform == null  ) { return false; }
+
+        if (hit.transform.gameObject.name == "bob") { Debug.Log("FOUND BOB"); return true; }
+
+        return false;
     }
 
     void Pray()

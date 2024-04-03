@@ -68,8 +68,13 @@ public class PlayerController : NetworkBehaviour
         runAction = playerInput.actions["Run"];
         jumpAction = playerInput.actions["Jump"];
         feet = transform.Find("Feet");
+        if (isDead)
+        {
+            OnDead();
+        }
     }
     
+    // TODO: find a fix to this hacky solution
     IEnumerator WaitFrozen()
     {
         yield return new WaitForSecondsRealtime(0.1f);
@@ -171,10 +176,18 @@ public class PlayerController : NetworkBehaviour
         xMovement.y = 0;
         zMovement.y = 0;
         move = xMovement + zMovement;
-        controller.Move(move * (Time.deltaTime * playerSpeed));
 
-        // set animator
-        animator.SetBool("isMoving", isMoving);
+        // set animator & move
+        if (isDead)
+        {
+            controller.Move(move * (Time.deltaTime * (playerSpeed * 0.5f)));
+            animator.SetFloat("movement", controller.velocity.magnitude);
+        }
+        else
+        {
+            controller.Move(move * (Time.deltaTime * playerSpeed));
+            animator.SetBool("isMoving", isMoving);
+        }
     }
 
     void Jump()
@@ -194,6 +207,18 @@ public class PlayerController : NetworkBehaviour
     {
         playerVelocity.y += gravityValue * Time.deltaTime;
         controller.Move(playerVelocity * Time.deltaTime);
+    }
+
+    public void Revive()
+    {
+        isDead = false;
+        animator.Play("idling");
+    }
+
+    public void OnDead()
+    {
+        isDead = true;
+        animator.Play("player_crawling");
     }
 
     public void ChangePlayerNickname(string playerName)

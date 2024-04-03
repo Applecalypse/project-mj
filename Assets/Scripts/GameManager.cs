@@ -11,7 +11,7 @@ public class GameManager : NetworkBehaviour
     public NetworkList<SpawnPosition> spawnPositions;
     public NetworkList<bool> spawnPositionsFlags;
     public Dictionary<ulong, Team> uidToTeam;
-    public NetworkVariable<int> keyItemCount = new NetworkVariable<int>(0);
+    public NetworkVariable<int> keyItemCount = new NetworkVariable<int>();
     public NetworkVariable<int> humanCount = new NetworkVariable<int>();
 
     public static GameManager Instance;
@@ -82,6 +82,12 @@ public class GameManager : NetworkBehaviour
         }
     }
 
+    public void OnPlayerRevive()
+    {
+        // TODO: yes Im lazy
+        DecrementPlayerCountServerRpc(-1);
+    }
+
     public void OnPlayerDeath()
     {
         DecrementPlayerCountServerRpc(1);
@@ -103,12 +109,15 @@ public class GameManager : NetworkBehaviour
         keyItemCount.Value = newKeyCount;
     }
 
-    public void increaseKeyCount()
+    public void IncreaseKeyCount()
     {
-        keyItemCount.Value += 1;
-        Debug.Log(keyItemCount.Value);
+        if (IsServer)
+        {
+            keyItemCount.Value += 1;
+            Debug.Log(keyItemCount.Value);
+        }
     }
-
+    
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();

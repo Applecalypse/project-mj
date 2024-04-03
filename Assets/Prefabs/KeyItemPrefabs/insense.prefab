@@ -11,17 +11,17 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: c4a4d47af496e8e438b4a8140ebdc1e2,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -69.762856
+      value: 69.30466
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: c4a4d47af496e8e438b4a8140ebdc1e2,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.433372
+      value: 1.7638978
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: c4a4d47af496e8e438b4a8140ebdc1e2,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 8.596377
+      value: 1.5266247
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: c4a4d47af496e8e438b4a8140ebdc1e2,
         type: 3}
@@ -31,17 +31,17 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: c4a4d47af496e8e438b4a8140ebdc1e2,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: c4a4d47af496e8e438b4a8140ebdc1e2,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: c4a4d47af496e8e438b4a8140ebdc1e2,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: c4a4d47af496e8e438b4a8140ebdc1e2,
         type: 3}
@@ -83,6 +83,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 2999248613066883530}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: c4a4d47af496e8e438b4a8140ebdc1e2,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1728324068805050683}
   m_SourcePrefab: {fileID: 100100000, guid: c4a4d47af496e8e438b4a8140ebdc1e2, type: 3}
 --- !u!1 &7820399347267896431 stripped
 GameObject:
@@ -171,3 +175,24 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &1728324068805050683
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7820399347267896431}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 1071807415
+  InScenePlacedSourceGlobalObjectIdHash: 0
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 1
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
