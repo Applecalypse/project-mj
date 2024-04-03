@@ -1103,6 +1103,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: EnemyWithCamera
       objectReference: {fileID: 0}
+    - target: {fileID: 3083167820188174513, guid: c3a1738ec1086499ba31d89da4132e79,
+        type: 3}
+      propertyPath: stunScreen
+      value: 
+      objectReference: {fileID: 1574527707}
     - target: {fileID: 4397341004930862277, guid: c3a1738ec1086499ba31d89da4132e79,
         type: 3}
       propertyPath: GlobalObjectIdHash
