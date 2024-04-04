@@ -47,17 +47,17 @@ public class HealthController : NetworkBehaviour
     }
 
     [ServerRpc(RequireOwnership = false)]
-    public void TakeDamageServerRpc(float damage)
+    public void TakeDamageServerRpc(float damage, Team _team)
     {
         currentHealth.Value -= damage;
         Debug.Log("DAMAGED");
         if (currentHealth.Value <= 0)
         {
-            if (myTeam == Team.Monster)
+            if (_team == Team.Monster)
             {
                 GameManager.Instance.MonsterDead();
             }
-            else if (myTeam == Team.Human)
+            else if (_team == Team.Human)
             {
                 GetComponent<PlayerController>().OnDead();
                 GameManager.Instance.OnPlayerDeath();
@@ -94,7 +94,7 @@ public class HealthController : NetworkBehaviour
     public void TakeDamage(float damage)
     {
         Debug.Log(transform.name + ": taking damage = " + damage);
-        TakeDamageServerRpc(damage);
+        TakeDamageServerRpc(damage, myTeam);
     }
 
 }
