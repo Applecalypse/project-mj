@@ -74,6 +74,7 @@ public class PlayerController : NetworkBehaviour
         StartCoroutine(WaitFrozen());
         controller = GetComponent<CharacterController>();
         controller.enabled = false;
+        nameTag.enabled = false;
         playerInput = GetComponent<PlayerInput>();
         animator = GetComponentInParent<Animator>();
         audioSource = GetComponentInChildren<AudioSource>();
