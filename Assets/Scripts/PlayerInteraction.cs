@@ -76,7 +76,7 @@ public class PlayerInteraction : NetworkBehaviour
         cameraFlashCollider = cameraFlashObject.GetComponent<Collider>();
         cameraFlash = cameraFlashObject.GetComponent<CameraFlash>();
 
-        hand = GetComponent<ParentableNetworkObject>().GetParentableObject();
+        // hand = GetComponent<ParentableNetworkObject>().GetParentableObject();
     }
 
     void Update()
@@ -161,7 +161,7 @@ public class PlayerInteraction : NetworkBehaviour
         
         if ( hit.transform == null  ) { return; }
         
-        // Debug.Log("Pointing at " + hit.transform.gameObject.name);
+        Debug.Log("Pointing at " + hit.transform.gameObject.name);
 
         Interactable targetInteractable = hit.transform.GetComponent<Interactable>();
         if (targetInteractable != null && !hit.transform.gameObject.CompareTag("shrine")) { targetInteractable.Interact(); return; }
@@ -169,14 +169,19 @@ public class PlayerInteraction : NetworkBehaviour
         Obtainable targetObtainable = hit.transform.GetComponent<Obtainable>();
         if (targetObtainable != null && heldItem == null)
         {
+            TransferOwnershipServerRpc(hit.transform.gameObject, NetworkManager.Singleton.LocalClientId);
             heldItem = targetObtainable.Obtain(hand.transform);
-            if (heldItem) 
-            {
-                // hit.transform.GetComponent<NetworkObject>().Despawn();
-                Destroy(hit.transform.gameObject);
-            }
         }
-        
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    void TransferOwnershipServerRpc(NetworkObjectReference networkObjectReference,ulong ownerId)
+    {
+        if (networkObjectReference.TryGet(out NetworkObject networkObject))
+        {
+            Debug.Log("Ownership changed to " + ownerId);
+            networkObject.ChangeOwnership(ownerId);
+        }
     }
 
 
@@ -231,13 +236,15 @@ public class PlayerInteraction : NetworkBehaviour
     void Shoot()
     {
         if (!shootAction.triggered) { return; }
-        // Debug.Log("Shooting");
+        Debug.Log("Shooting");
 
         if (heldItem != null) // if holding an item
         {
             Throwable targetThrowable = heldItem.GetComponent<Throwable>();
+            Obtainable targetObtainable = heldItem.GetComponent<Obtainable>();
             if (targetThrowable != null) 
             {
+                targetObtainable.StopPickUp();
                 targetThrowable.Throw(cameraTransform, hand.transform);
                 
                 Damagable targetDamagable = heldItem.GetComponent<Damagable>();
@@ -258,11 +265,12 @@ public class PlayerInteraction : NetworkBehaviour
     void Drop()
     {
         if (!dropAction.triggered) { return; }
-        // Debug.Log("Dropping");
+        Debug.Log("Dropping");
 
         if (heldItem == null) { return; }
         
         Obtainable targetObtainable = heldItem.GetComponent<Obtainable>();
+        targetObtainable.StopPickUp();
         targetObtainable.Drop(gameObject);
         heldItem = null;
     }

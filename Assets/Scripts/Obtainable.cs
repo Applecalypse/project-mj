@@ -1,8 +1,10 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Net.Http.Headers;
 using UnityEngine;
 using Unity.Netcode;
+using Random = UnityEngine.Random;
 
 public class Obtainable : NetworkBehaviour
 {   
@@ -10,9 +12,8 @@ public class Obtainable : NetworkBehaviour
     private Rigidbody rb;
     private Collider col;
     private readonly float dropForce = 3f;
-
-    [Header("Network")]
-    private GameObject newObtainable = null;
+    private bool onPickUp;
+    private Transform hand;
 
     void Start()
     {
@@ -23,58 +24,43 @@ public class Obtainable : NetworkBehaviour
         col.isTrigger = false;
     }
 
-    // public void Obtain(Transform hand)
-    // {
-    //     Debug.Log("Obtaining " + gameObject.name);
-        
-        
-    //     transform.SetParent(hand.transform);
-    //     rb.isKinematic = true;
-    //     rb.useGravity = false;
-    //     col.isTrigger = true;
+    private void Update()
+    {
+        if (!onPickUp || !hand) return;
+        var transform1 = transform;
+        var transform2 = hand.transform;
+        transform1.position = transform2.position;
+        transform1.rotation = transform2.rotation;
+    }
 
-    //     transform.localPosition = new Vector3(0, 0, 0);
-    //     transform.localRotation = Quaternion.Euler(0, 0, 0);
-        
-    //     originalScale = transform.localScale;
-    //     transform.localScale = transform.localScale * 0.5f;
-    // }
-
-    public GameObject Obtain(Transform hand)
+    public GameObject Obtain(Transform _hand)
     {
         rb.isKinematic = true;
         rb.useGravity = false;
         col.enabled = false;
-        GetComponent<NetworkObject>().enabled = false;
-        GetComponent<ClientNetworkTransform>().enabled = false;
+        onPickUp = true;
+        hand = _hand;
 
-        newObtainable = Instantiate(gameObject, hand.position, hand.rotation, hand);
-        newObtainable.name = gameObject.name;
-        newObtainable.transform.parent = hand.transform;
-        newObtainable.GetComponent<NetworkObject>().enabled = true;
-        newObtainable.GetComponent<ClientNetworkTransform>().enabled = true;
-        return newObtainable;
+        return gameObject;
     }
     
     public void Drop(GameObject player)
     {
         Debug.Log("Dropping " + gameObject.name);
 
-        transform.SetParent(null);
-
         rb.isKinematic = false;
         rb.useGravity = true;
         col.enabled = true;
-        GetComponent<NetworkObject>().enabled = false;
-        GetComponent<ClientNetworkTransform>().enabled = false;
-
-        transform.parent = null;
-        GetComponent<NetworkObject>().enabled = true;
-        GetComponent<ClientNetworkTransform>().enabled = true;
         rb.AddForce(player.transform.forward * dropForce, ForceMode.Impulse);
         rb.AddForce(player.transform.up * dropForce, ForceMode.Impulse);
 
         float random = Random.Range(-1f, 1f);
         rb.AddTorque(new Vector3(random, random, random));
+    }
+
+    public void StopPickUp()
+    {
+        onPickUp = false;
+        hand = null;
     }
 }

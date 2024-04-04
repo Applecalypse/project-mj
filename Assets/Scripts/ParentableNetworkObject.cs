@@ -12,11 +12,11 @@ public class ParentableNetworkObject : NetworkBehaviour
     private void Awake()
     {
         GameObject gameObj = Instantiate(parentableObjectPrefab, parentLocation.position, parentLocation.rotation, parentLocation);
-        gameObj.transform.parent = parentableObjectPrefab.transform;
-        gameObj.GetComponent<NetworkObject>().enabled = true;
-        gameObj.GetComponent<ClientNetworkTransform>().enabled = true;
+        gameObj.transform.parent = parentLocation;
+        // gameObj.GetComponent<NetworkObject>().enabled = true;
+        // gameObj.GetComponent<ClientNetworkTransform>().enabled = true;
 
-        parentableObject = gameObj;
+        // parentableObject = gameObj;
     }
 
     public GameObject GetParentableObject()

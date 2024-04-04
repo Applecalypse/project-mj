@@ -40,7 +40,7 @@ public class HealthController : NetworkBehaviour
         else { Debug.LogError("Wtf how did we reach here?"); }
     }
 
-    [ServerRpc]
+    [ServerRpc(RequireOwnership = false)]
     public void TakeDamageServerRPC(float damage)
     {
         currentHealth.Value -= damage;
