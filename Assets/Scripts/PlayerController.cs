@@ -8,6 +8,7 @@ using Unity.Collections;
 using Unity.Netcode;
 using Unity.Services.Authentication;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.InputSystem;
 
 public class PlayerController : NetworkBehaviour
@@ -57,6 +58,7 @@ public class PlayerController : NetworkBehaviour
     private bool isSpectator;
     private SkinnedMeshRenderer playerModel;
     private Canvas username;
+    [SerializeField] private Image crosshair;
     
 
     [Header("Networking - Debug")]
@@ -86,7 +88,7 @@ public class PlayerController : NetworkBehaviour
         feet = transform.Find("Feet");
         playerModel = gameObject.GetComponentInChildren<SkinnedMeshRenderer>();
         username = gameObject.GetComponentInChildren<Canvas>();
-
+        
         cameraTransform = cameraObject.transform;
         SetUpCamera();
         if (isDead)
@@ -109,10 +111,12 @@ public class PlayerController : NetworkBehaviour
         yield return new WaitForSecondsRealtime(0.1f);
         controller.enabled = true;
         isFrozen = false;
+        crosshair.enabled = true;
     }
 
     void Update()
     {
+        if (isInLobby.Value) { crosshair.enabled = false; }
         if (isInLobby.Value || isFrozen) { return; }
         
         if (!enablePlayerControls) { return; }
