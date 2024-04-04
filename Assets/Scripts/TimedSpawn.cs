@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using Unity.Netcode;
+using System.Linq;
 
 // credits: https://www.youtube.com/watch?v=1h2yStilBWU
 public class TimedSpawn : NetworkBehaviour
@@ -30,6 +31,9 @@ public class TimedSpawn : NetworkBehaviour
     [Header("Spawner Pity system")]
     [SerializeField] private float forcedSpawnInterval = 50f;
     private float timeSinceLastSpawn = 0f;
+
+    [Header("Spawner Spawned Items")]
+    private List<GameObject> spawnedItems = new List<GameObject>();
 
     void Update()
     {
@@ -61,7 +65,7 @@ public class TimedSpawn : NetworkBehaviour
     {
         if (stopSpawning) { CancelInvoke("SpawnObject"); }
 
-        // if (parentableObject.transform.childCount >= maxSpawnCount) { return; }
+        if (ItemCount() >= maxSpawnCount) { return; }
 
         bool rng = Random.Range(0, 100) <= spawnRate; // chance to spawn
         bool forcedSpawn = timeSinceLastSpawn > forcedSpawnInterval; // pity system
@@ -72,9 +76,10 @@ public class TimedSpawn : NetworkBehaviour
 
             GameObject spawnedObj = Instantiate(currentPrefabToSpawn, spawnPosition, Quaternion.identity, transform);
             spawnedObj.transform.parent = transform;
-
-            spawnedObj.GetComponent<NetworkObject>().Spawn(true);
+            spawnedObj.name = currentPrefabToSpawn.name + "--" + gameObject.name;
+            spawnedItems.Add(spawnedObj);
             
+            spawnedObj.GetComponent<NetworkObject>().Spawn(true);
             
             // reset the timer and set the next spawn
             timeSinceLastSpawn = 0f;
@@ -85,6 +90,11 @@ public class TimedSpawn : NetworkBehaviour
     void SpawnObject()
     {
         SpawnObjectServerRpc();
+    }
+
+    int ItemCount()
+    {
+        return spawnedItems.Count(n => n != null);
     }
 
     void SetNextSpawn()
