@@ -37,6 +37,7 @@ public class PlayerInteraction : NetworkBehaviour
     [Header("Player Model")]
     private Animator animator;
     private PlayerController playerController;
+    private AudioSource audioSource;
 
     private void Start()
     {
@@ -46,6 +47,7 @@ public class PlayerInteraction : NetworkBehaviour
         shootAction = playerInput.actions["Shoot"];
         animator = GetComponentInParent<Animator>();
         playerController = GetComponent<PlayerController>();
+        audioSource = GetComponentInChildren<AudioSource>();
         
         /*
         prayAction.started += context =>
@@ -161,7 +163,11 @@ public class PlayerInteraction : NetworkBehaviour
         // Debug.Log("Pointing at " + hit.transform.gameObject.name);
 
         Interactable targetInteractable = hit.transform.GetComponent<Interactable>();
-        if (targetInteractable != null && !hit.transform.gameObject.CompareTag("shrine")) { targetInteractable.Interact(); return; }
+        if (targetInteractable != null && !hit.transform.gameObject.CompareTag("shrine"))
+        {
+            SettingManager.Instance.PlaySfx("ItemPickUp", audioSource);
+            targetInteractable.Interact(); return;
+        }
         
         Obtainable targetObtainable = hit.transform.GetComponent<Obtainable>();
         if (targetObtainable != null && heldItem == null)

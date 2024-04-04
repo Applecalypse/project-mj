@@ -9,6 +9,7 @@ TagManager:
   - SpawnPointLobby
   - shrine
   - Ground
+  - KeyItem
   layers:
   - Default
   - TransparentFX

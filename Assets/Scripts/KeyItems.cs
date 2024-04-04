@@ -6,6 +6,7 @@ using UnityEngine;
 
 public class KeyItems : NetworkBehaviour
 {
+    
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.CompareTag("Player"))

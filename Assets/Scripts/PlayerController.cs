@@ -206,6 +206,15 @@ public class PlayerController : NetworkBehaviour
         }
     }
 
+    private void OnTriggerEnter(Collider other)
+    {
+        bool isKeyItem = other.CompareTag("KeyItem");
+        if (isKeyItem)
+        {
+            SettingManager.Instance.PlaySfx("KeyItemPickUp", audioSource);
+        }
+    }
+
     void Jump()
     {
         if (jumpAction.triggered && isGrounded)

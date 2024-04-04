@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.12214573, g: 0.06971302, b: 0.19284661, a: 1}
+  m_IndirectSpecularColor: {r: 0.059295986, g: 0.05277412, b: 0.101122074, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -9386,6 +9386,10 @@ MonoBehaviour:
     clip: {fileID: 8300000, guid: 2e7fb0ba5b18d404490681159db67163, type: 3}
   - name: ButtonClick
     clip: {fileID: 8300000, guid: bb84bfb629501443b9af694dbd200efd, type: 3}
+  - name: KeyItemPickUp
+    clip: {fileID: 8300000, guid: 35ffb6355f1534d468b9691ef62e7456, type: 3}
+  - name: ItemPickUp
+    clip: {fileID: 8300000, guid: c0fb8b90f241713499d267c5a489dbfd, type: 3}
   musicSource: {fileID: 0}
   sfxSource: {fileID: 0}
   musicSourceVolume: 0
