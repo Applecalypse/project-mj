@@ -37,16 +37,7 @@ public class GameManager : NetworkBehaviour
         spawnPositionsFlags = new NetworkList<bool>();
         uidToTeam = new Dictionary<ulong, Team>();
     }
-
-    private void Update()
-    {
-        if (isGameOver.Value)
-        {
-            NetworkManager.Singleton.Shutdown();
-            SceneManager.LoadScene("GameOverMonsterDead");
-        }
-    }
-
+    
     public void MonsterDead()
     {
         // ; Monster
@@ -55,8 +46,8 @@ public class GameManager : NetworkBehaviour
         // ; Human
         // Change Scene to winning scene (Monster Dead) -> move to lobby again
 
-        // ChangeSceneServerRpc_("GameOverHumansDead");
-        isGameOver.Value = true;
+        ChangeSceneServerRpc_("GameOverMonsterDead");
+        // isGameOver.Value = true;
     }
 
     // TODO: Connect this to the game
@@ -81,21 +72,11 @@ public class GameManager : NetworkBehaviour
         
         ChangeSceneServerRpc_("GameOverHumansDead");
     }
-
-    public void startco()
-    {
-        StartCoroutine(testChangeMap());
-    }
-    IEnumerator testChangeMap()
-    {
-        yield return new WaitForSecondsRealtime(5);
-        NetworkManager.Singleton.SceneManager.LoadScene("Standby", LoadSceneMode.Single);
-    }
-
+    
     // [ServerRpc(RequireOwnership = false)]
     private void ChangeSceneServerRpc_(string sceneName)
     {
-        NetworkManager.Singleton.SceneManager.LoadScene(sceneName, LoadSceneMode.Single);
+        NetworkManager.SceneManager.LoadScene(sceneName, LoadSceneMode.Single);
     }
 
     public void CountHumans()

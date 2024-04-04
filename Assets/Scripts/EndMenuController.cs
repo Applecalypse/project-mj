@@ -25,4 +25,5 @@ public class EndMenuController : MonoBehaviour
         NetworkManager.Singleton.SceneManager.LoadScene("StandBy", LoadSceneMode.Single);
         NetworkManager.Singleton.Shutdown();
     }
+    
 }

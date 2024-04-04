@@ -125,8 +125,6 @@ public class Relay : NetworkBehaviour
         
         GameManager.Instance.CountHumans();
 
-        GameManager.Instance.startco();
-        
         NetworkManager.Singleton.SceneManager.LoadScene("PrototypeMap", LoadSceneMode.Single);
     }
 
