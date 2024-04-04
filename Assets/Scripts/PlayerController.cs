@@ -199,8 +199,8 @@ public class PlayerController : NetworkBehaviour
         {
             _fireThrottle.Run(()=>
             {
-                SettingManager.Instance.PlaySfxGrass("OnGrass", audioSource);
-            }, 1/ (controller.velocity.magnitude * 0.5f) );
+                SettingManager.Instance.PlaySfxGrass("OnGrass", audioSource, 0.3f);
+            }, 1/ (controller.velocity.magnitude * fireRatio) );
         }
     }
 

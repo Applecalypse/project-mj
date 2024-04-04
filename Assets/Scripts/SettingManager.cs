@@ -62,7 +62,7 @@ public class SettingManager : MonoBehaviour
         }
     }
     
-    public void PlaySfxGrass(string soundName, AudioSource audioSource)
+    public void PlaySfxGrass(string soundName, AudioSource audioSource, float volumeFrom = 0.5f)
     {
         Sound s = Array.Find(sfxSounds, x => x.name == soundName);
 
@@ -74,37 +74,12 @@ public class SettingManager : MonoBehaviour
         {
             float delta = Random.Range(0f,.5f);
             float weight = 1f;
-            audioSource.volume = 0.3f;
             audioSource.pitch = 1 + delta * weight;
             Debug.Log("audioSource.pitch: "+ audioSource.pitch);
-            audioSource.PlayOneShot(s.clip);
+            audioSource.PlayOneShot(s.clip, volumeFrom);
             
         }
     }
-
-    // public void PlaySfxFromClip(AudioClip clip, bool isGun = false)
-    // {
-    //     if (!clip && isGun)
-    //         PlaySfx("ShootDefault");
-    //     else if (!clip && !isGun)
-    //         PlaySfx("SwingDefault");
-    //     else
-    //         sfxSource.PlayOneShot(clip);
-    // }
-
-    // public void PlaySfxAtPoint(string name, Vector3 pos, float volume = 0.2f)
-    // {
-    //     Sound s = Array.Find(sfxSounds, x => x.name == name);
-    //
-    //     if (s == null)
-    //     {
-    //         Debug.Log("Sound not found");
-    //     }
-    //     else
-    //     {
-    //         AudioSource.PlayClipAtPoint(s.clip, pos, volume);
-    //     }
-    // }
 
     public void ToggleMusic()
     {
