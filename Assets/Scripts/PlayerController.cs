@@ -20,9 +20,11 @@ public class PlayerController : NetworkBehaviour
     [Header("Player Movement")]
     private readonly float playerBaseSpeed = 5f;
     private readonly float playerFastSpeed = 10f;
+    private readonly float playerSpectatorSpeed = 15f;
     private readonly float playerSlowSpeed = 3f;
     [SerializeField] private float playerSpeed = 5f;
     private Vector3 playerVelocity;
+    private Vector3 spectatorVelocity;
 
     [Header("Player Physics")]
     private readonly float jumpHeight = 1.0f;
@@ -45,10 +47,14 @@ public class PlayerController : NetworkBehaviour
     [Header("Player Model")]
     private Transform feet;
     private bool isGrounded;
+    private GameObject player;
     [SerializeField] private TMP_Text nameTag;
     private Animator animator;
     public bool isDead;
     public bool isFrozen;
+    private bool isSpectator;
+    private SkinnedMeshRenderer playerModel;
+    private Canvas username;
     
 
     [Header("Networking - Debug")]
@@ -75,6 +81,8 @@ public class PlayerController : NetworkBehaviour
         runAction = playerInput.actions["Run"];
         jumpAction = playerInput.actions["Jump"];
         feet = transform.Find("Feet");
+        playerModel = gameObject.GetComponentInChildren<SkinnedMeshRenderer>();
+        username = gameObject.GetComponentInChildren<Canvas>();
         if (isDead)
         {
             OnDead();
@@ -101,9 +109,10 @@ public class PlayerController : NetworkBehaviour
         CheckGround();
         MakeMovement();
         Jump();
+        CheckSpectator();
         ApplyGravity();
+        //Debug.Log(isSpectator);
     }
-
     public override void OnNetworkSpawn()
     {
         nickname.OnValueChanged += OnNameChange;
@@ -176,6 +185,11 @@ public class PlayerController : NetworkBehaviour
                 isTired = false;
             }
         }
+
+        if (isSpectator)
+        {
+            playerSpeed = playerSpectatorSpeed;
+        }
         
         // will move relative to the camera's orientation
         Vector3 xMovement = move.x * cameraTransform.right.normalized;
@@ -219,8 +233,45 @@ public class PlayerController : NetworkBehaviour
         }
     }
 
+    void CheckSpectator()
+    {
+        if (isSpectator)
+        {
+            username.enabled = false;
+            playerModel.enabled = false;
+            controller.Move(spectatorVelocity * Time.deltaTime);
+        }
+        else
+        {
+            username.enabled = true;
+            playerModel.enabled = true;
+        }
+    }
+
+    public void setSpectator(bool state)
+    {
+        isSpectator = state;
+    }
+    
+    public void onFly(InputAction.CallbackContext context)
+    {
+        if (!isSpectator)
+        {
+            return;
+        }
+
+        float verticalDirection = context.ReadValue<Vector2>().y;
+        spectatorVelocity.x = playerVelocity.x;
+        spectatorVelocity.y =  verticalDirection * playerSpectatorSpeed;
+        spectatorVelocity.z = playerVelocity.z;
+    }
+
     void ApplyGravity()
     {
+        if (isSpectator)
+        {
+            return;
+        }
         playerVelocity.y += gravityValue * Time.deltaTime;
         controller.Move(playerVelocity * Time.deltaTime);
     }
