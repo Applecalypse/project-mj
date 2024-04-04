@@ -13,6 +13,7 @@ public class GameManager : NetworkBehaviour
     public Dictionary<ulong, Team> uidToTeam;
     public NetworkVariable<int> keyItemCount = new NetworkVariable<int>();
     public NetworkVariable<int> humanCount = new NetworkVariable<int>();
+    public NetworkVariable<bool> isEscaped = new NetworkVariable<bool>();
 
     public static GameManager Instance;
     
@@ -54,7 +55,7 @@ public class GameManager : NetworkBehaviour
         // ; Human
         // Change scene to winning scene (human escaped)
 
-        ChangeSceneServerRpc("GameOverHumansDead");
+        ChangeSceneServerRpc("GameOverHumanEscaped");
     }
 
     public void HumanDead()
@@ -97,7 +98,11 @@ public class GameManager : NetworkBehaviour
     private void DecrementPlayerCountServerRpc(int decrement = 1)
     {
         humanCount.Value -= decrement;
-        if (humanCount.Value <= 0)
+        if (humanCount.Value <= 0 && isEscaped.Value)
+        {
+            HumanEscaped();
+        }
+        else if (humanCount.Value <= 0)
         {
             HumanDead();
         }

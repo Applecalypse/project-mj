@@ -29,4 +29,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/GameOverHumansDead.unity
     guid: eee3b8ac1e7b44ac5ace2032845ca053
+  - enabled: 1
+    path: Assets/Scenes/GameOverHumanEscaped.unity
+    guid: 8448e842d87044ca39b9dc78d587124f
   m_configObjects: {}
