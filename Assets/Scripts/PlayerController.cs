@@ -46,7 +46,6 @@ public class PlayerController : NetworkBehaviour
     private Transform feet;
     private bool isGrounded;
     [SerializeField] private TMP_Text nameTag;
-    private AudioSource audioSource;
     private Animator animator;
     public bool isDead;
     public bool isFrozen;
@@ -59,6 +58,8 @@ public class PlayerController : NetworkBehaviour
     public NetworkVariable<bool> isInLobby = new NetworkVariable<bool>();
     public SpawnPosition sittingPos = new SpawnPosition();
     
+    [Header("Sound system")]
+    private AudioSource audioSource;
     [SerializeField] float fireRatio = 0.3f;
     Throttle _fireThrottle = new Throttle();
     
@@ -197,6 +198,7 @@ public class PlayerController : NetworkBehaviour
 
         if (move.magnitude > Mathf.Epsilon && isGrounded)
         {
+            Debug.Log("Playing sound");
             _fireThrottle.Run(()=>
             {
                 SettingManager.Instance.PlaySfxGrass("OnGrass", audioSource, 0.3f);

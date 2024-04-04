@@ -26,7 +26,10 @@ public class SettingManager : MonoBehaviour
     
     private void Start()
     {
-        PlayMusic("Theme", musicSource);
+        // PlayMusic("Theme", musicSource);
+        AudioSource mainMenuCamera = GameObject.Find("Cameras").GetComponentInChildren<AudioSource>();
+        mainMenuCamera.volume = 0.1f;
+        PlayMusic("MainMenuBGM", mainMenuCamera);
     }
 
     public void PlayMusic(string soundName, AudioSource audioSource)
@@ -76,7 +79,8 @@ public class SettingManager : MonoBehaviour
             float weight = 1f;
             audioSource.pitch = 1 + delta * weight;
             Debug.Log("audioSource.pitch: "+ audioSource.pitch);
-            audioSource.PlayOneShot(s.clip, sfxSourceVolume * volumeMultiplier);
+            // audioSource.PlayOneShot(s.clip, sfxSourceVolume * volumeMultiplier);
+            audioSource.PlayOneShot(s.clip, 0.3f);
             
         }
     }
@@ -152,3 +156,6 @@ public class Sound
     public string name;
     public AudioClip clip;
 }
+
+
+

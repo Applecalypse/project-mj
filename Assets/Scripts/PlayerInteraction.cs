@@ -169,8 +169,6 @@ public class PlayerInteraction : NetworkBehaviour
             targetObtainable.Obtain(handLocation);
             heldItem = targetObtainable.gameObject;
         }
-        
-       
     }
 
     void Revive()

@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -11,6 +12,9 @@ public class MainMenuController : MonoBehaviour
     private Button creditButtion;
 
     [SerializeField] private GameObject networkCanvas;
+    [SerializeField] private GameObject settingCanvas;
+
+    private AudioSource mainMenuCamera;
 
     private void OnEnable()
     {
@@ -19,14 +23,34 @@ public class MainMenuController : MonoBehaviour
         settingButton = root.Q<Button>("setting-button");
         creditButtion = root.Q<Button>("credit-button");
 
+        mainMenuCamera = GameObject.Find("Cameras").GetComponentInChildren<AudioSource>();
+
         startButton.clicked += OnStartButtonClick;
+        settingButton.clicked += OnSettingButtonClick;
+        
+        startButton.clicked += OnButtonClick;
+        settingButton.clicked += OnButtonClick;
+        creditButtion.clicked += OnButtonClick;
+
     }
 
     private async void OnStartButtonClick()
     {
         Debug.Log("Clicked");
+
         await Relay.Authenticate();
         networkCanvas.SetActive(true);
         gameObject.SetActive(false);
+    }
+
+    private void OnSettingButtonClick()
+    {
+        // settingCanvas.SetActive(true);
+        // gameObject.SetActive(false);
+    }
+
+    private void OnButtonClick()
+    {
+        SettingManager.Instance.PlaySfx("ButtonClick", mainMenuCamera);
     }
 } 
