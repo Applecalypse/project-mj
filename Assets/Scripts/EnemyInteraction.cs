@@ -31,12 +31,17 @@ public class EnemyInteraction : NetworkBehaviour
     [Header("Damage")]
     private Damagable damagable; // should be at weapon
 
+    [Header("Audio")]
+    private AudioSource audioSource;
+
     private void Start()
     {
         animator = GetComponent<Animator>();
         playerInput = GetComponent<PlayerInput>();
         animator = GetComponentInParent<Animator>();
         damagable = weapon.GetComponent<Damagable>();
+
+        audioSource = GetComponentInChildren<AudioSource>();
 
         interactAction = playerInput.actions["Interact"];
         attackAction = playerInput.actions["Attack"];
@@ -93,7 +98,7 @@ public class EnemyInteraction : NetworkBehaviour
         
         damagable.EnableCollision();
         animator.SetTrigger("Attacks");
-        
+        // SettingManager.Instance.PlaySfx("MonsterAttack", audioSource);
         StartCoroutine(AttackCooldown());
     }
 
@@ -108,6 +113,7 @@ public class EnemyInteraction : NetworkBehaviour
     {
         isStunned = true;
         StartCoroutine(GetStunned(stunDuration));
+        // SettingManager.Instance.PlaySfx("EnemyConfusion", audioSource);
     }
 
     IEnumerator GetStunned(float stunDuration)

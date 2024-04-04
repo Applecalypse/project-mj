@@ -37,12 +37,14 @@ public class EnemyController : NetworkBehaviour
     private Transform feet;
     private bool isGrounded;
     public bool isFrozen;
-    private AudioSource audioSource;
     private Animator animator;
 
     [Header("Enemy Stun settings")]
     private bool isStunned = false;
     public float stunDuration = 3f;
+
+    [Header("Audio")]
+    private AudioSource audioSource;
     
     [Header("Network")]
     private bool isInLobby;
@@ -143,6 +145,7 @@ public class EnemyController : NetworkBehaviour
             _fireThrottle.Run(()=>
             {
                 SettingManager.Instance.PlaySfxGrass("OnGrass", audioSource, 0.2f);
+                // SettingManager.Instance.PlaySfxGrass("MonsterFootstep", audioSource, 0.2f);
             }, 1/ (controller.velocity.magnitude * fireRatio) );
         }
     }
