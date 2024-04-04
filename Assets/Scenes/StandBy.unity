@@ -16970,16 +16970,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4331157867487981296, guid: bd9fe91b7f7dd4c33b7d38c82f4c85d4,
         type: 3}
-      propertyPath: NetworkConfig.ForceSamePrefabs
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4331157867487981296, guid: bd9fe91b7f7dd4c33b7d38c82f4c85d4,
-        type: 3}
-      propertyPath: NetworkConfig.Prefabs.NetworkPrefabsLists.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4331157867487981296, guid: bd9fe91b7f7dd4c33b7d38c82f4c85d4,
-        type: 3}
       propertyPath: NetworkConfig.Prefabs.NetworkPrefabsLists.Array.data[0]
       value: 
       objectReference: {fileID: 11400000, guid: 83774134b842e5849a12741b1ee838ab,
@@ -19040,7 +19030,7 @@ MonoBehaviour:
   - {fileID: 561087582}
   - {fileID: 1321373093}
   players: []
-  playerPrefab: {fileID: 3306610084392409789, guid: 75f5d98c8e6db4963b153e0eb3ffca21,
+  playerPrefab: {fileID: 7536629065839672824, guid: 75f5d98c8e6db4963b153e0eb3ffca21,
     type: 3}
   mainPlayer: {fileID: 0}
   gameManager: {fileID: 87118258}

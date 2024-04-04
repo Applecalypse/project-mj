@@ -27,7 +27,8 @@ public class PlayerInteraction : NetworkBehaviour
 
     [Header("Item Holding")]
     private GameObject heldItem = null;
-    [SerializeField] private Transform handLocation;
+    // [SerializeField] private Transform handLocation;
+    [SerializeField] private GameObject hand;
 
     [Header("Camera Flash")]
     [SerializeField] private GameObject cameraFlashObject;
@@ -76,6 +77,8 @@ public class PlayerInteraction : NetworkBehaviour
 
         cameraFlashCollider = cameraFlashObject.GetComponent<Collider>();
         cameraFlash = cameraFlashObject.GetComponent<CameraFlash>();
+
+        // hand = GetComponent<ParentableNetworkObject>().GetParentableObject();
     }
 
     void Update()
@@ -160,7 +163,7 @@ public class PlayerInteraction : NetworkBehaviour
         
         if ( hit.transform == null  ) { return; }
         
-        // Debug.Log("Pointing at " + hit.transform.gameObject.name);
+        Debug.Log("Pointing at " + hit.transform.gameObject.name);
 
         Interactable targetInteractable = hit.transform.GetComponent<Interactable>();
         if (targetInteractable != null && !hit.transform.gameObject.CompareTag("shrine"))
@@ -172,10 +175,21 @@ public class PlayerInteraction : NetworkBehaviour
         Obtainable targetObtainable = hit.transform.GetComponent<Obtainable>();
         if (targetObtainable != null && heldItem == null)
         {
-            targetObtainable.Obtain(handLocation);
-            heldItem = targetObtainable.gameObject;
+            TransferOwnershipServerRpc(hit.transform.gameObject, NetworkManager.Singleton.LocalClientId);
+            heldItem = targetObtainable.Obtain(hand.transform);
         }
     }
+
+    [ServerRpc(RequireOwnership = false)]
+    void TransferOwnershipServerRpc(NetworkObjectReference networkObjectReference,ulong ownerId)
+    {
+        if (networkObjectReference.TryGet(out NetworkObject networkObject))
+        {
+            Debug.Log("Ownership changed to " + ownerId);
+            networkObject.ChangeOwnership(ownerId);
+        }
+    }
+
 
     void Revive()
     {
@@ -228,12 +242,20 @@ public class PlayerInteraction : NetworkBehaviour
     void Shoot()
     {
         if (!shootAction.triggered) { return; }
-        // Debug.Log("Shooting");
+        Debug.Log("Shooting");
 
         if (heldItem != null) // if holding an item
         {
             Throwable targetThrowable = heldItem.GetComponent<Throwable>();
-            if (targetThrowable != null) { targetThrowable.Throw(cameraTransform, handLocation); }
+            Obtainable targetObtainable = heldItem.GetComponent<Obtainable>();
+            if (targetThrowable != null) 
+            {
+                targetObtainable.StopPickUp();
+                targetThrowable.Throw(cameraTransform, hand.transform);
+                
+                Damagable targetDamagable = heldItem.GetComponent<Damagable>();
+                if (targetDamagable != null) { targetDamagable.EnableCollision(); }
+            }
             
             Consumable targetConsumable = heldItem.GetComponent<Consumable>();
             if (targetConsumable != null) { targetConsumable.Use(); }
@@ -249,15 +271,23 @@ public class PlayerInteraction : NetworkBehaviour
     void Drop()
     {
         if (!dropAction.triggered) { return; }
-        // Debug.Log("Dropping");
+        Debug.Log("Dropping");
 
-        if (heldItem != null)
-        {
-            Obtainable targetObtainable = heldItem.GetComponent<Obtainable>();
-            targetObtainable.Drop(gameObject);
-            heldItem = null;
-        }
+        if (heldItem == null) { return; }
+        
+        Obtainable targetObtainable = heldItem.GetComponent<Obtainable>();
+        targetObtainable.StopPickUp();
+        targetObtainable.Drop(gameObject);
+        heldItem = null;
     }
+
+    // [ServerRpc(RequireOwnership = true)]
+    // void DropServerRpc()
+    // {
+    //     Obtainable targetObtainable = heldItem.GetComponent<Obtainable>();
+    //     targetObtainable.Drop(gameObject);
+    //     heldItem = null;
+    // }
 
     
     void DefaultAction()
