@@ -51,7 +51,7 @@ public class EnemyController : NetworkBehaviour
     [Header("Network")]
     private bool isInLobby;
     public NetworkVariable<FixedString32Bytes> nickname = new NetworkVariable<FixedString32Bytes>("", NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
-    public NetworkVariable<Team> team = new NetworkVariable<Team>(Team.Human, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+    public NetworkVariable<Team> team = new NetworkVariable<Team>(Team.Monster, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 
     [SerializeField] private TMP_Text nameTag;
 
