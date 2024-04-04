@@ -10,7 +10,7 @@ public class HealthController : NetworkBehaviour
 
     [Header("Team")]
     // maybe can be used for checking Friendly fire
-    [SerializeField] private Team myTeam;
+    [SerializeField] private NetworkVariable<Team> myTeam = new NetworkVariable<Team>(writePerm: NetworkVariableWritePermission.Owner);
 
     [Header("Network - Debug dun tath")]
     [SerializeField] private NetworkVariable<float> currentHealth = new NetworkVariable<float>(100);
@@ -36,8 +36,8 @@ public class HealthController : NetworkBehaviour
         PlayerController playerController = GetComponent<PlayerController>();
         EnemyController enemyController = GetComponent<EnemyController>();
         
-        if (playerController != null) { myTeam = Team.Human; }
-        else if (enemyController != null) { myTeam = Team.Monster; }
+        if (playerController != null) { myTeam.Value = Team.Human; }
+        else if (enemyController != null) { myTeam.Value = Team.Monster; }
         else { Debug.LogError("Wtf how did we reach here?"); }
     }
 
@@ -97,7 +97,7 @@ public class HealthController : NetworkBehaviour
     public void TakeDamage(float damage)
     {
         Debug.Log(transform.name + ": taking damage = " + damage);
-        TakeDamageServerRpc(damage, myTeam);
+        TakeDamageServerRpc(damage, myTeam.Value);
     }
 
 }
