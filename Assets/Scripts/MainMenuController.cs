@@ -13,6 +13,7 @@ public class MainMenuController : MonoBehaviour
 
     [SerializeField] private GameObject networkCanvas;
     [SerializeField] private GameObject settingCanvas;
+    [SerializeField] private GameObject creditsCanvas;
 
     private AudioSource mainMenuCamera;
 
@@ -27,6 +28,7 @@ public class MainMenuController : MonoBehaviour
 
         startButton.clicked += OnStartButtonClick;
         settingButton.clicked += OnSettingButtonClick;
+        creditButtion.clicked += OnCreditButtonClick;
         
         startButton.clicked += OnButtonClick;
         settingButton.clicked += OnButtonClick;
@@ -45,6 +47,11 @@ public class MainMenuController : MonoBehaviour
     private void OnSettingButtonClick()
     {
         settingCanvas.SetActive(true);
+    }
+
+    private void OnCreditButtonClick()
+    {
+        creditsCanvas.SetActive(true);
     }
 
     private void OnButtonClick()
