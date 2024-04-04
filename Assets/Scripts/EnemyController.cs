@@ -41,7 +41,7 @@ public class EnemyController : NetworkBehaviour
     private Animator animator;
 
     [Header("Enemy Stun settings")]
-    private bool isStunned = false;
+    // private bool isStunned = false;
     private readonly float stunDuration = 3f;
     [SerializeField] private Image stunScreen;
 
@@ -50,6 +50,7 @@ public class EnemyController : NetworkBehaviour
     
     [Header("Network")]
     private bool isInLobby;
+    public NetworkVariable<bool> isStunned = new NetworkVariable<bool>();
     public NetworkVariable<FixedString32Bytes> nickname = new NetworkVariable<FixedString32Bytes>("", NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
     public NetworkVariable<Team> team = new NetworkVariable<Team>(Team.Human, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 
@@ -81,7 +82,7 @@ public class EnemyController : NetworkBehaviour
 
     void Update()
     {
-        if (isInLobby || isFrozen || isStunned) { return; }
+        if (isInLobby || isFrozen || isStunned.Value ) { return; }
     
         if (!enablePlayerControls) { return; }
 
@@ -101,8 +102,9 @@ public class EnemyController : NetworkBehaviour
         
         if (!IsOwner)
         {
-            nameTag.text = nickname.Value.ToString();
             enabled = false; 
+            nameTag.text = nickname.Value.ToString();
+            stunScreen.enabled = false;
             return;
         }
         
@@ -155,13 +157,19 @@ public class EnemyController : NetworkBehaviour
         }
     }
 
+    [ServerRpc]
+    private void SetStunServerRpc(bool stun)
+    {
+        isStunned.Value = stun;
+    }
+
     public void Stun()
     {
         Debug.Log("Stunned");
         // animation does not work properly
         animator.SetBool("isStunned", true);
         
-        isStunned = true;
+        SetStunServerRpc(true);
         StartCoroutine(GetStunned());
         StartCoroutine(FlashBang());
         
@@ -185,7 +193,7 @@ public class EnemyController : NetworkBehaviour
     {
         yield return new WaitForSecondsRealtime(stunDuration);
         animator.SetBool("isStunned", false);
-        isStunned = false;
+        SetStunServerRpc(false);
     }
 
     void ApplyGravity()

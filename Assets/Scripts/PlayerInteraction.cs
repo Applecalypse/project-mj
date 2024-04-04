@@ -34,6 +34,8 @@ public class PlayerInteraction : NetworkBehaviour
     [SerializeField] private GameObject cameraFlashObject;
     private CameraFlash cameraFlash;
     private Collider cameraFlashCollider;
+    private bool canFlash = true;
+    private float flashCooldown = 5f;
 
     [Header("Player Model")]
     private Animator animator;
@@ -292,9 +294,28 @@ public class PlayerInteraction : NetworkBehaviour
     
     void DefaultAction()
     {
-        bool flashSuccessful = cameraFlash.Flash();
 
-        // if (flashSuccessful) { Debug.Log("Player Interaction: Flash Hit"); }
-        // else { Debug.Log("Player Interaction: No target in range"); }
+        if (canFlash)
+        {
+            Debug.Log("PlayerInteraction: Flashing");
+            canFlash = false;
+
+            cameraFlash.Flash();
+            SettingManager.Instance.PlaySfx("MonsterAttack", audioSource);
+            StartCoroutine(FlashCooldown());
+            
+        }
+        else
+        {
+            Debug.Log("PlayerInteraction: Flash on cooldown");
+        }
+    }
+
+    IEnumerator FlashCooldown()
+    {   
+        Debug.Log("PlayerInteraction: Start cooldown");
+        yield return new WaitForSeconds(flashCooldown);
+        canFlash = true;
+        Debug.Log("PlayerInteraction: Done cooldown");
     }
 }

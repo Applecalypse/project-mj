@@ -9541,6 +9541,8 @@ MonoBehaviour:
     clip: {fileID: 8300000, guid: 604fd4aa1e2b8450592d5af5f0079703, type: 3}
   - name: MonsterConfusion
     clip: {fileID: 8300000, guid: 48002c240dcb34282bb89e8d6d5caad9, type: 3}
+  - name: CameraFlash
+    clip: {fileID: 8300000, guid: f7608c17442d64aed82309cd326d979a, type: 3}
   FootStepPitchModWeight: -0.112
 --- !u!4 &866269171
 Transform:

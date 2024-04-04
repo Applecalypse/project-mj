@@ -5,6 +5,13 @@ using UnityEngine;
 public class CameraFlash : MonoBehaviour
 {
     private EnemyController target;
+    private Light flashLight;
+
+    void Start()
+    {
+        flashLight = GetComponent<Light>();
+        flashLight.intensity = 0;
+    }
 
     // when the enemy gets in range, track the target
     void OnTriggerEnter(Collider other)
@@ -26,12 +33,25 @@ public class CameraFlash : MonoBehaviour
 
     // can be triggered at any time
     // will only be effective when the target is in range
-    public bool Flash()
+    public void Flash()
     {
-        Debug.Log("CameraFlash: Flashing Camera");
-        if (target == null) return false;
+        Debug.Log("CameraFlash: Flashing");
+        StartCoroutine(FlashEffect());
         
+        if (target == null) return;
         target.Stun();
-        return true;
+        
+    }
+
+    IEnumerator FlashEffect()
+    {
+        flashLight.intensity = 100;
+        float fadeSpeed = 60f * Time.deltaTime;
+        while (flashLight.intensity > 0)
+        {
+            Debug.Log("CameraFlash: Intensity = " + flashLight.intensity);
+            flashLight.intensity -= fadeSpeed;
+            yield return null;
+        }
     }
 }

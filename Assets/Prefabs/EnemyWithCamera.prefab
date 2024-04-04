@@ -117,7 +117,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 912098900
+  GlobalObjectIdHash: 2455458695
   InScenePlacedSourceGlobalObjectIdHash: 912098900
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
@@ -710,6 +710,8 @@ MonoBehaviour:
   enemySpeed: 6
   isFrozen: 0
   stunScreen: {fileID: 880425550506054667}
+  isStunned:
+    m_InternalValue: 0
   nickname:
     m_InternalValue:
       utf8LengthInBytes: 0
@@ -799,6 +801,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cameraTransform: {fileID: 1291649321670059270}
   enablePlayerControls: 1
+  isStunned:
+    m_InternalValue: 0
   weapon: {fileID: 4588016251794671421}
 --- !u!114 &2547531375449741721
 MonoBehaviour:

@@ -14,7 +14,8 @@ public class EnemyInteraction : NetworkBehaviour
     [SerializeField] private bool enablePlayerControls = true;
 
     [Header("Enemy Status")]
-    private bool isStunned = false;
+    // private bool isStunned = false;
+    public NetworkVariable<bool> isStunned = new NetworkVariable<bool>();
 
     [Header("Enemy Animation")]
     private Animator animator;
@@ -52,7 +53,7 @@ public class EnemyInteraction : NetworkBehaviour
     {
         if (!enablePlayerControls) { return; }
 
-        if (isStunned) { return; }
+        if (isStunned.Value) { return; }
 
         Interact();
         Attack();
@@ -111,7 +112,8 @@ public class EnemyInteraction : NetworkBehaviour
 
     public void Stun( float stunDuration )
     {
-        isStunned = true;
+        SetStunServerRpc(true);
+        SettingManager.Instance.PlaySfx("MonsterAttack", audioSource);
         StartCoroutine(GetStunned(stunDuration));
         SettingManager.Instance.PlaySfx("MonsterConfusion", audioSource);
     }
@@ -119,6 +121,12 @@ public class EnemyInteraction : NetworkBehaviour
     IEnumerator GetStunned(float stunDuration)
     {
         yield return new WaitForSecondsRealtime(stunDuration);
-        isStunned = false;
+        SetStunServerRpc(false);
+    }
+
+    [ServerRpc]
+    private void SetStunServerRpc(bool stun)
+    {
+        isStunned.Value = stun;
     }
 }
