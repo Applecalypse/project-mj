@@ -43,10 +43,10 @@ public class EnemyController : NetworkBehaviour
     [Header("Enemy Stun settings")]
     private bool isStunned = false;
     private readonly float stunDuration = 3f;
+    [SerializeField] private Image stunScreen;
 
     [Header("Audio")]
     private AudioSource audioSource;
-    [SerializeField] private Image stunScreen;
     
     [Header("Network")]
     private bool isInLobby;
