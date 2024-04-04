@@ -13,7 +13,7 @@ public class HealthController : NetworkBehaviour
     private Team myTeam;
 
     [Header("Network - Debug dun tath")]
-    [SerializeField] private NetworkVariable<float> currentHealth = new NetworkVariable<float>();
+    [SerializeField] private NetworkVariable<float> currentHealth = new NetworkVariable<float>(writePerm: NetworkVariableWritePermission.Owner);
 
     public override void OnNetworkSpawn()
     {
@@ -35,8 +35,8 @@ public class HealthController : NetworkBehaviour
         PlayerController playerController = GetComponent<PlayerController>();
         EnemyController enemyController = GetComponent<EnemyController>();
         
-        if (playerController != null) { myTeam = playerController.team.Value; }
-        else if (enemyController != null) { myTeam = enemyController.team.Value; }
+        if (playerController != null) { myTeam = Team.Human; }
+        else if (enemyController != null) { myTeam = Team.Monster; }
         else { Debug.LogError("Wtf how did we reach here?"); }
     }
 
@@ -55,10 +55,12 @@ public class HealthController : NetworkBehaviour
         {
             if (_team == Team.Monster)
             {
+                Debug.LogWarning("COWABUNGA 1");
                 GameManager.Instance.MonsterDead();
             }
             else if (_team == Team.Human)
             {
+                Debug.LogWarning("COWABUNGA 2");
                 GetComponent<PlayerController>().OnDead();
                 GameManager.Instance.OnPlayerDeath();
                 StartCoroutine(KillCoroutine());
