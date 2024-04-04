@@ -58,7 +58,15 @@ public class Relay : NetworkBehaviour
         base.OnNetworkSpawn();
         gameManager = FindObjectOfType<GameManager>();
     }
-    
+
+    public override void OnNetworkDespawn()
+    {
+        base.OnNetworkDespawn();
+        
+        NetworkManager.Singleton.OnClientDisconnectCallback -= OnClientDisconnect;
+        NetworkManager.Singleton.OnClientConnectedCallback -= OnClientJoin;
+    }
+
     /*
      * Helping Functions
      */
