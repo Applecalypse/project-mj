@@ -33,6 +33,9 @@ public class Relay : NetworkBehaviour
     [SerializeField] private GameObject[] players;
     [SerializeField] private NetworkObject playerPrefab;
 
+    [Header("Main menu camera")]
+    private AudioSource mainMenuCamera;
+
     [field: Header("For Debugging, dun touch")]
     [SerializeField] private GameObject mainPlayer;
     [SerializeField] private GameManager gameManager;
@@ -49,6 +52,7 @@ public class Relay : NetworkBehaviour
         renamePanel.SetActive(false);
         changeTeamPanel.SetActive(false);
         roomText.text = "";
+        mainMenuCamera = GameObject.Find("Cameras").GetComponentInChildren<AudioSource>();
     }
 
     public override void OnNetworkSpawn()
@@ -81,9 +85,14 @@ public class Relay : NetworkBehaviour
      * Button functions
      */
 
+    private void ButtonPlaySfx()
+    {
+        SettingManager.Instance.PlaySfx("ButtonClick", mainMenuCamera);
+    }
 
     public void ToMainMenu()
     {
+        ButtonPlaySfx();
         networkUI.SetActive(false);
         mainMenuUI.SetActive(true);
         SignOff();
@@ -91,13 +100,13 @@ public class Relay : NetworkBehaviour
     
     public void StartGame()
     {
+        ButtonPlaySfx();
         if (mainPlayer == null)
         {
             mainPlayer = FindMainPlayer(NetworkManager.Singleton.LocalClientId);
             if (mainPlayer == null)
             {
                 throw new NullReferenceException("No player found, null");
-                return;
             }
         }
         
@@ -115,6 +124,7 @@ public class Relay : NetworkBehaviour
 
     public void Rename()
     {
+        ButtonPlaySfx();
         if (mainPlayer == null)
         {
             mainPlayer = FindMainPlayer(NetworkManager.Singleton.LocalClientId);
@@ -128,6 +138,7 @@ public class Relay : NetworkBehaviour
 
     public void ChangeTeam()
     {
+        ButtonPlaySfx();
         if (mainPlayer == null)
         {
             mainPlayer = FindMainPlayer(NetworkManager.Singleton.LocalClientId);
@@ -250,6 +261,7 @@ public class Relay : NetworkBehaviour
 
     public async void StartRelay()
     {
+        ButtonPlaySfx();
         string joinCode = await StartHostWithRelay();
 
         networkPanel.SetActive(false);
@@ -272,6 +284,7 @@ public class Relay : NetworkBehaviour
 
     public async void JoinRelay()
     {
+        ButtonPlaySfx();
         bool started = await StartClientWithRelay(roomInput.text);
         if (started)
         {
@@ -286,6 +299,7 @@ public class Relay : NetworkBehaviour
 
     public void DisconnectRelay()
     {
+        ButtonPlaySfx();
         shutdownPanel.SetActive(false);
         networkPanel.SetActive(true);
         mainMenuPanel.SetActive(true);

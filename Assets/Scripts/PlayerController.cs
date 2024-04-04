@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using HGS.CallLimiter;
 using TMPro;
 using Unity.Collections;
 using Unity.Netcode;
@@ -63,6 +64,11 @@ public class PlayerController : NetworkBehaviour
     public NetworkVariable<bool> isInLobby = new NetworkVariable<bool>();
     public SpawnPosition sittingPos = new SpawnPosition();
     
+    [Header("Sound system")]
+    private AudioSource audioSource;
+    [SerializeField] float fireRatio = 0.3f;
+    Throttle _fireThrottle = new Throttle();
+    
     private void Awake()
     {
         StartCoroutine(WaitFrozen());
@@ -70,6 +76,7 @@ public class PlayerController : NetworkBehaviour
         controller.enabled = false;
         playerInput = GetComponent<PlayerInput>();
         animator = GetComponentInParent<Animator>();
+        audioSource = GetComponentInChildren<AudioSource>();
         moveAction = playerInput.actions["Move"];
         runAction = playerInput.actions["Run"];
         jumpAction = playerInput.actions["Jump"];
@@ -201,6 +208,24 @@ public class PlayerController : NetworkBehaviour
         {
             controller.Move(move * (Time.deltaTime * playerSpeed));
             animator.SetBool("isMoving", isMoving);
+        }
+
+        if (move.magnitude > Mathf.Epsilon && isGrounded)
+        {
+            Debug.Log("Playing sound");
+            _fireThrottle.Run(()=>
+            {
+                SettingManager.Instance.PlaySfxGrass("OnGrass", audioSource, 0.3f);
+            }, 1/ (controller.velocity.magnitude * fireRatio) );
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        bool isKeyItem = other.CompareTag("KeyItem");
+        if (isKeyItem)
+        {
+            SettingManager.Instance.PlaySfx("KeyItemPickUp", audioSource);
         }
     }
 

@@ -63,10 +63,19 @@ PrefabInstance:
       propertyPath: m_Name
       value: fanta
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 5b9436f4c1051ab42af01dc57cedd2e0,
+        type: 3}
+      propertyPath: m_TagString
+      value: KeyItem
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 5b9436f4c1051ab42af01dc57cedd2e0,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 886753165325980746}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 5b9436f4c1051ab42af01dc57cedd2e0,
         type: 3}
       insertIndex: -1
@@ -83,10 +92,6 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 7940857773268037034}
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 5b9436f4c1051ab42af01dc57cedd2e0,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 886753165325980746}
   m_SourcePrefab: {fileID: 100100000, guid: 5b9436f4c1051ab42af01dc57cedd2e0, type: 3}
 --- !u!1 &1249624992255382936 stripped
 GameObject:
@@ -94,6 +99,27 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 2132145042601027785}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &886753165325980746
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1249624992255382936}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 522218523
+  InScenePlacedSourceGlobalObjectIdHash: 0
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 1
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
 --- !u!114 &9197140206465617977
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -175,24 +201,3 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.5, y: 0.5, z: 0.5}
   m_Center: {x: 0, y: 0.25, z: 0}
---- !u!114 &886753165325980746
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1249624992255382936}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 14547178
-  InScenePlacedSourceGlobalObjectIdHash: 0
-  AlwaysReplicateAsRoot: 0
-  SynchronizeTransform: 1
-  ActiveSceneSynchronization: 0
-  SceneMigrationSynchronization: 1
-  SpawnWithObservers: 1
-  DontDestroyWithOwner: 0
-  AutoObjectParentSync: 1

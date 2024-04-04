@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using HGS.CallLimiter;
 using TMPro;
 using Unity.Collections;
 using Unity.Netcode;
@@ -36,7 +37,8 @@ public class EnemyController : NetworkBehaviour
     [Header("Enemy Model")]
     private Transform feet;
     private bool isGrounded;
-    private bool isFrozen = true;
+    public bool isFrozen;
+    private AudioSource audioSource;
     private Animator animator;
 
     [Header("Enemy Stun settings")]
@@ -51,12 +53,16 @@ public class EnemyController : NetworkBehaviour
 
     [SerializeField] private TMP_Text nameTag;
 
+    [SerializeField] float fireRatio = 0.1f;
+    Throttle _fireThrottle = new Throttle();
+    
     private void Start()
     {
         StartCoroutine(WaitFrozen());
         controller = GetComponent<CharacterController>();
         playerInput = GetComponent<PlayerInput>();
         animator = GetComponentInParent<Animator>();
+        audioSource = GetComponentInChildren<AudioSource>();
         moveAction = playerInput.actions["Move"];
 
         jumpAction = playerInput.actions["Jump"];
@@ -133,6 +139,14 @@ public class EnemyController : NetworkBehaviour
         zMovement.y = 0;
         move = xMovement + zMovement;
         controller.Move(move * (Time.deltaTime * enemySpeed));
+        
+        if (move.magnitude > Mathf.Epsilon && isGrounded)
+        {
+            _fireThrottle.Run(()=>
+            {
+                SettingManager.Instance.PlaySfxGrass("OnGrass", audioSource, 0.2f);
+            }, 1/ (controller.velocity.magnitude * fireRatio) );
+        }
     }
 
     void Jump()
