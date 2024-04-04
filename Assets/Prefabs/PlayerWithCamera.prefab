@@ -279,7 +279,7 @@ AudioListener:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1644475780224886112}
-  m_Enabled: 1
+  m_Enabled: 0
 --- !u!114 &8934234076379090679
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1480,6 +1480,7 @@ MonoBehaviour:
   sittingPos:
     position: {x: 0, y: 0, z: 0}
     rotation: {x: 0, y: 0, z: 0, w: 0}
+  fireRatio: 0.3
 --- !u!114 &1771223874525122018
 MonoBehaviour:
   m_ObjectHideFlags: 0

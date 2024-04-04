@@ -143,11 +143,6 @@ public class PlayerController : NetworkBehaviour
         if (isGrounded && playerVelocity.y < 0)
         {
             playerVelocity.y = 0f;
-            // Debug.Log("Grounded");
-        }
-        else
-        {
-            // Debug.Log("Not Grounded");
         }
     }
 
@@ -313,6 +308,23 @@ public class PlayerController : NetworkBehaviour
     public void ChangePlayerTeam()
     {
         team.Value = team.Value == Team.Human ? Team.Monster : Team.Human;
+
+        ChangeTeamServerRpc(OwnerClientId, team.Value);
+        
+        foreach (var VARIABLE in GameManager.Instance.uidToTeam)
+        {
+            Debug.LogFormat("{0} : {1}", VARIABLE.Key, VARIABLE.Value);
+        }
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    void ChangeTeamServerRpc(ulong Id, Team newTeam)
+    {
+        GameManager.Instance.uidToTeam[Id] = newTeam;
+        foreach (var VARIABLE in GameManager.Instance.uidToTeam)
+        {
+            Debug.LogFormat("{0} : {1}", VARIABLE.Key, VARIABLE.Value);
+        }
     }
 
     private void OnTeamChange(Team oldTeam, Team newTeam)

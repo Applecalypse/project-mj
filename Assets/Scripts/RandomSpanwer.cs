@@ -15,6 +15,10 @@ public class RandomSpanwer : MonoBehaviour
 
     private void Start()
     {
+        foreach (var VARIABLE in GameManager.Instance.uidToTeam)
+        {
+            Debug.LogFormat("{0} : {1}", VARIABLE.Key, VARIABLE.Value);
+        }
         ulong[] uids = GameManager.Instance.uidToTeam.Keys.ToArray();
         foreach (ulong uid in uids)
         {

@@ -144,6 +144,7 @@ public class Relay : NetworkBehaviour
             mainPlayer = FindMainPlayer(NetworkManager.Singleton.LocalClientId);
             if (mainPlayer == null)
             {
+                Debug.LogError("No player found, null, gg");
                 throw new NullReferenceException("No player found, null");
             }
         }

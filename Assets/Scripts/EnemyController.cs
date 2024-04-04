@@ -116,11 +116,6 @@ public class EnemyController : NetworkBehaviour
         if (isGrounded && enemyVelocity.y < 0)
         {
             enemyVelocity.y = 0f;
-            Debug.Log("Grounded");
-        }
-        else
-        {
-            Debug.Log("Not Grounded");
         }
     }
 
