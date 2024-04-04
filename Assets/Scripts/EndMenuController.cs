@@ -22,7 +22,8 @@ public class EndMenuController : MonoBehaviour
 
     private void OnMainMenuButtonClick()
     {
-        NetworkManager.Singleton.Shutdown();
         NetworkManager.Singleton.SceneManager.LoadScene("StandBy", LoadSceneMode.Single);
+        NetworkManager.Singleton.Shutdown();
     }
+    
 }

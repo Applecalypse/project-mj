@@ -42,8 +42,6 @@ public class Relay : NetworkBehaviour
 
     private void Awake()
     {
-        NetworkManager.Singleton.OnClientDisconnectCallback += OnClientDisconnect;
-        NetworkManager.Singleton.OnClientConnectedCallback += OnClientJoin;
         networkUI.SetActive(false);
         networkPanel.SetActive(true);
         mainMenuUI.SetActive(true);
@@ -60,7 +58,15 @@ public class Relay : NetworkBehaviour
         base.OnNetworkSpawn();
         gameManager = FindObjectOfType<GameManager>();
     }
-    
+
+    public override void OnNetworkDespawn()
+    {
+        base.OnNetworkDespawn();
+        
+        NetworkManager.Singleton.OnClientDisconnectCallback -= OnClientDisconnect;
+        NetworkManager.Singleton.OnClientConnectedCallback -= OnClientJoin;
+    }
+
     /*
      * Helping Functions
      */
@@ -118,7 +124,7 @@ public class Relay : NetworkBehaviour
         }
         
         GameManager.Instance.CountHumans();
-        
+
         NetworkManager.Singleton.SceneManager.LoadScene("PrototypeMap", LoadSceneMode.Single);
     }
 
@@ -206,7 +212,7 @@ public class Relay : NetworkBehaviour
      * Networking section (Relay related stuff)
      */
 
-    public static async Task Authenticate()
+    public async Task Authenticate()
     {
         await UnityServices.InitializeAsync();
         try
@@ -216,6 +222,9 @@ public class Relay : NetworkBehaviour
         
             // Shows how to get the playerID
             Debug.Log($"PlayerID: {AuthenticationService.Instance.PlayerId}"); 
+            
+            NetworkManager.Singleton.OnClientDisconnectCallback += OnClientDisconnect;
+            NetworkManager.Singleton.OnClientConnectedCallback += OnClientJoin;
 
         }
         catch (AuthenticationException ex)

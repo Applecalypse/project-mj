@@ -15,6 +15,9 @@ public class GameManager : NetworkBehaviour
     public NetworkVariable<int> humanCount = new NetworkVariable<int>();
     public NetworkVariable<bool> isEscaped = new NetworkVariable<bool>();
 
+    public NetworkVariable<bool> isGameOver = new NetworkVariable<bool>();
+    public NetworkVariable<bool> isMonsterDead = new NetworkVariable<bool>();
+
     public static GameManager Instance;
     
     void Awake()
@@ -34,7 +37,7 @@ public class GameManager : NetworkBehaviour
         spawnPositionsFlags = new NetworkList<bool>();
         uidToTeam = new Dictionary<ulong, Team>();
     }
-
+    
     public void MonsterDead()
     {
         // ; Monster
@@ -43,7 +46,8 @@ public class GameManager : NetworkBehaviour
         // ; Human
         // Change Scene to winning scene (Monster Dead) -> move to lobby again
 
-        ChangeSceneServerRpc_("GameOverHumansDead");
+        ChangeSceneServerRpc_("GameOverMonsterDead");
+        // isGameOver.Value = true;
     }
 
     // TODO: Connect this to the game
@@ -68,11 +72,11 @@ public class GameManager : NetworkBehaviour
         
         ChangeSceneServerRpc_("GameOverHumansDead");
     }
-
+    
     // [ServerRpc(RequireOwnership = false)]
     private void ChangeSceneServerRpc_(string sceneName)
     {
-        NetworkManager.Singleton.SceneManager.LoadScene(sceneName, LoadSceneMode.Single);
+        NetworkManager.SceneManager.LoadScene(sceneName, LoadSceneMode.Single);
     }
 
     public void CountHumans()
