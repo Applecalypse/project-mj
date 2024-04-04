@@ -116,16 +116,10 @@ public class Relay : NetworkBehaviour
         }
         
         GameManager.Instance.CountHumans();
+
+        GameManager.Instance.startco();
         
         NetworkManager.Singleton.SceneManager.LoadScene("PrototypeMap", LoadSceneMode.Single);
-
-        StartCoroutine(testChangeMap());
-    }
-
-    IEnumerator testChangeMap()
-    {
-        yield return new WaitForSecondsRealtime(5);
-        NetworkManager.Singleton.SceneManager.LoadScene("Standby", LoadSceneMode.Single);
     }
 
     public void Rename()

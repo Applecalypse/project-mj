@@ -82,6 +82,16 @@ public class GameManager : NetworkBehaviour
         ChangeSceneServerRpc_("GameOverHumansDead");
     }
 
+    public void startco()
+    {
+        StartCoroutine(testChangeMap());
+    }
+    IEnumerator testChangeMap()
+    {
+        yield return new WaitForSecondsRealtime(5);
+        NetworkManager.Singleton.SceneManager.LoadScene("Standby", LoadSceneMode.Single);
+    }
+
     // [ServerRpc(RequireOwnership = false)]
     private void ChangeSceneServerRpc_(string sceneName)
     {
