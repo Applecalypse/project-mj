@@ -42,6 +42,7 @@ public class GameManager : NetworkBehaviour
     {
         if (isGameOver.Value)
         {
+            NetworkManager.Singleton.Shutdown();
             SceneManager.LoadScene("GameOverMonsterDead");
         }
     }

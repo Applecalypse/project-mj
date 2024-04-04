@@ -147,8 +147,7 @@ public class PlayerController : NetworkBehaviour
 
     public override void OnNetworkDespawn()
     {
-        GameManager gameManager = FindObjectOfType<GameManager>();
-        gameManager.EmptyPosition(sittingPos.position, sittingPos.rotation);
+        GameManager.Instance.EmptyPosition(sittingPos.position, sittingPos.rotation);
         base.OnNetworkDespawn();
     }
 
