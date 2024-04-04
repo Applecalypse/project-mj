@@ -59,7 +59,7 @@ public class PlayerController : NetworkBehaviour
     public NetworkVariable<bool> isInLobby = new NetworkVariable<bool>();
     public SpawnPosition sittingPos = new SpawnPosition();
     
-    [SerializeField] float fireRatio = 0.5f;
+    [SerializeField] float fireRatio = 0.3f;
     Throttle _fireThrottle = new Throttle();
     
     private void Awake()

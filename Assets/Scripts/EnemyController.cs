@@ -51,7 +51,7 @@ public class EnemyController : NetworkBehaviour
 
     [SerializeField] private TMP_Text nameTag;
 
-    [SerializeField] float fireRatio = 0.5f;
+    [SerializeField] float fireRatio = 0.1f;
     Throttle _fireThrottle = new Throttle();
     
     private void Start()

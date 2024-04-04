@@ -8,7 +8,7 @@ public class SettingManager : MonoBehaviour
 {
     public Sound[] musicSounds, sfxSounds;
     public AudioSource musicSource, sfxSource;
-    public float musicSourceVolume, sfxSourceVolume = 0.5f;
+    public float musicSourceVolume = 0.5f, sfxSourceVolume = 0.5f;
     
     public static SettingManager Instance;
 
@@ -62,7 +62,7 @@ public class SettingManager : MonoBehaviour
         }
     }
     
-    public void PlaySfxGrass(string soundName, AudioSource audioSource, float volumeFrom = 0.5f)
+    public void PlaySfxGrass(string soundName, AudioSource audioSource, float volumeMultiplier = 0.5f)
     {
         Sound s = Array.Find(sfxSounds, x => x.name == soundName);
 
@@ -76,7 +76,7 @@ public class SettingManager : MonoBehaviour
             float weight = 1f;
             audioSource.pitch = 1 + delta * weight;
             Debug.Log("audioSource.pitch: "+ audioSource.pitch);
-            audioSource.PlayOneShot(s.clip, volumeFrom);
+            audioSource.PlayOneShot(s.clip, sfxSourceVolume * volumeMultiplier);
             
         }
     }
