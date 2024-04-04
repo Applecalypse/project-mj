@@ -134,6 +134,7 @@ public class PlayerController : NetworkBehaviour
     {
         GameManager gameManager = FindObjectOfType<GameManager>();
         gameManager.EmptyPosition(sittingPos.position, sittingPos.rotation);
+        GameManager.Instance.uidToTeam.Remove(OwnerClientId);
         base.OnNetworkDespawn();
     }
 
