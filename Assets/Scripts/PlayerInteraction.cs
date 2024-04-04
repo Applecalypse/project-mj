@@ -238,7 +238,7 @@ public class PlayerInteraction : NetworkBehaviour
         Debug.Log("Pointing at " + hit.transform.gameObject.name);
 
         Interactable targetInteractable = hit.transform.GetComponent<Interactable>();
-        if (targetInteractable != null && GameManager.Instance.keyItemCount.Value == 3) { targetInteractable.Interact(); return; }
+        if (targetInteractable != null && GameManager.Instance.keyItemCount.Value >= 3) { targetInteractable.Interact(); return; }
     }
 
     void Shoot()
