@@ -10,10 +10,10 @@ public class HealthController : NetworkBehaviour
 
     [Header("Team")]
     // maybe can be used for checking Friendly fire
-    private Team myTeam;
+    [SerializeField] private NetworkVariable<Team> myTeam = new NetworkVariable<Team>(writePerm: NetworkVariableWritePermission.Owner);
 
-    [Header("Network")]
-    private NetworkVariable<float> currentHealth = new NetworkVariable<float>(writePerm: NetworkVariableWritePermission.Owner);
+    [Header("Network - Debug dun tath")]
+    [SerializeField] private NetworkVariable<float> currentHealth = new NetworkVariable<float>(100);
 
     public override void OnNetworkSpawn()
     {
@@ -25,7 +25,8 @@ public class HealthController : NetworkBehaviour
 
         CheckTeam();
         
-        currentHealth.Value = maxHealth;
+        // TODO: Make hp not hard set aka use serverrpc to change dis plz ty hahahahaha
+        // currentHealth.Value = maxHealth;
         base.OnNetworkSpawn();
     }
 
@@ -35,8 +36,8 @@ public class HealthController : NetworkBehaviour
         PlayerController playerController = GetComponent<PlayerController>();
         EnemyController enemyController = GetComponent<EnemyController>();
         
-        if (playerController != null) { myTeam = playerController.team.Value; }
-        else if (enemyController != null) { myTeam = enemyController.team.Value; }
+        if (playerController != null) { myTeam.Value = Team.Human; }
+        else if (enemyController != null) { myTeam.Value = Team.Monster; }
         else { Debug.LogError("Wtf how did we reach here?"); }
     }
 
@@ -47,18 +48,20 @@ public class HealthController : NetworkBehaviour
     }
 
     [ServerRpc(RequireOwnership = false)]
-    public void TakeDamageServerRpc(float damage)
+    public void TakeDamageServerRpc(float damage, Team _team)
     {
         currentHealth.Value -= damage;
         Debug.Log("DAMAGED");
         if (currentHealth.Value <= 0)
         {
-            if (myTeam == Team.Monster)
+            if (_team == Team.Monster)
             {
+                Debug.LogWarning("COWABUNGA 1");
                 GameManager.Instance.MonsterDead();
             }
-            if (myTeam == Team.Human)
+            else if (_team == Team.Human)
             {
+                Debug.LogWarning("COWABUNGA 2");
                 GetComponent<PlayerController>().OnDead();
                 GameManager.Instance.OnPlayerDeath();
                 StartCoroutine(KillCoroutine());
@@ -94,7 +97,7 @@ public class HealthController : NetworkBehaviour
     public void TakeDamage(float damage)
     {
         Debug.Log(transform.name + ": taking damage = " + damage);
-        TakeDamageServerRpc(damage);
+        TakeDamageServerRpc(damage, myTeam.Value);
     }
 
 }
