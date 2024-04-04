@@ -6,13 +6,18 @@ using Random = UnityEngine.Random;
 
 public class SettingManager : MonoBehaviour
 {
-    public Sound[] musicSounds, sfxSounds;
-    public AudioSource musicSource, sfxSource;
-    public float musicSourceVolume = 0.5f, sfxSourceVolume = 0.5f;
-    
+    [Header("Singleton")]
     public static SettingManager Instance;
 
-    // Singleton
+    [Header("Sound Settings")]
+    public Sound[] musicSounds, sfxSounds;
+    // public AudioSource musicSource, sfxSource;
+    private float musicSourceVolume = 0.5f, sfxSourceVolume = 0.5f;
+
+    [Header("Camera Sensitivity")]
+    private float xSensitivity = 2f, ySensitivity = 0.7f;
+    
+
     private void Awake()
     {
         if (Instance != null)
@@ -26,9 +31,8 @@ public class SettingManager : MonoBehaviour
     
     private void Start()
     {
-        // PlayMusic("Theme", musicSource);
         AudioSource mainMenuCamera = GameObject.Find("Cameras").GetComponentInChildren<AudioSource>();
-        mainMenuCamera.volume = 0.1f;
+        mainMenuCamera.volume = musicSourceVolume;
         PlayMusic("MainMenuBGM", mainMenuCamera);
     }
 
@@ -61,7 +65,7 @@ public class SettingManager : MonoBehaviour
         }
         else
         {
-            audioSource.PlayOneShot(s.clip);
+            audioSource.PlayOneShot(s.clip, sfxSourceVolume);
         }
     }
     
@@ -79,75 +83,49 @@ public class SettingManager : MonoBehaviour
             float weight = 1f;
             audioSource.pitch = 1 + delta * weight;
             Debug.Log("audioSource.pitch: "+ audioSource.pitch);
-            // audioSource.PlayOneShot(s.clip, sfxSourceVolume * volumeMultiplier);
-            audioSource.PlayOneShot(s.clip, 0.3f);
-            
+            audioSource.PlayOneShot(s.clip, sfxSourceVolume * volumeMultiplier);
         }
     }
 
-    public void ToggleMusic()
-    {
-        musicSource.mute = !musicSource.mute;
-    }
+    public void SetMusicVolume(float volume) { musicSourceVolume = volume; }
 
-    public void ToggleSfx()
-    {
-        sfxSource.mute = !sfxSource.mute;
-    }
+    public void SetSfxVolume(float volume) { sfxSourceVolume = volume; }
 
-    public void MusicVolume(float volume)
-    {
-        musicSourceVolume = volume;
-    }
+    public float GetMusicVolume() { return musicSourceVolume; }
 
-    public void SfxVolume(float volume)
-    {
-        sfxSourceVolume = volume;
-    }
+    public float GetSfxVolume() { return sfxSourceVolume; }
 
-    public float GetMusicVolume()
-    {
-        return musicSource.volume;
-    }
+    // public void PlayerSfxToTime(string name, float time)
+    // {
+    //     Sound s = Array.Find(sfxSounds, x => x.name == name);
 
-    public float GetSfxVolume()
-    {
-        return sfxSource.volume;
-    }
+    //     if (s == null)
+    //     {
+    //         Debug.Log("Sound not found");
+    //     }
+    //     else
+    //     {
+    //         sfxSource.clip = s.clip;
+    //         StartCoroutine(PlayClipWithTime());
+    //     }
 
-    public bool GetMusicButtonState()
-    {
-        return musicSource.mute;
-    }
+    //     return;
 
-    public bool GetSfxButtonState()
-    {
-        return sfxSource.mute;
-    }
+    //     IEnumerator PlayClipWithTime()
+    //     {
+    //         sfxSource.Play();
+    //         yield return new WaitForSecondsRealtime(time);
+    //         sfxSource.Stop();
+    //     }
+    // }
 
-    public void PlayerSfxToTime(string name, float time)
-    {
-        Sound s = Array.Find(sfxSounds, x => x.name == name);
+    public void SetSensitivityX(float sensitivity) { xSensitivity = sensitivity; }
 
-        if (s == null)
-        {
-            Debug.Log("Sound not found");
-        }
-        else
-        {
-            sfxSource.clip = s.clip;
-            StartCoroutine(PlayClipWithTime());
-        }
+    public void SetSensitivityY(float sensitivity) { ySensitivity = sensitivity; }
 
-        return;
+    public float GetSensitivityX() { return xSensitivity; }
 
-        IEnumerator PlayClipWithTime()
-        {
-            sfxSource.Play();
-            yield return new WaitForSecondsRealtime(time);
-            sfxSource.Stop();
-        }
-    }
+    public float GetSensitivityY() { return ySensitivity; }
 }
 
 [Serializable]

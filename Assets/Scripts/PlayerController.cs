@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Cinemachine;
 using HGS.CallLimiter;
 using TMPro;
 using Unity.Collections;
@@ -12,7 +13,8 @@ using UnityEngine.InputSystem;
 public class PlayerController : NetworkBehaviour
 {
     [Header("Camera")]
-    [SerializeField] private Transform cameraTransform;
+    [SerializeField] private GameObject cameraObject;
+    private Transform cameraTransform;
 
     [Header("Player Controls")]
     [SerializeField] private bool enablePlayerControls = true;
@@ -84,10 +86,21 @@ public class PlayerController : NetworkBehaviour
         feet = transform.Find("Feet");
         playerModel = gameObject.GetComponentInChildren<SkinnedMeshRenderer>();
         username = gameObject.GetComponentInChildren<Canvas>();
+
+        cameraTransform = cameraObject.transform;
+        SetUpCamera();
         if (isDead)
         {
             OnDead();
         }
+    }
+
+    void SetUpCamera()
+    {
+        CinemachineVirtualCamera cmc = cameraObject.GetComponent<CinemachineVirtualCamera>();
+        CinemachinePOV vcam = cmc.GetCinemachineComponent<CinemachinePOV>();
+        vcam.m_HorizontalAxis.m_MaxSpeed = SettingManager.Instance.GetSensitivityX();
+        vcam.m_VerticalAxis.m_MaxSpeed = SettingManager.Instance.GetSensitivityY();
     }
     
     // TODO: find a fix to this hacky solution
@@ -114,6 +127,7 @@ public class PlayerController : NetworkBehaviour
         ApplyGravity();
         //Debug.Log(isSpectator);
     }
+
     public override void OnNetworkSpawn()
     {
         nickname.OnValueChanged += OnNameChange;

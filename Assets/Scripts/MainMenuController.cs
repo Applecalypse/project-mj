@@ -31,7 +31,6 @@ public class MainMenuController : MonoBehaviour
         startButton.clicked += OnButtonClick;
         settingButton.clicked += OnButtonClick;
         creditButtion.clicked += OnButtonClick;
-
     }
 
     private async void OnStartButtonClick()
@@ -45,8 +44,7 @@ public class MainMenuController : MonoBehaviour
 
     private void OnSettingButtonClick()
     {
-        // settingCanvas.SetActive(true);
-        // gameObject.SetActive(false);
+        settingCanvas.SetActive(true);
     }
 
     private void OnButtonClick()
