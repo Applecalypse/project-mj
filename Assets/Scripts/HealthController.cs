@@ -10,10 +10,10 @@ public class HealthController : NetworkBehaviour
 
     [Header("Team")]
     // maybe can be used for checking Friendly fire
-    private Team myTeam;
+    [SerializeField] private Team myTeam;
 
     [Header("Network - Debug dun tath")]
-    [SerializeField] private NetworkVariable<float> currentHealth = new NetworkVariable<float>(writePerm: NetworkVariableWritePermission.Owner);
+    [SerializeField] private NetworkVariable<float> currentHealth = new NetworkVariable<float>(100);
 
     public override void OnNetworkSpawn()
     {
@@ -25,7 +25,8 @@ public class HealthController : NetworkBehaviour
 
         CheckTeam();
         
-        currentHealth.Value = maxHealth;
+        // TODO: Make hp not hard set aka use serverrpc to change dis plz ty hahahahaha
+        // currentHealth.Value = maxHealth;
         base.OnNetworkSpawn();
     }
 
