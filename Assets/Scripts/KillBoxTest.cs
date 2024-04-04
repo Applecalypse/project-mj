@@ -14,7 +14,7 @@ public class KillBoxTest : NetworkBehaviour
         if (other.gameObject.CompareTag("Player") || other.gameObject.CompareTag("Enemy"))
         {
             Debug.Log("kill box");
-            other.gameObject.GetComponent<HealthController>().TakeDamageServerRpc(1000);
+            other.gameObject.GetComponent<HealthController>().TakeDamage(1000);
         }
     }
 }

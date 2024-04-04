@@ -12,8 +12,8 @@ public class HealthController : NetworkBehaviour
     // maybe can be used for checking Friendly fire
     private Team myTeam;
 
-    [Header("Network")]
-    private NetworkVariable<float> currentHealth = new NetworkVariable<float>(writePerm: NetworkVariableWritePermission.Owner);
+    [Header("Network - Debug dun tath")]
+    [SerializeField] private NetworkVariable<float> currentHealth = new NetworkVariable<float>();
 
     public override void OnNetworkSpawn()
     {
@@ -57,7 +57,7 @@ public class HealthController : NetworkBehaviour
             {
                 GameManager.Instance.MonsterDead();
             }
-            if (myTeam == Team.Human)
+            else if (myTeam == Team.Human)
             {
                 GetComponent<PlayerController>().OnDead();
                 GameManager.Instance.OnPlayerDeath();

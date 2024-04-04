@@ -43,7 +43,7 @@ public class GameManager : NetworkBehaviour
         // ; Human
         // Change Scene to winning scene (Monster Dead) -> move to lobby again
 
-        ChangeSceneServerRpc("GameOverHumansDead");
+        ChangeSceneServerRpc_("GameOverHumansDead");
     }
 
     // TODO: Connect this to the game
@@ -55,7 +55,7 @@ public class GameManager : NetworkBehaviour
         // ; Human
         // Change scene to winning scene (human escaped)
 
-        ChangeSceneServerRpc("GameOverHumanEscaped");
+        ChangeSceneServerRpc_("GameOverHumanEscaped");
     }
 
     public void HumanDead()
@@ -66,11 +66,11 @@ public class GameManager : NetworkBehaviour
         // ; Human
         // If all humans are dead change to losing scene
         
-        ChangeSceneServerRpc("GameOverHumansDead");
+        ChangeSceneServerRpc_("GameOverHumansDead");
     }
 
-    [ServerRpc(RequireOwnership = false)]
-    private void ChangeSceneServerRpc(string sceneName)
+    // [ServerRpc(RequireOwnership = false)]
+    private void ChangeSceneServerRpc_(string sceneName)
     {
         NetworkManager.Singleton.SceneManager.LoadScene(sceneName, LoadSceneMode.Single);
     }
