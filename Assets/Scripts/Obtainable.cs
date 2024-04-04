@@ -1,15 +1,19 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Net.Http.Headers;
 using UnityEngine;
+using Unity.Netcode;
+using Random = UnityEngine.Random;
 
-public class Obtainable : MonoBehaviour
+public class Obtainable : NetworkBehaviour
 {   
     [Header("Item Physics")]
     private Rigidbody rb;
     private Collider col;
-    private Vector3 originalScale;
     private readonly float dropForce = 3f;
+    private bool onPickUp;
+    private Transform hand;
 
     void Start()
     {
@@ -20,42 +24,43 @@ public class Obtainable : MonoBehaviour
         col.isTrigger = false;
     }
 
-    public void Obtain(Transform hand)
+    private void Update()
     {
-        Debug.Log("Obtaining " + gameObject.name);
-
-        transform.SetParent(hand);        
-        rb.isKinematic = true;
-        rb.useGravity = false;
-        col.isTrigger = true;
-
-        transform.localPosition = new Vector3(0, 0, 0);
-        transform.localRotation = Quaternion.Euler(0, 0, 0);
-        
-        originalScale = transform.localScale;
-        transform.localScale = transform.localScale * 0.5f;
+        if (!onPickUp || !hand) return;
+        var transform1 = transform;
+        var transform2 = hand.transform;
+        transform1.position = transform2.position;
+        transform1.rotation = transform2.rotation;
     }
 
+    public GameObject Obtain(Transform _hand)
+    {
+        rb.isKinematic = true;
+        rb.useGravity = false;
+        col.enabled = false;
+        onPickUp = true;
+        hand = _hand;
+
+        return gameObject;
+    }
+    
     public void Drop(GameObject player)
     {
         Debug.Log("Dropping " + gameObject.name);
-        // resize back the object if needed
-        transform.localScale = originalScale;
-
-        transform.SetParent(null);
 
         rb.isKinematic = false;
         rb.useGravity = true;
-        col.isTrigger = false;
-
-        // rb.velocity = player.GetComponent<Rigidbody>().velocity;
+        col.enabled = true;
         rb.AddForce(player.transform.forward * dropForce, ForceMode.Impulse);
         rb.AddForce(player.transform.up * dropForce, ForceMode.Impulse);
 
         float random = Random.Range(-1f, 1f);
         rb.AddTorque(new Vector3(random, random, random));
+    }
 
-        
-
+    public void StopPickUp()
+    {
+        onPickUp = false;
+        hand = null;
     }
 }

@@ -46,7 +46,7 @@ public class HealthController : NetworkBehaviour
         Debug.Log( currentHealth.Value );
     }
 
-    [ServerRpc]
+    [ServerRpc(RequireOwnership = false)]
     public void TakeDamageServerRpc(float damage)
     {
         currentHealth.Value -= damage;

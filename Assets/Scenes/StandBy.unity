@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.12214573, g: 0.06971302, b: 0.19284661, a: 1}
+  m_IndirectSpecularColor: {r: 0.059295986, g: 0.05277412, b: 0.101122074, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -9386,6 +9386,10 @@ MonoBehaviour:
     clip: {fileID: 8300000, guid: 2e7fb0ba5b18d404490681159db67163, type: 3}
   - name: ButtonClick
     clip: {fileID: 8300000, guid: bb84bfb629501443b9af694dbd200efd, type: 3}
+  - name: KeyItemPickUp
+    clip: {fileID: 8300000, guid: 35ffb6355f1534d468b9691ef62e7456, type: 3}
+  - name: ItemPickUp
+    clip: {fileID: 8300000, guid: c0fb8b90f241713499d267c5a489dbfd, type: 3}
   musicSource: {fileID: 0}
   sfxSource: {fileID: 0}
   musicSourceVolume: 0
@@ -16966,16 +16970,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4331157867487981296, guid: bd9fe91b7f7dd4c33b7d38c82f4c85d4,
         type: 3}
-      propertyPath: NetworkConfig.ForceSamePrefabs
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4331157867487981296, guid: bd9fe91b7f7dd4c33b7d38c82f4c85d4,
-        type: 3}
-      propertyPath: NetworkConfig.Prefabs.NetworkPrefabsLists.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4331157867487981296, guid: bd9fe91b7f7dd4c33b7d38c82f4c85d4,
-        type: 3}
       propertyPath: NetworkConfig.Prefabs.NetworkPrefabsLists.Array.data[0]
       value: 
       objectReference: {fileID: 11400000, guid: 83774134b842e5849a12741b1ee838ab,
@@ -19036,7 +19030,7 @@ MonoBehaviour:
   - {fileID: 561087582}
   - {fileID: 1321373093}
   players: []
-  playerPrefab: {fileID: 3306610084392409789, guid: 75f5d98c8e6db4963b153e0eb3ffca21,
+  playerPrefab: {fileID: 7536629065839672824, guid: 75f5d98c8e6db4963b153e0eb3ffca21,
     type: 3}
   mainPlayer: {fileID: 0}
   gameManager: {fileID: 87118258}

@@ -37,7 +37,7 @@ public class EnemyController : NetworkBehaviour
     [Header("Enemy Model")]
     private Transform feet;
     private bool isGrounded;
-    private bool isFrozen = true;
+    public bool isFrozen;
     private Animator animator;
 
     [Header("Enemy Stun settings")]

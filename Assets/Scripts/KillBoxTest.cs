@@ -11,7 +11,7 @@ public class KillBoxTest : NetworkBehaviour
     //[SerializeField] private HealthController bob;
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("Player"))
+        if (other.gameObject.CompareTag("Player") || other.gameObject.CompareTag("Enemy"))
         {
             Debug.Log("kill box");
             other.gameObject.GetComponent<HealthController>().TakeDamageServerRpc(1000);

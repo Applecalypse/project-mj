@@ -11,10 +11,10 @@ GameObject:
   - component: {fileID: 3369005352476071307}
   - component: {fileID: 3861186601861573080}
   - component: {fileID: 8614459303909833421}
+  - component: {fileID: 8830959793474567753}
   - component: {fileID: 7895125736913830212}
   - component: {fileID: 2305088266406317168}
   - component: {fileID: 6529539626746084996}
-  - component: {fileID: 8830959793474567753}
   - component: {fileID: 9027696931298705140}
   m_Layer: 7
   m_Name: Holy Water
@@ -57,7 +57,7 @@ SphereCollider:
     m_Bits: 0
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
-  m_ProvidesContacts: 0
+  m_ProvidesContacts: 1
   m_Enabled: 1
   serializedVersion: 3
   m_Radius: 0.15
@@ -89,6 +89,27 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &8830959793474567753
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2705198999065431857}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 3442826540
+  InScenePlacedSourceGlobalObjectIdHash: 2860817260
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 1
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
 --- !u!114 &7895125736913830212
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -125,31 +146,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b3ee8129c2d064908af7a652418b8400, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  teamToDamage: 0
+  teamToDamage: 1
   damage: 10
   breakOnCollision: 1
   onlyApplyDamageOnce: 1
---- !u!114 &8830959793474567753
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2705198999065431857}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 3365293968
-  InScenePlacedSourceGlobalObjectIdHash: 2860817260
-  AlwaysReplicateAsRoot: 0
-  SynchronizeTransform: 1
-  ActiveSceneSynchronization: 0
-  SceneMigrationSynchronization: 1
-  SpawnWithObservers: 1
-  DontDestroyWithOwner: 0
-  AutoObjectParentSync: 1
 --- !u!114 &9027696931298705140
 MonoBehaviour:
   m_ObjectHideFlags: 0
