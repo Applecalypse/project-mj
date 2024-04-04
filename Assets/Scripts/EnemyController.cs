@@ -146,8 +146,7 @@ public class EnemyController : NetworkBehaviour
         {
             _fireThrottle.Run(()=>
             {
-                SettingManager.Instance.PlaySfxGrass("OnGrass", audioSource, 0.2f);
-                // SettingManager.Instance.PlaySfxGrass("MonsterFootstep", audioSource, 0.2f);
+                SettingManager.Instance.PlaySfxGrass("MonsterFootstep", audioSource, 0.2f);
             }, 1/ (controller.velocity.magnitude * fireRatio) );
         }
     }

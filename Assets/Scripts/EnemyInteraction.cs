@@ -98,7 +98,7 @@ public class EnemyInteraction : NetworkBehaviour
         
         damagable.EnableCollision();
         animator.SetTrigger("Attacks");
-        // SettingManager.Instance.PlaySfx("MonsterAttack", audioSource);
+        SettingManager.Instance.PlaySfx("MonsterAttack", audioSource);
         StartCoroutine(AttackCooldown());
     }
 
@@ -113,7 +113,7 @@ public class EnemyInteraction : NetworkBehaviour
     {
         isStunned = true;
         StartCoroutine(GetStunned(stunDuration));
-        // SettingManager.Instance.PlaySfx("EnemyConfusion", audioSource);
+        SettingManager.Instance.PlaySfx("MonsterConfusion", audioSource);
     }
 
     IEnumerator GetStunned(float stunDuration)
