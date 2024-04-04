@@ -37,7 +37,7 @@ public class MainMenuController : MonoBehaviour
     {
         Debug.Log("Clicked");
 
-        await Relay.Authenticate();
+        await FindObjectOfType<Relay>().Authenticate();
         networkCanvas.SetActive(true);
         gameObject.SetActive(false);
     }

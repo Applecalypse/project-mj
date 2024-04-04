@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Unity.Netcode;
-using UnityEngine.SceneManagement;
 
 public class HealthController : NetworkBehaviour
 {
@@ -58,7 +57,7 @@ public class HealthController : NetworkBehaviour
             if (_team == Team.Monster)
             {
                 Debug.LogWarning("COWABUNGA 1");
-                NetworkManager.Singleton.SceneManager.LoadScene("GameOverHumansDead", LoadSceneMode.Single);
+                GameManager.Instance.MonsterDead();
             }
             else if (_team == Team.Human)
             {

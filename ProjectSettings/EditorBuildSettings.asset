@@ -6,23 +6,20 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/PrototypePlayer.unity
-    guid: 99c9720ab356a0642a771bea13969a05
-  - enabled: 0
-    path: Assets/Scenes/Lobby.unity
-    guid: 3178cc3e65d9243c0bd0e95ae4503a48
-  - enabled: 1
     path: Assets/Scenes/StandBy.unity
     guid: 4e07deed834e14d169093062c6ee77c1
+  - enabled: 1
+    path: Assets/Scenes/PrototypeMap.unity
+    guid: 131cb336b6d0f4e6bae30114b1d5ccc8
+  - enabled: 1
+    path: Assets/Scenes/PrototypePlayer.unity
+    guid: 99c9720ab356a0642a771bea13969a05
   - enabled: 1
     path: Assets/Scenes/PrototypeWarp.unity
     guid: 94d1c37079d8b434f8be5f23e79a99f3
   - enabled: 1
     path: Assets/Scenes/PrototypeEnemy.unity
     guid: cde5f7b50730249e090ce067a8c3628f
-  - enabled: 1
-    path: Assets/Scenes/PrototypeMap.unity
-    guid: 131cb336b6d0f4e6bae30114b1d5ccc8
   - enabled: 1
     path: Assets/Scenes/GameOverMonsterDead.unity
     guid: 5ab47893353504eb39782e8531e89866
