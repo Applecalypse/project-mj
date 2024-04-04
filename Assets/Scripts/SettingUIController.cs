@@ -16,8 +16,6 @@ public class SettingUIController : MonoBehaviour
 
     [SerializeField] private Toggle yToggle;
     [SerializeField] private Slider ySensitivitySlider;
-
-    [SerializeField] private Button backButton;
     
     public void Start()
     {
