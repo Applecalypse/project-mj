@@ -56,7 +56,8 @@ public class TimedSpawn : NetworkBehaviour
         // base.OnNetworkSpawn();
     }
 
-    void SpawnObject()
+    [ServerRpc(RequireOwnership = false)]
+    void SpawnObjectServerRpc()
     {
         if (stopSpawning) { CancelInvoke("SpawnObject"); }
 
@@ -72,13 +73,18 @@ public class TimedSpawn : NetworkBehaviour
             GameObject spawnedObj = Instantiate(currentPrefabToSpawn, spawnPosition, Quaternion.identity, transform);
             spawnedObj.transform.parent = transform;
 
-            spawnedObj.GetComponent<NetworkObject>().Spawn();
+            spawnedObj.GetComponent<NetworkObject>().Spawn(true);
             
             
             // reset the timer and set the next spawn
             timeSinceLastSpawn = 0f;
             SetNextSpawn();
         }
+    }
+
+    void SpawnObject()
+    {
+        SpawnObjectServerRpc();
     }
 
     void SetNextSpawn()

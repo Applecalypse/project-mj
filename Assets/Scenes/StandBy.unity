@@ -14229,16 +14229,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4331157867487981296, guid: bd9fe91b7f7dd4c33b7d38c82f4c85d4,
         type: 3}
-      propertyPath: NetworkConfig.ForceSamePrefabs
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4331157867487981296, guid: bd9fe91b7f7dd4c33b7d38c82f4c85d4,
-        type: 3}
-      propertyPath: NetworkConfig.Prefabs.NetworkPrefabsLists.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4331157867487981296, guid: bd9fe91b7f7dd4c33b7d38c82f4c85d4,
-        type: 3}
       propertyPath: NetworkConfig.Prefabs.NetworkPrefabsLists.Array.data[0]
       value: 
       objectReference: {fileID: 11400000, guid: 83774134b842e5849a12741b1ee838ab,
