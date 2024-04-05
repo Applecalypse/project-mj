@@ -22,7 +22,7 @@ public class SettingManager : MonoBehaviour
     {
         if (Instance != null)
         {
-            Destroy(this);
+            Destroy(gameObject);
         }
 
         Instance = this;

@@ -5,7 +5,7 @@ using UnityEngine.UIElements;
 using Unity.Netcode;
 using UnityEngine.SceneManagement;
 
-public class EndMenuController : MonoBehaviour
+public class EndMenuController : NetworkBehaviour
 {
     private Button mainMenuButton;
     private Button lobbyButton;
@@ -22,8 +22,29 @@ public class EndMenuController : MonoBehaviour
 
     private void OnMainMenuButtonClick()
     {
-        NetworkManager.Singleton.SceneManager.LoadScene("StandBy", LoadSceneMode.Single);
+        // NetworkManager.Singleton.SceneManager.LoadScene("StandBy", LoadSceneMode.Single);
+        // NetworkManager.Singleton.Shutdown();
+        if (IsHost)
+        {
+            NetworkManager.SceneManager.LoadScene("StandBy", LoadSceneMode.Single);
+            foreach (ulong connectedClientsId in NetworkManager.ConnectedClientsIds)
+            {
+                if (OwnerClientId == connectedClientsId) { continue; }
+                NetworkManager.DisconnectClient(connectedClientsId);
+            }
+            NetworkManager.Shutdown();
+            // StartCoroutine(WaitToShutdown());
+        }
+        else
+        {
+            SceneManager.LoadScene("StandBy");
+            NetworkManager.Shutdown();
+        }
+    }
+
+    IEnumerator WaitToShutdown()
+    {
+        yield return new WaitForSecondsRealtime(0.5f);
         NetworkManager.Singleton.Shutdown();
     }
-    
 }
