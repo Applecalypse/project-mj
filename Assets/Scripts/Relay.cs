@@ -171,6 +171,7 @@ public class Relay : NetworkBehaviour
     private void SpawnPlayerServerRpc(ulong playerId, SpawnPosition spawnPosition) {
         NetworkObject networkObject = NetworkManager.Singleton.SpawnManager.InstantiateAndSpawn(playerPrefab, playerId, true, true, position: spawnPosition.position, rotation: spawnPosition.rotation);
         PlayerController playerController = networkObject.gameObject.GetComponentInChildren<PlayerController>();
+        playerController.nameTag.enabled = true;
         playerController.IsInLobby = true;
         playerController.sittingPos.position = spawnPosition.position;
         playerController.sittingPos.rotation = spawnPosition.rotation;

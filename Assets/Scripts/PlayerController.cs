@@ -51,7 +51,7 @@ public class PlayerController : NetworkBehaviour
     private Transform feet;
     private bool isGrounded;
     private GameObject player;
-    [SerializeField] private TMP_Text nameTag;
+    public TMP_Text nameTag;
     private Animator animator;
     public bool isDead;
     public bool isFrozen;
@@ -78,7 +78,6 @@ public class PlayerController : NetworkBehaviour
         StartCoroutine(WaitFrozen());
         controller = GetComponent<CharacterController>();
         controller.enabled = false;
-        nameTag.enabled = false;
         playerInput = GetComponent<PlayerInput>();
         animator = GetComponentInParent<Animator>();
         audioSource = GetComponentInChildren<AudioSource>();
@@ -137,6 +136,7 @@ public class PlayerController : NetworkBehaviour
         nickname.OnValueChanged += OnNameChange;
         team.OnValueChanged += OnTeamChange;
         isInLobby.OnValueChanged += OnLobbyStateChange;
+        if (!(isInLobby.Value)) { nameTag.enabled = false; }
         
         if (!IsOwner)
         {
